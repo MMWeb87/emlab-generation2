@@ -15,6 +15,8 @@
  ******************************************************************************/
 package emlab.gen.domain.agent;
 
+import java.util.HashMap;
+
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.role.investment.GenericInvestmentRole;
 
@@ -64,6 +66,13 @@ public class EnergyProducer extends EMLabAgent {
     private double historicalCVarInterestRateIncreaseForNewTechnologies;
     private long historicalCvarBacklookingYears;
     private boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+    
+    // For investors with empirical preferences
+    private HashMap<String, Double> utilityTechnology;
+    private HashMap<String, Double> utilityReturn;
+    private HashMap<String, Double> utilityCountry;
+    private HashMap<String, Double> utilityPolicy;
+
 
     public boolean isWillingToInvest() {
         return willingToInvest;
@@ -234,4 +243,39 @@ public class EnergyProducer extends EMLabAgent {
             boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies) {
         this.historicalCvarCreateDummyPowerPlantsForNewTechnologies = historicalCvarCreateDummyPowerPlantsForNewTechnologies;
     }
+    
+    
+    public HashMap<String, Double> getUtilityTechnology() {
+        return utilityTechnology;
+    }
+
+    public void setUtilityTechnology(HashMap<String, Double> utilityTechnology) {
+                
+        this.utilityTechnology = utilityTechnology;
+    }
+
+	public HashMap<String, Double> getUtilityReturn() {
+		return utilityReturn;
+	}
+
+	public void setUtilityReturn(HashMap<String, Double> utilityReturn) {
+		this.utilityReturn = utilityReturn;
+	}
+
+	public HashMap<String, Double> getUtilityCountry() {
+		return utilityCountry;
+	}
+
+	public void setUtilityCountry(HashMap<String, Double> utilityCountry) {
+		this.utilityCountry = utilityCountry;
+	}
+
+	public HashMap<String, Double> getUtilityPolicy() {
+		return utilityPolicy;
+	}
+
+	public void setUtilityPolicy(HashMap<String, Double> utilityPolicy) {
+		this.utilityPolicy = utilityPolicy;
+	}
+    
 }
