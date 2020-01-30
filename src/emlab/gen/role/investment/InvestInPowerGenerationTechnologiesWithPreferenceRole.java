@@ -53,7 +53,7 @@ import java.util.logging.Level;
  * <a href="mailto:A.Chmieliauskas@tudelft.nl">Alfredas Chmieliauskas</a>
  * @author JCRichstein
  */
-public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends InvestorWithPreference> extends GenericInvestmentRole<T> implements Role<T> {
+public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends EnergyProducer> extends GenericInvestmentRole<T> {
 
     Map<ElectricitySpotMarket, MarketInformation> marketInfoMap = new HashMap<ElectricitySpotMarket, MarketInformation>();
 
@@ -232,20 +232,19 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Inv
                     // plant.getActualNominalCapacity();
                     // double projectReturnOnInvestment = discountedOpProfit
                     // / (-discountedCapitalCosts);
-                    
-                    // TODO only for InvestorWithPreference. And what is T??
-                    
-                    
-                    
+                                        
                     
                     double projectReturnOnInvestment = discountedOpProfit / (-discountedCapitalCosts);
-
                     double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
 
-                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity);
+                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
                     double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
+                 
+                    // TODO MM
+                    double partWorthUtilityPolicy = 0; 
+                    double partWorthUtilityCountry = 0;
                     
-                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology;
+                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry;
                     
 
                     logger.warning(
@@ -256,8 +255,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Inv
                             		+ " the utility for return " + technology + " to be " + partWorthUtilityReturn + "\n"
                             		+ " the total utility to be " + totalUtility + "\n");
                     
-                    // double partWorthUtilityPolicy = 100;
-                    // double partWorthUtilityCountry = 100;
+
 
                     /*
                      * Divide by capacity, in order not to favour large power
@@ -311,16 +309,30 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Inv
     }
     
      /**
-     * Determines part-worth utility from return on equity number
+     * Determines part-worth utility from return on equity number and EnergyProducers return sensitivity. 
+     * A linear extrapolation is used based on the difference between two return values. This
+     * difference is assumed to show the sensitivity of investors to changes in returns.
+     * 
+     * Example:
+     * 	assume return 6% has part-worth utility of 0 and 7% of 40, i.e. 40u per 1%
+     *  then with 0.1 ROE -> (0.1-0.06) * 40/0.01 = 160
      *
-     * @param projectReturnOnEquity
+     * @param projectReturnOnEquity 	ROE of the project
+     * @param agent						EnergyProducer
      * @return double utility value
+     *
      */
-    private double determineUtilityReturn(double projectReturnOnEquity) {
-        // assume return equals 6% is 0u and +1% is +40u
-        // e.g. 0.1 ROE -> (0.1-0.06) * 40/0.01 = 160
-        // TODO: investortype specific
-        double utility = (projectReturnOnEquity - 0.06) * 40 / 0.01;
+    private double determineUtilityReturn(double projectReturnOnEquity, EnergyProducer agent) {
+
+    	// TODO MM all based on 6% -> could be more generic hence.
+    	// TODO MM andwhat if 5-6% is different from 6-7% (which it will be probably) ?
+
+    	double investorReturnUtilitySensitivity = agent.getUtilityReturn().get("7%") - agent.getUtilityReturn().get("6%");  
+    	double utility = (projectReturnOnEquity - 0.06) * investorReturnUtilitySensitivity / 0.01;
+        
+        // TODO MM idea 2: weight 
+        
+        
         return utility;
     }
      
@@ -331,7 +343,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Inv
      * @param projectReturnOnEquity
      * @return double utility value
      */
-    private double determineUtilityTechnology(PowerGeneratingTechnology technology, InvestorWithPreference agent) {
+    private double determineUtilityTechnology(PowerGeneratingTechnology technology, EnergyProducer agent) {
         
         double utility;
         

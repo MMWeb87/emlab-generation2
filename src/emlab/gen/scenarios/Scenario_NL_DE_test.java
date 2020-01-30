@@ -166,21 +166,24 @@ public class Scenario_NL_DE_test implements Scenario {
         energyConsumer.setLtcMaximumCoverageFraction(0.8);
         reps.energyConsumers.add(energyConsumer);
         
-        
-        // Must correspond to names used below in technology definition
-        
-        
-        
+        // TODO-MM: cumbersome?
+        // Must correspond to names used below in technology definition        
         String utilityLevelsTechnologyPV = "Photovoltaic PGT";
         String utilityLevelsTechnologyOnshore ="Onshore wind PGT";
         String utilityLevelsTechnologyOffshore = "Offshore wind PGT";
+        
+        String utilityLevelsReturn5 = "5%";
+        String utilityLevelsReturn6 = "6%";
+        String utilityLevelsReturn7 = "7%";
         
         
         InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
         InvestInPowerGenerationTechnologiesWithPreferenceRole preferenceInvestmentRole = new InvestInPowerGenerationTechnologiesWithPreferenceRole(schedule);
         
-        InvestorWithPreference energyProducerNLAa = reps.createInvestorWithPreference();
-        energyProducerNLAa.setName("Pref Investor NL A");
+        
+        // TODO: why won't this investor be added. I actually wanted to create this investorWithPreference but it doesn't work.?
+        EnergyProducer energyProducerNLAa = reps.createInvestorWithPreference();
+        energyProducerNLAa.setName("Preference Investor NL A");
         energyProducerNLAa.setInvestorMarket(netherlandsElectricitySpotMarket);
         energyProducerNLAa.setNumberOfYearsBacklookingForForecasting(5);
         energyProducerNLAa.setPriceMarkUp(1.0);
@@ -198,13 +201,13 @@ public class Scenario_NL_DE_test implements Scenario {
         energyProducerNLAa.setCash(3e9);
         energyProducerNLAa.setInvestmentRole(preferenceInvestmentRole);
         
-        HashMap<String, Double> energyProducerNLAaPreference = new HashMap<>();
+        //HashMap<String, Double> energyProducerNLAaPreference = new HashMap<>();
         
-        energyProducerNLAaPreference.put(utilityLevelsTechnologyPV, 100.0);
-        energyProducerNLAaPreference.put(utilityLevelsTechnologyOnshore, 200.0);
-        energyProducerNLAaPreference.put(utilityLevelsTechnologyOffshore, 300.0);
+        //energyProducerNLAaPreference.put(utilityLevelsTechnologyPV, 100.0);
+        //energyProducerNLAaPreference.put(utilityLevelsTechnologyOnshore, 200.0);
+        //energyProducerNLAaPreference.put(utilityLevelsTechnologyOffshore, 300.0);
         
-        energyProducerNLAa.setUtilityTechnology(energyProducerNLAaPreference);
+        //energyProducerNLAa.setUtilityTechnology(energyProducerNLAaPreference);
         
 
         EnergyProducer energyProducerNLA = reps.createEnergyProducer();
@@ -224,7 +227,27 @@ public class Scenario_NL_DE_test implements Scenario {
         energyProducerNLA.setLongTermContractPastTimeHorizon(3);
         energyProducerNLA.setLongTermContractMargin(0.1);
         energyProducerNLA.setCash(3e9);
-        energyProducerNLA.setInvestmentRole(defaultInvestmentRole);
+        energyProducerNLA.setInvestmentRole(preferenceInvestmentRole);
+        
+        
+        // TODO-MM: seems cumbersome, better solution, e.g. function of some kind?
+        // However, this here is quite clear, no possible to confuse things.
+        HashMap<String, Double> energyProducerNLAaPreferenceTechnology = new HashMap<>();
+        
+        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyPV, 100.0);
+        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyOnshore, 200.0);
+        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyOffshore, 300.0);
+        
+        energyProducerNLA.setUtilityTechnology(energyProducerNLAaPreferenceTechnology);
+        
+        HashMap<String, Double> energyProducerNLAaPreferenceReturn = new HashMap<>();
+        
+        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn5, 50.0);
+        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn6, 100.0);
+        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn7, 150.0);
+        
+        energyProducerNLA.setUtilityReturn(energyProducerNLAaPreferenceReturn);
+
         
         
 
@@ -631,10 +654,10 @@ public class Scenario_NL_DE_test implements Scenario {
         nuclearPGT.setFuels(nuclearPGTFuels);
         
         GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
-        pvInvestmentCostTimeSeries.setStart(2048300);
+        pvInvestmentCostTimeSeries.setStart(18003); //2048300
 
         GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
-        pvFixedOperatingCostTimeSeries.setStart(20480);
+        pvFixedOperatingCostTimeSeries.setStart(204);//20480
 
         GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
         pvEfficiencyTimeSeries.setStart(1);
@@ -691,10 +714,12 @@ public class Scenario_NL_DE_test implements Scenario {
         hydro.setFuels(hydroPGTFuels);
         
         GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
-        windOnshoreInvestmentCostTimeSeries.setStart(1214600);
+        //windOnshoreInvestmentCostTimeSeries.setStart(1214600); Test
+        windOnshoreInvestmentCostTimeSeries.setStart(10000); //1214600
+
 
         GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-        windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
+        windOnshoreFixedOperatingCostTimeSeries.setStart(182); //18220
 
         GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
         windOnshoreEfficiencyTimeSeries.setStart(1);
@@ -721,10 +746,11 @@ public class Scenario_NL_DE_test implements Scenario {
         windOnshore.setFuels(windOnshorePGTFuels);
         
         GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
-        windOffshoreInvestmentCostTimeSeries.setStart(2450770);
+        windOffshoreInvestmentCostTimeSeries.setStart(20000); //2450770
+
 
         GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-        windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
+        windOffshoreFixedOperatingCostTimeSeries.setStart(735); //73520
 
         GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
         windOffshoreEfficiencyTimeSeries.setStart(1);
@@ -754,8 +780,8 @@ public class Scenario_NL_DE_test implements Scenario {
         pvTarget.setPowerGeneratingTechnology(pv);
         StepTrend pvTargetTrend = new StepTrend();
         pvTargetTrend.setStart(0);
-        pvTargetTrend.setIncrement(0);
-        pvTargetTrend.setDuration(1);
+        pvTargetTrend.setIncrement(5000);
+        pvTargetTrend.setDuration(5);//1
         pvTargetTrend.setMinValue(0);
         pvTarget.setTrend(pvTargetTrend);
         
@@ -763,8 +789,8 @@ public class Scenario_NL_DE_test implements Scenario {
         windTarget.setPowerGeneratingTechnology(windOffshore);
         StepTrend windTargetTrend = new StepTrend();
         windTargetTrend.setStart(0);
-        windTargetTrend.setIncrement(0);
-        windTargetTrend.setDuration(1);
+        windTargetTrend.setIncrement(10000);
+        windTargetTrend.setDuration(6);//1
         windTargetTrend.setMinValue(0);
         windTarget.setTrend(windTargetTrend);
                        
@@ -784,5 +810,6 @@ public class Scenario_NL_DE_test implements Scenario {
         for (PowerPlant plant : powerPlantCSVFactory.read()) {
             reps.createPowerPlantFromPlant(plant);
         }
+        
     }
 }
