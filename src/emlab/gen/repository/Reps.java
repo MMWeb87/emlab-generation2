@@ -11,6 +11,7 @@ import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyConsumer;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
+import emlab.gen.domain.agent.InvestorWithPreference;
 import emlab.gen.domain.agent.NationalGovernment;
 import emlab.gen.domain.agent.PowerPlantMaintainer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
@@ -151,6 +152,8 @@ public class Reps {
     public ArrayList<CommodityMarket> commodityMarkets = new ArrayList<>();
     
     public ArrayList<MarketInformationReport> marketInformationReports = new ArrayList<>();
+    
+    public ArrayList<String> utilityLevelsTechnology = new ArrayList<>();    
 
     public DoubleMatrix2D intermittentMatrix = null;
     
@@ -161,6 +164,7 @@ public class Reps {
     private HashMap<EMLabAgent, ArrayList<Loan>> loansFromAgent = new HashMap<>();
     private HashMap<EMLabAgent, ArrayList<Loan>> loansToAgent = new HashMap<>();
     private HashMap<EMLabAgent, ArrayList<PowerPlant>> powerPlantsForAgent = new HashMap<>();
+    
 
     /**
      * Gives the electricity spot market for a specific zone
@@ -1411,7 +1415,18 @@ public class Reps {
         powerPlantsForAgent.put(producer, new ArrayList<>());
         return producer;
     }
-
+    
+    
+    public InvestorWithPreference createInvestorWithPreference() {
+        InvestorWithPreference producer = new InvestorWithPreference();
+        
+        energyProducers.add(producer);
+        powerPlantsForAgent.put(producer, new ArrayList<>());
+        return producer;
+    }
+    
+    
+   
     public PowerGeneratingTechnology createPowerGeneratingTechnology() {
         PowerGeneratingTechnology tech = new PowerGeneratingTechnology();
         powerGeneratingTechnologies.add(tech);
