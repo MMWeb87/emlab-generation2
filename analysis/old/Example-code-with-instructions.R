@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------------
 
 # Install package dependencies
-install.packages(c("sqldf", "dplyr", "ggplot2", "RColorBrewer"), dependencies = TRUE)
+#install.packages(c("sqldf", "dplyr", "ggplot2", "RColorBrewer"), dependencies = TRUE)
 
 # Install the 'emlab' package going to Tools > Install Packages.. > Install from: Package Archive File 
 # and select a locally stored version, e.g. 'emlab_0.1.0.tar.gz'
@@ -12,9 +12,9 @@ install.packages(c("sqldf", "dplyr", "ggplot2", "RColorBrewer"), dependencies = 
 library(emlab)
 
 # Define your directory location (where data files are located and plots will be stored). Make sure you use '/', not '\'
-directory = "C:/Users/USERNAME/Documents/EMLab/emlab2-analysis"
+directory = "/Users/marcmel/Development/emlab-generation2/"
 # Define the file name from which to read. Make sure it is in your directory folder and has '.csv' at the end.
-filename = "0000000000000-Scenario_XX-EMlabModelRole-DefaultReporter-main.csv"
+filename = "1573727421008-Scenario_NL_DE_test-EMlabModelRole-DefaultReporter-main.csv"
 # Read your main.csv data into a cleaned dataframe using
 data = ReadMainData(filename, directory)
 
