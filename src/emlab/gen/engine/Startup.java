@@ -36,7 +36,6 @@ public class Startup {
         long numberOfIterations = 1;
         long numberOfParallelJobs = 1;
         
-        //String scenarioName = "DefaultScenario";
         //String scenarioName = "Scenario_NL";
         String scenarioName = "Scenario_NL_intermittent";
         //String scenarioName = "Scenario_NL_DE";
