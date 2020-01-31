@@ -166,49 +166,49 @@ public class Scenario_NL_DE_test implements Scenario {
         energyConsumer.setLtcMaximumCoverageFraction(0.8);
         reps.energyConsumers.add(energyConsumer);
         
-        // TODO-MM: cumbersome?
         // Must correspond to names used below in technology definition        
         String utilityLevelsTechnologyPV = "Photovoltaic PGT";
         String utilityLevelsTechnologyOnshore ="Onshore wind PGT";
         String utilityLevelsTechnologyOffshore = "Offshore wind PGT";
-        
         String utilityLevelsReturn5 = "5%";
         String utilityLevelsReturn6 = "6%";
         String utilityLevelsReturn7 = "7%";
+        String utilityLevelsCountryOwn = "Own country";
+        String utilityLevelsCountryKnown = "Known country";
+        String utilityLevelsCountryUnknown = "Unknown country";
+        String utilityLevelsPolicyFIT = "FIT";
+        String utilityLevelsPolicyAuction = "Auction";
+        String utilityLevelsPolicyNone = "None";
         
+        HashMap<String, Double> preferenceMap = new HashMap<>();
+
         
         InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
         InvestInPowerGenerationTechnologiesWithPreferenceRole preferenceInvestmentRole = new InvestInPowerGenerationTechnologiesWithPreferenceRole(schedule);
         
         
-        // TODO: why won't this investor be added. I actually wanted to create this investorWithPreference but it doesn't work.?
-        EnergyProducer energyProducerNLAa = reps.createInvestorWithPreference();
-        energyProducerNLAa.setName("Preference Investor NL A");
-        energyProducerNLAa.setInvestorMarket(netherlandsElectricitySpotMarket);
-        energyProducerNLAa.setNumberOfYearsBacklookingForForecasting(5);
-        energyProducerNLAa.setPriceMarkUp(1.0);
-        energyProducerNLAa.setWillingToInvest(true);
-        energyProducerNLAa.setDownpaymentFractionOfCash(.5);
-        energyProducerNLAa.setDismantlingRequiredOperatingProfit(0);
-        energyProducerNLAa.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
-        energyProducerNLAa.setDebtRatioOfInvestments(0.7);
-        energyProducerNLAa.setLoanInterestRate(0.1);
-        energyProducerNLAa.setEquityInterestRate(0.1);
-        energyProducerNLAa.setPastTimeHorizon(5);
-        energyProducerNLAa.setInvestmentFutureTimeHorizon(7);
-        energyProducerNLAa.setLongTermContractPastTimeHorizon(3);
-        energyProducerNLAa.setLongTermContractMargin(0.1);
-        energyProducerNLAa.setCash(3e9);
-        energyProducerNLAa.setInvestmentRole(preferenceInvestmentRole);
-        
-        //HashMap<String, Double> energyProducerNLAaPreference = new HashMap<>();
-        
-        //energyProducerNLAaPreference.put(utilityLevelsTechnologyPV, 100.0);
-        //energyProducerNLAaPreference.put(utilityLevelsTechnologyOnshore, 200.0);
-        //energyProducerNLAaPreference.put(utilityLevelsTechnologyOffshore, 300.0);
-        
-        //energyProducerNLAa.setUtilityTechnology(energyProducerNLAaPreference);
-        
+        // TODO: why won't this investor invest? 
+        // I actually wanted to create a separate investorWithPreference role
+        // Even useful to have a separate role?
+//        EnergyProducer energyProducerNLAa = reps.createInvestorWithPreference();
+//        energyProducerNLAa.setName("Preference Investor NL A");
+//        energyProducerNLAa.setInvestorMarket(netherlandsElectricitySpotMarket);
+//        energyProducerNLAa.setNumberOfYearsBacklookingForForecasting(5);
+//        energyProducerNLAa.setPriceMarkUp(1.0);
+//        energyProducerNLAa.setWillingToInvest(true);
+//        energyProducerNLAa.setDownpaymentFractionOfCash(.5);
+//        energyProducerNLAa.setDismantlingRequiredOperatingProfit(0);
+//        energyProducerNLAa.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+//        energyProducerNLAa.setDebtRatioOfInvestments(0.7);
+//        energyProducerNLAa.setLoanInterestRate(0.1);
+//        energyProducerNLAa.setEquityInterestRate(0.1);
+//        energyProducerNLAa.setPastTimeHorizon(5);
+//        energyProducerNLAa.setInvestmentFutureTimeHorizon(7);
+//        energyProducerNLAa.setLongTermContractPastTimeHorizon(3);
+//        energyProducerNLAa.setLongTermContractMargin(0.1);
+//        energyProducerNLAa.setCash(3e9);
+//        energyProducerNLAa.setInvestmentRole(preferenceInvestmentRole);
+
 
         EnergyProducer energyProducerNLA = reps.createEnergyProducer();
         energyProducerNLA.setName("Energy Producer NL A");
@@ -227,28 +227,28 @@ public class Scenario_NL_DE_test implements Scenario {
         energyProducerNLA.setLongTermContractPastTimeHorizon(3);
         energyProducerNLA.setLongTermContractMargin(0.1);
         energyProducerNLA.setCash(3e9);
-        energyProducerNLA.setInvestmentRole(preferenceInvestmentRole);
+        energyProducerNLA.setInvestmentRole(preferenceInvestmentRole);               
         
-        
-        // TODO-MM: seems cumbersome, better solution, e.g. function of some kind?
-        // However, this here is quite clear, no possible to confuse things.
-        HashMap<String, Double> energyProducerNLAaPreferenceTechnology = new HashMap<>();
-        
-        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyPV, 100.0);
-        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyOnshore, 200.0);
-        energyProducerNLAaPreferenceTechnology.put(utilityLevelsTechnologyOffshore, 300.0);
-        
-        energyProducerNLA.setUtilityTechnology(energyProducerNLAaPreferenceTechnology);
-        
-        HashMap<String, Double> energyProducerNLAaPreferenceReturn = new HashMap<>();
-        
-        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn5, 50.0);
-        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn6, 100.0);
-        energyProducerNLAaPreferenceReturn.put(utilityLevelsReturn7, 150.0);
-        
-        energyProducerNLA.setUtilityReturn(energyProducerNLAaPreferenceReturn);
-
-        
+        preferenceMap = new HashMap<>();
+        preferenceMap.put(utilityLevelsTechnologyPV, 		100.0);
+        preferenceMap.put(utilityLevelsTechnologyOnshore, 	200.0);
+        preferenceMap.put(utilityLevelsTechnologyOffshore, 	300.0);
+        energyProducerNLA.setUtilityTechnology(preferenceMap);
+        preferenceMap = new HashMap<>();
+        preferenceMap.put(utilityLevelsReturn5, 			50.0);
+        preferenceMap.put(utilityLevelsReturn6, 			100.0);
+        preferenceMap.put(utilityLevelsReturn7, 			150.0);
+        energyProducerNLA.setUtilityReturn(preferenceMap);
+        preferenceMap = new HashMap<>();
+        preferenceMap.put(utilityLevelsCountryOwn, 			50.0);
+        preferenceMap.put(utilityLevelsCountryKnown, 		100.0);
+        preferenceMap.put(utilityLevelsCountryUnknown, 		150.0);
+        energyProducerNLA.setUtilityCountry(preferenceMap);
+        preferenceMap = new HashMap<>();
+        preferenceMap.put(utilityLevelsPolicyFIT, 			50.0);
+        preferenceMap.put(utilityLevelsPolicyAuction, 		100.0);
+        preferenceMap.put(utilityLevelsPolicyNone, 			150.0);
+        energyProducerNLA.setUtilityPolicy(preferenceMap);        
         
 
         EnergyProducer energyProducerNLB = reps.createEnergyProducer();
