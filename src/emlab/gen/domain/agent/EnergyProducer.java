@@ -16,6 +16,7 @@
 package emlab.gen.domain.agent;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.role.investment.GenericInvestmentRole;
@@ -27,6 +28,7 @@ public class EnergyProducer extends EMLabAgent {
 
 //    @RelatedTo(type = "INVESTOR_MARKET", elementClass = ElectricitySpotMarket.class, direction = Direction.OUTGOING)
     private ElectricitySpotMarket investorMarket;
+    private HashSet<ElectricitySpotMarket> potentialInvestorMarkets;
 
 //    @SimulationParameter(label = "Price Mark-Up for spotmarket (as multiplier)", from = 1, to = 2)
     private double priceMarkUp;
@@ -208,7 +210,15 @@ public class EnergyProducer extends EMLabAgent {
         this.investorMarket = investorMarket;
     }
 
-    public double getHistoricalCVarAlpha() {
+    public HashSet<ElectricitySpotMarket> getPotentialInvestorMarkets() {
+		return potentialInvestorMarkets;
+	}
+
+	public void setPotentialInvestorMarkets(HashSet<ElectricitySpotMarket> potentialInvestorMarkets) {
+		this.potentialInvestorMarkets = potentialInvestorMarkets;
+	}
+
+	public double getHistoricalCVarAlpha() {
         return historicalCVarAlpha;
     }
 
