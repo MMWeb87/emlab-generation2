@@ -166,7 +166,8 @@ public class Scenario_NL_DE_test implements Scenario {
         energyConsumer.setLtcMaximumCoverageFraction(0.8);
         reps.energyConsumers.add(energyConsumer);
         
-        // Must correspond to names used below in technology definition        
+        // Must correspond to names used below in technology definition
+        // TODO: Need to be defined on level above, as I use some of the names like "Own country" -> also implement in Role.
         String utilityLevelsTechnologyPV = "Photovoltaic PGT";
         String utilityLevelsTechnologyOnshore ="Onshore wind PGT";
         String utilityLevelsTechnologyOffshore = "Offshore wind PGT";
@@ -212,7 +213,6 @@ public class Scenario_NL_DE_test implements Scenario {
 
         EnergyProducer energyProducerNLA = reps.createEnergyProducer();
         energyProducerNLA.setName("Energy Producer NL A");
-        energyProducerNLA.setInvestorMarket(netherlandsElectricitySpotMarket);
         energyProducerNLA.setNumberOfYearsBacklookingForForecasting(5);
         energyProducerNLA.setPriceMarkUp(1.0);
         energyProducerNLA.setWillingToInvest(true);
@@ -240,15 +240,22 @@ public class Scenario_NL_DE_test implements Scenario {
         preferenceMap.put(utilityLevelsReturn7, 			150.0);
         energyProducerNLA.setUtilityReturn(preferenceMap);
         preferenceMap = new HashMap<>();
-        preferenceMap.put(utilityLevelsCountryOwn, 			50.0);
-        preferenceMap.put(utilityLevelsCountryKnown, 		100.0);
-        preferenceMap.put(utilityLevelsCountryUnknown, 		150.0);
+        preferenceMap.put(utilityLevelsCountryOwn, 			150.0);
+        preferenceMap.put(utilityLevelsCountryKnown, 		50.0);
+        preferenceMap.put(utilityLevelsCountryUnknown, 		-200.0);
         energyProducerNLA.setUtilityCountry(preferenceMap);
         preferenceMap = new HashMap<>();
         preferenceMap.put(utilityLevelsPolicyFIT, 			50.0);
         preferenceMap.put(utilityLevelsPolicyAuction, 		100.0);
         preferenceMap.put(utilityLevelsPolicyNone, 			150.0);
-        energyProducerNLA.setUtilityPolicy(preferenceMap);        
+        energyProducerNLA.setUtilityPolicy(preferenceMap);
+        
+        HashSet<ElectricitySpotMarket> potentialInvestorMarkets = new HashSet<>();
+        potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+        potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+        
+        energyProducerNLA.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+        energyProducerNLA.setPotentialInvestorMarkets(potentialInvestorMarkets);
         
 
         EnergyProducer energyProducerNLB = reps.createEnergyProducer();
@@ -329,7 +336,7 @@ public class Scenario_NL_DE_test implements Scenario {
         
         EnergyProducer energyProducerINTA = reps.createEnergyProducer();
         energyProducerINTA.setName("Energy Producer International A");
-        energyProducerINTA.setInvestorMarket(netherlandsElectricitySpotMarket);
+        energyProducerINTA.setInvestorMarket(netherlandsElectricitySpotMarket); // This would not work, would it?
         energyProducerINTA.setInvestorMarket(germanyElectricitySpotMarket);
         energyProducerINTA.setNumberOfYearsBacklookingForForecasting(5);
         energyProducerINTA.setPriceMarkUp(1.0);
