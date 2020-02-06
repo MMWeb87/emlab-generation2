@@ -27,6 +27,7 @@ public class EnergyProducer extends EMLabAgent {
     GenericInvestmentRole<EnergyProducer> investmentRole;
 
 //    @RelatedTo(type = "INVESTOR_MARKET", elementClass = ElectricitySpotMarket.class, direction = Direction.OUTGOING)
+    // If there is a potentialInvestorMarkets set (currently implemented for preferenceInvestor), investorMarket is treated like the home market of the investor
     private ElectricitySpotMarket investorMarket;
     private HashSet<ElectricitySpotMarket> potentialInvestorMarkets;
 
