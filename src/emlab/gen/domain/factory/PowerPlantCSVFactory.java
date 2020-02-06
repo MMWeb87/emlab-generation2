@@ -53,6 +53,7 @@ public class PowerPlantCSVFactory extends AbstractFactory {
         List<PowerPlant> powerplants = null;
         InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream(csvFile));
 
+        // TODO: error handling for InputStreamReader?
         CSVReader<PowerPlant> csvPersonReader = new CSVReaderBuilder<PowerPlant>(inputStreamReader).entryParser(
                 new PowerPlantEntryParser(getReps().energyProducers, getReps().powerGeneratingTechnologies, getReps().powerGridNodes))
                 .strategy(new CSVStrategy(',', '\"', '#', true, true))

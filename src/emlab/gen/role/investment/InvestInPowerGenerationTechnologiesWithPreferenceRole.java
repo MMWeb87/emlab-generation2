@@ -86,9 +86,6 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
         }
 
         
-        // Implement markets here
-        // TODO check where market is used
-        
         PowerPlant bestPlant = null;
         ElectricitySpotMarket bestPlantMarket = null;
         double highestValue = Double.MIN_VALUE;
