@@ -181,7 +181,8 @@ public class Scenario_NL_DE_test implements Scenario {
         String utilityLevelsPolicyAuction = "Auction";
         String utilityLevelsPolicyNone = "None";
         
-        HashMap<String, Double> preferenceMap = new HashMap<>();
+        HashMap<String, Double> preferenceMap;
+        HashSet<ElectricitySpotMarket> potentialInvestorMarkets;
 
         
         InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
@@ -210,9 +211,200 @@ public class Scenario_NL_DE_test implements Scenario {
 //        energyProducerNLAa.setCash(3e9);
 //        energyProducerNLAa.setInvestmentRole(preferenceInvestmentRole);
 
+        // Renewables pref investors
+        // Generated with R script
+        
+		EnergyProducer prefInvestorsSmallDE = reps.createEnergyProducer();
+		prefInvestorsSmallDE.setName("Pref Investor Small DE");
+		prefInvestorsSmallDE.setNumberOfYearsBacklookingForForecasting(5);
+		prefInvestorsSmallDE.setPriceMarkUp(1.0);
+		prefInvestorsSmallDE.setWillingToInvest(true);
+		prefInvestorsSmallDE.setDownpaymentFractionOfCash(.5);
+		prefInvestorsSmallDE.setDismantlingRequiredOperatingProfit(0);
+		prefInvestorsSmallDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+		prefInvestorsSmallDE.setDebtRatioOfInvestments(0.7);
+		prefInvestorsSmallDE.setLoanInterestRate(0.1);
+		prefInvestorsSmallDE.setEquityInterestRate(0.1);
+		prefInvestorsSmallDE.setPastTimeHorizon(5);
+		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
+		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
+		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
+		prefInvestorsSmallDE.setCash(3e9);
+		prefInvestorsSmallDE.setInvestmentRole(preferenceInvestmentRole); 
+
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsCountryOwn, 			101.11);
+		preferenceMap.put(utilityLevelsCountryKnown, 		-108.88);
+		preferenceMap.put(utilityLevelsCountryUnknown, 	  	7.78);
+		prefInvestorsSmallDE.setUtilityCountry(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsReturn5, 			-25.49);
+		preferenceMap.put(utilityLevelsReturn6, 			-2.13);
+		preferenceMap.put(utilityLevelsReturn7, 			27.62);
+		prefInvestorsSmallDE.setUtilityReturn(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsPolicyFIT, 			28.23);
+		preferenceMap.put(utilityLevelsPolicyAuction, 		-3.01);
+		preferenceMap.put(utilityLevelsPolicyNone, 			-25.23);
+		prefInvestorsSmallDE.setUtilityPolicy(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsTechnologyPV, 		25.23);
+		preferenceMap.put(utilityLevelsTechnologyOnshore, 	8.62);
+		preferenceMap.put(utilityLevelsTechnologyOffshore, 	-33.84);
+		prefInvestorsSmallDE.setUtilityTechnology(preferenceMap);
+
+		potentialInvestorMarkets = new HashSet<>();
+		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+		prefInvestorsSmallDE.setInvestorMarket(netherlandsElectricitySpotMarket);
+		prefInvestorsSmallDE.setPotentialInvestorMarkets(potentialInvestorMarkets);
+
+
+		EnergyProducer prefInvestorsMediumDE = reps.createEnergyProducer();
+		prefInvestorsMediumDE.setName("Pref Investor Medium DE");
+		prefInvestorsMediumDE.setNumberOfYearsBacklookingForForecasting(5);
+		prefInvestorsMediumDE.setPriceMarkUp(1.0);
+		prefInvestorsMediumDE.setWillingToInvest(true);
+		prefInvestorsMediumDE.setDownpaymentFractionOfCash(.5);
+		prefInvestorsMediumDE.setDismantlingRequiredOperatingProfit(0);
+		prefInvestorsMediumDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+		prefInvestorsMediumDE.setDebtRatioOfInvestments(0.7);
+		prefInvestorsMediumDE.setLoanInterestRate(0.1);
+		prefInvestorsMediumDE.setEquityInterestRate(0.1);
+		prefInvestorsMediumDE.setPastTimeHorizon(5);
+		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
+		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
+		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
+		prefInvestorsMediumDE.setCash(3e9);
+		prefInvestorsMediumDE.setInvestmentRole(preferenceInvestmentRole); 
+
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsCountryOwn, 			76.16);
+		preferenceMap.put(utilityLevelsCountryKnown, 		-64.74);
+		preferenceMap.put(utilityLevelsCountryUnknown, 	  -11.43);
+		prefInvestorsMediumDE.setUtilityCountry(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsReturn5, 			-37.13);
+		preferenceMap.put(utilityLevelsReturn6, 			6.18);
+		preferenceMap.put(utilityLevelsReturn7, 			30.95);
+		prefInvestorsMediumDE.setUtilityReturn(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsPolicyFIT, 			29.46);
+		preferenceMap.put(utilityLevelsPolicyAuction, 		-2.59);
+		preferenceMap.put(utilityLevelsPolicyNone, 			-26.87);
+		prefInvestorsMediumDE.setUtilityPolicy(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsTechnologyPV, 		31.27);
+		preferenceMap.put(utilityLevelsTechnologyOnshore, 	32.08);
+		preferenceMap.put(utilityLevelsTechnologyOffshore, 	-63.35);
+		prefInvestorsMediumDE.setUtilityTechnology(preferenceMap);
+
+		potentialInvestorMarkets = new HashSet<>();
+		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+		prefInvestorsMediumDE.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+		prefInvestorsMediumDE.setPotentialInvestorMarkets(potentialInvestorMarkets);
+
+
+		EnergyProducer prefInvestorsLargeDE = reps.createEnergyProducer();
+		prefInvestorsLargeDE.setName("Pref Investor Large DE");
+		prefInvestorsLargeDE.setNumberOfYearsBacklookingForForecasting(5);
+		prefInvestorsLargeDE.setPriceMarkUp(1.0);
+		prefInvestorsLargeDE.setWillingToInvest(true);
+		prefInvestorsLargeDE.setDownpaymentFractionOfCash(.5);
+		prefInvestorsLargeDE.setDismantlingRequiredOperatingProfit(0);
+		prefInvestorsLargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+		prefInvestorsLargeDE.setDebtRatioOfInvestments(0.7);
+		prefInvestorsLargeDE.setLoanInterestRate(0.1);
+		prefInvestorsLargeDE.setEquityInterestRate(0.1);
+		prefInvestorsLargeDE.setPastTimeHorizon(5);
+		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
+		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
+		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
+		prefInvestorsLargeDE.setCash(3e9);
+		prefInvestorsLargeDE.setInvestmentRole(preferenceInvestmentRole); 
+
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsCountryOwn, 			40.9);
+		preferenceMap.put(utilityLevelsCountryKnown, 		-5.78);
+		preferenceMap.put(utilityLevelsCountryUnknown, 	  -35.12);
+		prefInvestorsLargeDE.setUtilityCountry(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsReturn5, 			-47.19);
+		preferenceMap.put(utilityLevelsReturn6, 			3.29);
+		preferenceMap.put(utilityLevelsReturn7, 			43.9);
+		prefInvestorsLargeDE.setUtilityReturn(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsPolicyFIT, 			37.67);
+		preferenceMap.put(utilityLevelsPolicyAuction, 		0.96);
+		preferenceMap.put(utilityLevelsPolicyNone, 			-38.63);
+		prefInvestorsLargeDE.setUtilityPolicy(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsTechnologyPV, 		43.23);
+		preferenceMap.put(utilityLevelsTechnologyOnshore, 	24.05);
+		preferenceMap.put(utilityLevelsTechnologyOffshore, 	-67.28);
+		prefInvestorsLargeDE.setUtilityTechnology(preferenceMap);
+
+		potentialInvestorMarkets = new HashSet<>();
+		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+
+		prefInvestorsLargeDE.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+		prefInvestorsLargeDE.setPotentialInvestorMarkets(potentialInvestorMarkets);
+		
+		
+		EnergyProducer prefInvestorsVerylargeDE = reps.createEnergyProducer();
+		prefInvestorsVerylargeDE.setName("Pref Investor Very Large DE");
+		prefInvestorsVerylargeDE.setNumberOfYearsBacklookingForForecasting(5);
+		prefInvestorsVerylargeDE.setPriceMarkUp(1.0);
+		prefInvestorsVerylargeDE.setWillingToInvest(true);
+		prefInvestorsVerylargeDE.setDownpaymentFractionOfCash(.5);
+		prefInvestorsVerylargeDE.setDismantlingRequiredOperatingProfit(0);
+		prefInvestorsVerylargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+		prefInvestorsVerylargeDE.setDebtRatioOfInvestments(0.7);
+		prefInvestorsVerylargeDE.setLoanInterestRate(0.1);
+		prefInvestorsVerylargeDE.setEquityInterestRate(0.1);
+		prefInvestorsVerylargeDE.setPastTimeHorizon(5);
+		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
+		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
+		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
+		prefInvestorsVerylargeDE.setCash(3e9);
+		prefInvestorsVerylargeDE.setInvestmentRole(preferenceInvestmentRole); 
+
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsCountryOwn, 			48.0);
+		preferenceMap.put(utilityLevelsCountryKnown, 		7.1);
+		preferenceMap.put(utilityLevelsCountryUnknown, 	  -55.1);
+		prefInvestorsVerylargeDE.setUtilityCountry(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsReturn5, 			-34.41);
+		preferenceMap.put(utilityLevelsReturn6, 			-1.19);
+		preferenceMap.put(utilityLevelsReturn7, 			35.6);
+		prefInvestorsVerylargeDE.setUtilityReturn(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsPolicyFIT, 			39.73);
+		preferenceMap.put(utilityLevelsPolicyAuction, 		5.19);
+		preferenceMap.put(utilityLevelsPolicyNone, 			-44.92);
+		prefInvestorsVerylargeDE.setUtilityPolicy(preferenceMap);
+		preferenceMap = new HashMap<>();
+		preferenceMap.put(utilityLevelsTechnologyPV, 		21.56);
+		preferenceMap.put(utilityLevelsTechnologyOnshore, 	7.92);
+		preferenceMap.put(utilityLevelsTechnologyOffshore, 	-29.48);
+		prefInvestorsVerylargeDE.setUtilityTechnology(preferenceMap);
+		        
+		potentialInvestorMarkets = new HashSet<>();
+		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+		prefInvestorsVerylargeDE.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+		prefInvestorsVerylargeDE.setPotentialInvestorMarkets(potentialInvestorMarkets);
+
+
+        
+        // Fossil only investors
 
         EnergyProducer energyProducerNLA = reps.createEnergyProducer();
         energyProducerNLA.setName("Energy Producer NL A");
+        energyProducerNLA.setInvestorMarket(netherlandsElectricitySpotMarket);
         energyProducerNLA.setNumberOfYearsBacklookingForForecasting(5);
         energyProducerNLA.setPriceMarkUp(1.0);
         energyProducerNLA.setWillingToInvest(true);
@@ -227,37 +419,8 @@ public class Scenario_NL_DE_test implements Scenario {
         energyProducerNLA.setLongTermContractPastTimeHorizon(3);
         energyProducerNLA.setLongTermContractMargin(0.1);
         energyProducerNLA.setCash(3e9);
-        energyProducerNLA.setInvestmentRole(preferenceInvestmentRole);               
+        energyProducerNLA.setInvestmentRole(defaultInvestmentRole);
         
-        preferenceMap = new HashMap<>();
-        preferenceMap.put(utilityLevelsTechnologyPV, 		100.0);
-        preferenceMap.put(utilityLevelsTechnologyOnshore, 	200.0);
-        preferenceMap.put(utilityLevelsTechnologyOffshore, 	300.0);
-        energyProducerNLA.setUtilityTechnology(preferenceMap);
-        preferenceMap = new HashMap<>();
-        preferenceMap.put(utilityLevelsReturn5, 			50.0);
-        preferenceMap.put(utilityLevelsReturn6, 			100.0);
-        preferenceMap.put(utilityLevelsReturn7, 			150.0);
-        energyProducerNLA.setUtilityReturn(preferenceMap);
-        preferenceMap = new HashMap<>();
-        preferenceMap.put(utilityLevelsCountryOwn, 			150.0);
-        preferenceMap.put(utilityLevelsCountryKnown, 		50.0);
-        preferenceMap.put(utilityLevelsCountryUnknown, 		-200.0);
-        energyProducerNLA.setUtilityCountry(preferenceMap);
-        preferenceMap = new HashMap<>();
-        preferenceMap.put(utilityLevelsPolicyFIT, 			50.0);
-        preferenceMap.put(utilityLevelsPolicyAuction, 		100.0);
-        preferenceMap.put(utilityLevelsPolicyNone, 			150.0);
-        energyProducerNLA.setUtilityPolicy(preferenceMap);
-        
-        HashSet<ElectricitySpotMarket> potentialInvestorMarkets = new HashSet<>();
-        potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
-        potentialInvestorMarkets.add(germanyElectricitySpotMarket);
-        
-        energyProducerNLA.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
-        energyProducerNLA.setPotentialInvestorMarkets(potentialInvestorMarkets);
-        
-
         EnergyProducer energyProducerNLB = reps.createEnergyProducer();
         energyProducerNLB.setName("Energy Producer NL B");
         energyProducerNLB.setInvestorMarket(netherlandsElectricitySpotMarket);
@@ -783,40 +946,43 @@ public class Scenario_NL_DE_test implements Scenario {
         Set<Substance> windOffshorePGTFuels = new HashSet<>();
         windOffshore.setFuels(windOffshorePGTFuels);
        
-        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
-        pvTarget.setPowerGeneratingTechnology(pv);
-        StepTrend pvTargetTrend = new StepTrend();
-        pvTargetTrend.setStart(0);
-        pvTargetTrend.setIncrement(5000);
-        pvTargetTrend.setDuration(5);//1
-        pvTargetTrend.setMinValue(0);
-        pvTarget.setTrend(pvTargetTrend);
+//        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
+//        pvTarget.setPowerGeneratingTechnology(pv);
+//        StepTrend pvTargetTrend = new StepTrend();
+//        pvTargetTrend.setStart(0);
+//        pvTargetTrend.setIncrement(5000);
+//        pvTargetTrend.setDuration(5);//1
+//        pvTargetTrend.setMinValue(0);
+//        pvTarget.setTrend(pvTargetTrend);
+//        
+//        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
+//        windTarget.setPowerGeneratingTechnology(windOffshore);
+//        StepTrend windTargetTrend = new StepTrend();
+//        windTargetTrend.setStart(0);
+//        windTargetTrend.setIncrement(10000);
+//        windTargetTrend.setDuration(6);//1
+//        windTargetTrend.setMinValue(0);
+//        windTarget.setTrend(windTargetTrend);
+//                       
+//        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
+//        targets.add(pvTarget);
+//        targets.add(windTarget);  
+//
+//        TargetInvestor investor = reps.createTargetInvestor();
+//        investor.setName("Target investor NL");
+//        investor.setPowerGenerationTechnologyTargets(targets);
+//        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
+//        investor.setInvestorMarket(nethe rlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
         
-        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
-        windTarget.setPowerGeneratingTechnology(windOffshore);
-        StepTrend windTargetTrend = new StepTrend();
-        windTargetTrend.setStart(0);
-        windTargetTrend.setIncrement(10000);
-        windTargetTrend.setDuration(6);//1
-        windTargetTrend.setMinValue(0);
-        windTarget.setTrend(windTargetTrend);
-                       
-        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
-        targets.add(pvTarget);
-        targets.add(windTarget);  
+        reps.powerPlants.toString();
 
-        TargetInvestor investor = reps.createTargetInvestor();
-        investor.setName("Target investor NL");
-        investor.setPowerGenerationTechnologyTargets(targets);
-        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
-        
-     
         PowerPlantCSVFactory powerPlantCSVFactory = new PowerPlantCSVFactory(reps);
-        powerPlantCSVFactory.setCsvFile("/data/dutchGermanPlants2015.csv");
+        powerPlantCSVFactory.setCsvFile("/data/prefModelPowerPlants.csv");
         for (PowerPlant plant : powerPlantCSVFactory.read()) {
             reps.createPowerPlantFromPlant(plant);
         }
+        
+        reps.powerPlants.toString();
         
     }
 }
