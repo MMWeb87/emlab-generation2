@@ -188,6 +188,8 @@ public class Scenario_NL_DE_test implements Scenario {
         InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
         InvestInPowerGenerationTechnologiesWithPreferenceRole preferenceInvestmentRole = new InvestInPowerGenerationTechnologiesWithPreferenceRole(schedule);
         
+        preferenceInvestmentRole.setRandomUtilityBound(0.05); // adding some randomness according to random utility theory
+        
         
         // TODO: why won't this investor invest? 
         // I actually wanted to create a separate investorWithPreference role

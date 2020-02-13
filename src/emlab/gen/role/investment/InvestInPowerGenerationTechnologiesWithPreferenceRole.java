@@ -17,7 +17,6 @@ package emlab.gen.role.investment;
 
 import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
-import emlab.gen.domain.agent.InvestorWithPreference;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
 import emlab.gen.domain.agent.StrategicReserveOperator;
 import emlab.gen.domain.contract.CashFlow;
@@ -34,7 +33,6 @@ import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.domain.technology.SubstanceShareInFuelMix;
-import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
 import emlab.gen.util.GeometricTrendRegression;
 import emlab.gen.util.MapValueComparator;
@@ -45,6 +43,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 /**
  * {@link EnergyProducer}s decide to invest in new {@link PowerPlant}
@@ -57,6 +57,8 @@ import java.util.logging.Level;
 public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends EnergyProducer> extends GenericInvestmentRole<T> {
 
     Map<ElectricitySpotMarket, MarketInformation> marketInfoMap = new HashMap<ElectricitySpotMarket, MarketInformation>();
+    
+    private double randomUtilityBound = 0;
 
     public InvestInPowerGenerationTechnologiesWithPreferenceRole(Schedule schedule) {
         super(schedule);
@@ -253,8 +255,8 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    // TODO MM
 		                    double partWorthUtilityPolicy = 0; 
 		                    
-		                    
-		                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry;	                    
+		                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
+		                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 		
 		                    logger.warning(
 		                    		"Agent " + agent + " found in market " + market.getName() + "\n"
@@ -264,10 +266,11 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                            		+ " the ROE to be " + projectReturnOnEquity + "\n" 
 		                            		+ " the utility for return " + technology + " to be " + partWorthUtilityReturn + "\n"
 		                            		+ " the utility for market " + market + " to be " + partWorthUtilityCountry + "\n"
-		                            		+ " the total utility to be " + totalUtility + "\n");
+		                            		+ " the total utility to be " + totalUtility + "\n"
+		                            		+ " the total random utility to be " + totalRandomUtility + "\n");
 		                    	                    	                    
-		                    if(totalUtility > highestValue) {
-		                    	highestValue = totalUtility;
+		                    if(totalRandomUtility > highestValue) {
+		                    	highestValue = totalRandomUtility;
 		                    	bestPlant = plant;
 		                    	bestPlantMarket = market;
 		                    }
@@ -597,5 +600,13 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
             }
         }
     }
+
+	public double getRandomUtilityBound() {
+		return randomUtilityBound;
+	}
+
+	public void setRandomUtilityBound(double randomUtilityBound) {
+		this.randomUtilityBound = randomUtilityBound;
+	}
 
 }
