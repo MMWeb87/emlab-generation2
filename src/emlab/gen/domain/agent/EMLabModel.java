@@ -297,6 +297,10 @@ public class EMLabModel extends AbstractAgent implements Agent {
     public boolean isRenewableTenderSchemeImplemented() {
         return renewableTenderSchemeImplemented;
     }
+    
+	public void setRenewableTenderSchemeImplemented(boolean renewableTenderSchemeImplemented) {
+		this.renewableTenderSchemeImplemented = renewableTenderSchemeImplemented;
+	}
 
 	public boolean isFeedInPremiumImplemented() {
 		return feedInPremiumImplemented;

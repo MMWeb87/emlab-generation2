@@ -162,6 +162,7 @@ public class Reps {
 
     public ArrayList<CommodityMarket> commodityMarkets = new ArrayList<>();
     
+    
     public ArrayList<RenewableTarget> renewableTargets = new ArrayList<>();
     
     public ArrayList<RenewablePotentialLimit> renewablePotentialLimits = new ArrayList<>();
@@ -179,6 +180,8 @@ public class Reps {
     public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>();
     
     public ArrayList<BiasFactor> biasFactors = new ArrayList<>();
+
+    public ArrayList<Regulator> regulators = new ArrayList<>();
 
     
 
