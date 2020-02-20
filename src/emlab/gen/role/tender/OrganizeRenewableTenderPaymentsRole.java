@@ -25,6 +25,7 @@ import emlab.gen.domain.policy.renewablesupport.TenderClearingPoint;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
@@ -35,17 +36,20 @@ import emlab.gen.repository.Reps;
 public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    Reps reps;
+    public OrganizeRenewableTenderPaymentsRole(Schedule schedule) {
+        super(schedule);
+    }
+
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
 
         double annualTenderRevenue = 0d;
 
-        for (TenderBid currentTenderBid : reps.findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
+        for (TenderBid currentTenderBid : getReps().findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
                 getCurrentTick())) {
 
-            TenderClearingPoint tenderClearingPoint = reps.findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
+            TenderClearingPoint tenderClearingPoint = getReps().findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
 
             annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
             // logger.warn("Accepted Amount " +
@@ -66,7 +70,7 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
                 annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
             }
 
-            reps.createCashFlow(scheme.getRegulator(), currentTenderBid.getBidder(),
+            getReps().createCashFlow(scheme.getRegulator(), currentTenderBid.getBidder(),
                     annualTenderRevenue, CashFlow.TENDER_SUBSIDY, getCurrentTick(), currentTenderBid.getPowerPlant());
 
             // logger.warn("Producer's cash reserves after payment of tender
@@ -92,20 +96,20 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
         // price the plant earned
         // throughout the year, for its total production
         PowerPlant plant = bid.getPowerPlant();
-        ElectricitySpotMarket eMarket = reps.findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
+        ElectricitySpotMarket eMarket = getReps().findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
 
         for (SegmentLoad segmentLoad : eMarket.getLoadDurationCurve()) {
             // logger.warn("Inside segment loop for
             // calculating
             // total production");
 
-            electricityPrice = reps.findOneSegmentClearingPointForMarketSegmentAndTime(
+            electricityPrice = getReps().findOneSegmentClearingPointForMarketSegmentAndTime(
                     getCurrentTick(), segmentLoad.getSegment(), eMarket, false).getPrice();
             double hours = segmentLoad.getSegment().getLengthInHours();
             totalAnnualHoursOfGeneration += hours;
             sumRevenueOfElectricity += electricityPrice * hours;
 
-            PowerPlantDispatchPlan ppdp = reps
+            PowerPlantDispatchPlan ppdp = getReps()
                     .findOnePowerPlantDispatchPlanForPowerPlantForSegmentForTime(plant, segmentLoad.getSegment(),
                             getCurrentTick(), false);
 

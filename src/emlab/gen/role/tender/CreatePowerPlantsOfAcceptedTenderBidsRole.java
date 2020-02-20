@@ -25,6 +25,7 @@ import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 import emlab.gen.role.AbstractRoleWithFunctionsRole;
 
@@ -35,7 +36,10 @@ import emlab.gen.role.AbstractRoleWithFunctionsRole;
 
 public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithFunctionsRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
-    Reps reps;
+    
+    public CreatePowerPlantsOfAcceptedTenderBidsRole(Schedule schedule) {
+        super(schedule);
+    }
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
@@ -51,7 +55,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithF
 
         // Initialize the accepted bids
         Iterable<TenderBid> acceptedTenderBidsByTime = null;
-        acceptedTenderBidsByTime = reps.findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
+        acceptedTenderBidsByTime = getReps().findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
 
         for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
 
@@ -60,7 +64,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithF
             // currentTenderBid.getPowerPlant());
 
         	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
-            PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(
+            PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
             		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
             currentTenderBid.setPowerPlant(plant);                            
                     
@@ -76,7 +80,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithF
             double amount = determineLoanAnnuities(investmentCostPayedByDebt,
                     plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
             // logger.warn("Loan amount is: " + amount);
-            Loan loan = reps.createLoan(currentTenderBid.getBidder(), bigbank, amount,
+            Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
                     plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
             // Create the loan
             plant.createOrUpdateLoan(loan);

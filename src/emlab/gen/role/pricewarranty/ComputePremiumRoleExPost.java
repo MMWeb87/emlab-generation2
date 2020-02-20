@@ -65,8 +65,6 @@ import emlab.gen.util.MapValueComparator;
 
 public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
 
-    Reps reps;
-
 	public ComputePremiumRoleExPost(Schedule schedule) {
 	    super(schedule);
 	}
@@ -88,7 +86,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
         // should be close to the investor's future time point.
         long futureTimePoint = scheme.getFutureSchemeStartTime() + getCurrentTick();
 
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(regulator.getZone());
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(regulator.getZone());
 
         Iterable<PowerGeneratingTechnology> eligibleTechnologies = scheme.getPowerGeneratingTechnologiesEligible();
 
@@ -102,7 +100,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
             if (technology.isIntermittent() && model.isNoPrivateIntermittentRESInvestment())
                 continue;
 
-            for (PowerGridNode node : reps.findAllPowerGridNodesByZone(regulator.getZone())) {
+            for (PowerGridNode node : getReps().findAllPowerGridNodesByZone(regulator.getZone())) {
 
                 // or create a new power plant if above statement returns
                 // null,
@@ -110,7 +108,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
 
                 EnergyProducer producer = getReps().energyProducers.iterator().next();
 
-                PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
+                PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
                 // logger.warn("creating a new power plant for " +
                 // producer.getName() + ", of technology "
                 // + plant.getTechnology().getName() + ", with node" +
@@ -188,7 +186,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
                 double discountedOpCost = npv(discountedProjectCashOutflow, wacc);
                 double factorDiscountedGeneration = npv(factorDiscountedGenerationSeries, wacc);
                 // logger.warn("discountedOpCost " + discountedOpCost);
-                BiasFactor biasFactor = reps
+                BiasFactor biasFactor = getReps()
                         .findBiasFactorGivenTechnologyNodeAndScheme(technology.getName(), node.getName(), scheme);
 
                 if (scheme.isCostContainmentMechanismEnabled() && scheme.isTechnologySpecificityEnabled() == false) {
@@ -289,7 +287,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
                 // logger.warn(
                 // "technology name" + technology.getName() + "regulator name" +
                 // scheme.getRegulator().getName());
-                technologyPotential = reps
+                technologyPotential = getReps()
                         .findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(scheme.getRegulator(),
                                 technology.getName())
                         .getValue(futureTimePoint);

@@ -29,8 +29,6 @@ import emlab.gen.role.AbstractEnergyProducerRole;
 public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerRole<EnergyProducer> implements Role<EnergyProducer>{
 	
 
-	Reps reps;
-
 	public AbstractComputePremiumRole(Schedule schedule) {
 	    super(schedule);
 	}
@@ -81,7 +79,7 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
         // logger.warn("Calculate Renewable Target Role started of zone: " +
         // zone);
 
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(zone);
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(zone);
 
         // Assuming perfect knowledge of demand
         demandFactor = market.getDemandGrowthTrend().getValue(getCurrentTick() + scheme.getFutureSchemeStartTime());
@@ -94,10 +92,10 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
         RenewableTarget target = new RenewableTarget();
         // get renewable energy target in factor (percent)
         if (scheme.isTechnologySpecificityEnabled() == false) {
-            target = reps
+            target = getReps()
                     .findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator());
         } else {
-            target = reps.findTechnologySpecificRenewableTargetForTenderByRegulator(
+            target = getReps().findTechnologySpecificRenewableTargetForTenderByRegulator(
                     scheme.getRegulator(), technology.getName());
         }
 
@@ -133,13 +131,13 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
         double expectedGenerationPerPlant = 0d;
         long numberOfSegments = getReps().segments.size();
         // logger.warn("numberOfsegments: " + numberOfSegments);
-        ElectricitySpotMarket market = reps
+        ElectricitySpotMarket market = getReps()
                 .findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
 
         if (scheme.isTechnologySpecificityEnabled() == false) {
             for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
                 expectedGenerationPerTechnology = 0d;
-                for (PowerPlant plant : reps.findOperationalPowerPlantsByMarketAndTechnology(
+                for (PowerPlant plant : getReps().findOperationalPowerPlantsByMarketAndTechnology(
                         market, technology, getCurrentTick() + scheme.getFutureSchemeStartTime())) {
                     expectedGenerationPerPlant = 0d;
                     for (Segment segment : getReps().segments) {
@@ -154,7 +152,7 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
 
             }
         } else {
-            for (PowerPlant plant : reps.findOperationalPowerPlantsByMarketAndTechnology(market,
+            for (PowerPlant plant : getReps().findOperationalPowerPlantsByMarketAndTechnology(market,
                     technologySpecified, getCurrentTick() + scheme.getFutureSchemeStartTime())) {
                 expectedGenerationPerPlant = 0d;
                 for (Segment segment : getReps().segments) {

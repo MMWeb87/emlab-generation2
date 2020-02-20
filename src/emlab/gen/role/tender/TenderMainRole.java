@@ -31,21 +31,19 @@ public class TenderMainRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
 
-    Reps reps;
+    CalculateRenewableTargetForTenderRole calculateRenewableTargetForTenderRole = new CalculateRenewableTargetForTenderRole(schedule);
 
-    CalculateRenewableTargetForTenderRole calculateRenewableTargetForTenderRole;
+    SubmitTenderBidRole submitTenderBidRole = new SubmitTenderBidRole(schedule);
 
-    SubmitTenderBidRole submitTenderBidRole;
+    FilterTenderBidsByTechnologyPotentialRole filterTenderBidsByTechnologyPotentialRole = new FilterTenderBidsByTechnologyPotentialRole(schedule);
 
-    FilterTenderBidsByTechnologyPotentialRole filterTenderBidsByTechnologyPotentialRole;
+    ClearRenewableTenderRole clearRenewableTenderRole = new ClearRenewableTenderRole(schedule);
 
-    ClearRenewableTenderRole clearRenewableTenderRole;
+    CreatePowerPlantsOfAcceptedTenderBidsRole createPowerPlantsOfAcceptedTenderBidsRole = new CreatePowerPlantsOfAcceptedTenderBidsRole(schedule);
 
-    CreatePowerPlantsOfAcceptedTenderBidsRole createPowerPlantsOfAcceptedTenderBidsRole;
+    OrganizeRenewableTenderPaymentsRole organizeRenewableTenderPaymentsRole = new OrganizeRenewableTenderPaymentsRole(schedule);
 
-    OrganizeRenewableTenderPaymentsRole organizeRenewableTenderPaymentsRole;
-
-    VerificationTargetCalculationRole verificationTargetCalculationRole;
+    VerificationTargetCalculationRole verificationTargetCalculationRole = new VerificationTargetCalculationRole(schedule);
     
     public TenderMainRole(Schedule schedule) {
         super(schedule);

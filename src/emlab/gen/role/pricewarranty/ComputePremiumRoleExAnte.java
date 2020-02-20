@@ -59,7 +59,6 @@ import emlab.gen.util.MapValueComparator;
 
 public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
 
-    Reps reps;
 
     public ComputePremiumRoleExAnte(Schedule schedule) {
         super(schedule);
@@ -88,7 +87,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
         // should be close to the investor's future time point.
         long futureTimePoint = scheme.getFutureSchemeStartTime() + getCurrentTick();
 
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(regulator.getZone());
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(regulator.getZone());
 
         Iterable<PowerGeneratingTechnology> eligibleTechnologies = scheme.getPowerGeneratingTechnologiesEligible();
 
@@ -102,15 +101,15 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
             if (technology.isIntermittent() && model.isNoPrivateIntermittentRESInvestment())
                 continue;
 
-            for (PowerGridNode node : reps.findAllPowerGridNodesByZone(regulator.getZone())) {
+            for (PowerGridNode node : getReps().findAllPowerGridNodesByZone(regulator.getZone())) {
 
                 // or create a new power plant if above statement returns null,
                 // and assign it to a random energy producer.
                 
                 // TODO MM Check how is that random?
-                EnergyProducer producer =  reps.energyProducers.iterator().next();
+                EnergyProducer producer =  getReps().energyProducers.iterator().next();
                 
-                PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
+                PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
 
                 // logger.warn("creating a new power plant for " +
                 // producer.getName() + ", of technology "
@@ -177,7 +176,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
                     runningHours = runningHours + hours;
                     if (technology.isIntermittent()) {
 
-                        loadFactor = reps
+                        loadFactor = getReps()
                                 .findIntermittentTechnologyNodeLoadFactorForNodeAndTechnology(node, technology)
                                 .getLoadFactorForSegment(segmentLoad.getSegment());
 
@@ -261,7 +260,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
                 // based on regulator's assumption of companies debt-ratio
 
                 double factorDiscountedGeneration = npv(factorDiscountedGenerationSeries, wacc);
-                BiasFactor biasFactor = reps
+                BiasFactor biasFactor = getReps()
                         .findBiasFactorGivenTechnologyNodeAndScheme(technology.getName(), node.getName(), scheme);
 
                 if (scheme.isCostContainmentMechanismEnabled() && scheme.isTechnologySpecificityEnabled() == false) {
@@ -392,7 +391,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
                 // logger.warn("Regulator Name " + regulator.getName() +
                 // "Technology " + technology.getName()
                 // + " Node " + node.getName());
-                technologyPotential = reps
+                technologyPotential = getReps()
                         .findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(scheme.getRegulator(),
                                 technology.getName())
                         .getValue(futureTimePoint);

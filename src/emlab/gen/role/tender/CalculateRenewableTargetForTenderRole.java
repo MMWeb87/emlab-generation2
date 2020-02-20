@@ -12,6 +12,7 @@ import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 import emlab.gen.util.GeometricTrendRegression;
 
@@ -23,8 +24,10 @@ import emlab.gen.util.GeometricTrendRegression;
 
 public class CalculateRenewableTargetForTenderRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
-
-    Reps reps;
+    
+    public CalculateRenewableTargetForTenderRole(Schedule schedule) {
+        super(schedule);
+    }
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
@@ -35,29 +38,28 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         double targetFactorAchievementForecast;
         Zone zone = scheme.getRegulator().getZone();
 
-        // logger.warn("Calculate Renewable Target Role started of zone: " +
-        // zone);
+        logger.log(Level.INFO, "Calculate Renewable Target Role started of zone: " + zone);
 
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(zone);
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(zone);
 
         // get demand factor
         demandFactor = predictDemandForElectricitySpotMarket(market,
                 scheme.getRegulator().getNumberOfYearsLookingBackToForecastDemand(), futureStartingTenderTimePoint);
 
-        // logger.warn("regulator name" + scheme.getRegulator().getName());
-        // logger.warn("calculate technology name" +
-        // scheme.getPowerGeneratingTechnologiesEligible().iterator().next().getName());
+        logger.log(Level.INFO, "regulator name" + scheme.getRegulator().getName());
+        logger.log(Level.INFO, "calculate technology name" +
+        		scheme.getPowerGeneratingTechnologiesEligible().iterator().next().getName());
 
         if (scheme.isTechnologySpecificityEnabled()) {
 
             PowerGeneratingTechnology technology = scheme.getPowerGeneratingTechnologiesEligible().iterator().next();
-            targetFactor = reps.findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(scheme, technology.getName())
+            targetFactor = getReps().findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(scheme, technology.getName())
                     .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
             // TODO MM: debug!
             // targetFactorAchievementForecast =
             // getForecastedRenewableGeneration(scheme, technology);
         } else {
-            targetFactor = reps.findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator())
+            targetFactor = getReps().findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator())
                     .getYearlyRenewableTargetTimeSeries()
                     .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
             // targetFactorAchievementForecast =
@@ -132,9 +134,8 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
             renewableTargetInMwh = 0;
         }
 
-        // logger.warn("actualRenewableTargetInMwh; " + renewableTargetInMwh + "
-        // for year" + futureStartingTenderTimePoint
-        // + "for scheme " + scheme.getName());
+        logger.log(Level.INFO, "actualRenewableTargetInMwh; " + renewableTargetInMwh + 
+        		"for year" + futureStartingTenderTimePoint + "for scheme " + scheme.getName());
         scheme.setAnnualRenewableTargetInMwh(renewableTargetInMwh);
 
     }
@@ -180,7 +181,7 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         double expectedGenerationPerTechnologyAvailable = 0d;
         int count = 0;
 
-        for (PowerPlant plant : reps.findExpectedOperationalPowerPlantsInMarketByTechnology(market,
+        for (PowerPlant plant : getReps().findExpectedOperationalPowerPlantsInMarketByTechnology(market,
                 technology, futureTimePoint)) {
             count++;
             double totalGenerationOfPlantInMwh = plant.getAnnualFullLoadHours() * plant.getActualNominalCapacity();
