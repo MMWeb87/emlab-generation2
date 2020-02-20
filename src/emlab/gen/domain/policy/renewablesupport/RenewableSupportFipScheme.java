@@ -17,11 +17,7 @@ package emlab.gen.domain.policy.renewablesupport;
 
 import java.util.Set;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-
-import agentspring.simulation.SimulationParameter;
+import emlab.gen.domain.agent.EMLabAgent;
 import emlab.gen.domain.agent.Regulator;
 import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
@@ -30,16 +26,16 @@ import emlab.gen.domain.technology.PowerGeneratingTechnology;
  * @author Kaveri3012 A generic renewable support scheme role, meant to be able
  *         to model both price based and quantity based schemes.
  */
-@NodeEntity
-public class RenewableSupportFipScheme {
 
-    @RelatedTo(type = "WITH_REGULATOR", elementClass = Regulator.class, direction = Direction.OUTGOING)
+public class RenewableSupportFipScheme extends EMLabAgent {
+
+    //@RelatedTo(type = "WITH_REGULATOR", elementClass = Regulator.class, direction = Direction.OUTGOING)
     private Regulator regulator;
 
-    @RelatedTo(type = "RES_SCHEME_FOR_ZONE", elementClass = Zone.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "RES_SCHEME_FOR_ZONE", elementClass = Zone.class, direction = Direction.OUTGOING)
     private Zone zone;
 
-    @RelatedTo(type = "TECHNOLOGIES_ELIGIBLE_ARE", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "TECHNOLOGIES_ELIGIBLE_ARE", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     private Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligible;
 
     private boolean technologySpecificityEnabled;
@@ -54,7 +50,7 @@ public class RenewableSupportFipScheme {
 
     private long futureSchemeStartTime;
 
-    @SimulationParameter(label = "Support Scheme Duration", from = 0, to = 50)
+    //@SimulationParameter(label = "Support Scheme Duration", from = 0, to = 50)
     private long supportSchemeDuration;
 
     private String name;

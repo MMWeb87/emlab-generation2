@@ -15,11 +15,7 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
 
-import agentspring.simulation.SimulationParameter;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGridNode;
 
@@ -27,22 +23,21 @@ import emlab.gen.domain.technology.PowerGridNode;
  * @author Kaveri3012
  *
  */
-@NodeEntity
 public class BiasFactor {
 
-    @SimulationParameter(label = "FeedInPremiumFactor", from = 0, to = 2)
+    //@SimulationParameter(label = "FeedInPremiumFactor", from = 0, to = 2)
     private double feedInPremiumBiasFactor;
 
-    @RelatedTo(type = "BIASFACTOR_FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "BIASFACTOR_FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     private PowerGeneratingTechnology technology;
 
-    @RelatedTo(type = "BIASFACTOR_FOR_NODE", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "BIASFACTOR_FOR_NODE", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
     private PowerGridNode node;
 
-    @RelatedTo(type = "BIASFACTOR_FOR_SUPPORTSCHEME", elementClass = RenewableSupportFipScheme.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "BIASFACTOR_FOR_SUPPORTSCHEME", elementClass = RenewableSupportFipScheme.class, direction = Direction.OUTGOING)
     private RenewableSupportFipScheme scheme;
 
-    @SimulationParameter(label = "DegressionFactor", from = 0, to = 1)
+    //@SimulationParameter(label = "DegressionFactor", from = 0, to = 1)
     private double degressionFactor;
 
     public double getDegressionFactor() {

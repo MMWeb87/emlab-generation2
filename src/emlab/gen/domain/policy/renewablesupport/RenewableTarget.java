@@ -15,9 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
 
 import emlab.gen.domain.agent.Regulator;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
@@ -26,22 +23,18 @@ import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.trend.TimeSeriesImpl;
 
 /**
- * @author Kaveri3012
+ * @author Kaveri3012, marcmel
  *
  */
-@NodeEntity
+
 public class RenewableTarget {
 
-    @RelatedTo(type = "SET_BY_REGULATOR", elementClass = Regulator.class, direction = Direction.INCOMING)
     Regulator regulator;
 
-    @RelatedTo(type = "FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     PowerGeneratingTechnology powerGeneratingTechnology;
 
-    @RelatedTo(type = "AT_NODE", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
     PowerGridNode powerGridNode;
 
-    @RelatedTo(type = "TARGET_TREND", elementClass = TimeSeriesImpl.class, direction = Direction.OUTGOING)
     TimeSeriesCSVReader yearlyRenewableTargetTimeSeries;
 
     private boolean targetTechnologySpecific;

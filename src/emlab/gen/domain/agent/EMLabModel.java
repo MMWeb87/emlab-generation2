@@ -74,6 +74,13 @@ public class EMLabModel extends AbstractAgent implements Agent {
 
 //    @SimulationParameter(label = "Deletion age")
     private long deletionAge;
+    
+    
+    private boolean renewableTenderSchemeImplemented;
+    
+    private boolean feedInPremiumImplemented;
+
+    
 
     public boolean isRealRenewableDataImplemented() {
         return realRenewableDataImplemented;
@@ -284,5 +291,20 @@ public class EMLabModel extends AbstractAgent implements Agent {
     public void setNoPrivateIntermittentRESInvestment(boolean noPrivateIntermittentRESInvestment) {
         this.noPrivateIntermittentRESInvestment = noPrivateIntermittentRESInvestment;
     }
+    
+    
+    
+    public boolean isRenewableTenderSchemeImplemented() {
+        return renewableTenderSchemeImplemented;
+    }
+
+	public boolean isFeedInPremiumImplemented() {
+		return feedInPremiumImplemented;
+	}
+
+	public void setFeedInPremiumImplemented(boolean feedInPremiumImplemented) {
+		this.feedInPremiumImplemented = feedInPremiumImplemented;
+	}
+
 
 }

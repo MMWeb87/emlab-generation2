@@ -18,13 +18,6 @@ package emlab.gen.role.pricewarranty;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.transaction.annotation.Transactional;
-
-import agentspring.role.AbstractRole;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.agent.Regulator;
 import emlab.gen.domain.contract.CashFlow;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
@@ -36,6 +29,9 @@ import emlab.gen.domain.policy.renewablesupport.SupportPriceContract;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
@@ -51,18 +47,15 @@ import emlab.gen.repository.Reps;
  * 
  * 
  */
-@RoleComponent
-public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
+public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> 
+	implements Role<RenewableSupportFipScheme> {
 
-    @Transient
-    @Autowired
     Reps reps;
 
-    @Transient
-    @Autowired
-    Neo4jTemplate template;
-
-    @Transactional
+    public FeedInPremiumRole(Schedule schedule) {
+        super(schedule);
+    }
+    
     public void act(RenewableSupportFipScheme renewableSupportScheme) {
 
         Regulator regulator = new Regulator();
@@ -71,12 +64,12 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
         Set<PowerGeneratingTechnology> technologySet = new HashSet<PowerGeneratingTechnology>();
         technologySet = renewableSupportScheme.getPowerGeneratingTechnologiesEligible();
 
-        ElectricitySpotMarket eMarket = reps.marketRepository.findElectricitySpotMarketForZone(regulator.getZone());
+        ElectricitySpotMarket eMarket = reps.findElectricitySpotMarketForZone(regulator.getZone());
         SupportPriceContract contract = null;
 
         for (PowerGeneratingTechnology technology : technologySet) {
 
-            Iterable<PowerGridNode> possibleInstallationNodes = reps.powerGridNodeRepository
+            Iterable<PowerGridNode> possibleInstallationNodes = reps
                     .findAllPowerGridNodesByZone(regulator.getZone());
 
             // logger.warn("Calculating FEED IN PREMIUM for " +
@@ -90,7 +83,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                 Iterable<PowerPlant> plantSet;
 
                 if (getCurrentTick() >= 1) {
-                    plantSet = reps.powerPlantRepository
+                    plantSet = reps
                             .findPowerPlantsStartingOperationThisTickByPowerGridNodeAndTechnology(node,
                                     technology.getName(), getCurrentTick());
                                     // logger.warn("FIP role, plantSet");
@@ -120,13 +113,13 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                         BaseCostFip baseCost = null;
                         // create a query to get base cost.
                         if (renewableSupportScheme.isTechnologySpecificityEnabled()) {
-                            baseCost = reps.baseCostFipRepository.findOneBaseCostForTechnologyAndNodeAndTime(
+                            baseCost = reps.findOneBaseCostForTechnologyAndNodeAndTime(
                                     node.getName(), technology, plant.getConstructionStartTime()
                                             + renewableSupportScheme.getFutureSchemeStartTime());
                             // logger.warn("expected base cost query test FIP is
                             // " + baseCost);
                         } else {
-                            baseCost = reps.baseCostFipRepository
+                            baseCost = reps
                                     .findOneTechnologyNeutralBaseCostForTime(plant.getConstructionStartTime()
                                             + renewableSupportScheme.getFutureSchemeStartTime());
                             // logger.warn("expected base cost query test FIP is
@@ -140,7 +133,6 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                             contract.setPricePerUnit(baseCost.getCostPerMWh());
                             contract.setFinish(contractFinishTime);
                             contract.setPlant(plant);
-                            contract.persist();
 
                             // logger.warn("Contract price for plant of
                             // technology " + plant.getTechnology().getName()
@@ -151,7 +143,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                     }
                 }
 
-                for (PowerPlant plant : reps.powerPlantRepository
+                for (PowerPlant plant : reps
                         .findOperationalPowerPlantsByPowerGridNodeAndTechnology(node, technology, getCurrentTick())) {
                     // .findAllPowerPlantsWithConstructionStartTimeInTick(getCurrentTick())
                     // //findOperationalPowerPlantsByMarketAndTechnology(eMarket,
@@ -171,7 +163,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                     // for all eligible plants, the support price is calculated,
                     // and
                     // payment is made.
-                    contract = reps.supportPriceContractRepository.findOneContractByPowerPlant(plant);
+                    contract = reps.findOneContractByPowerPlant(plant);
                     if (contract != null) {
                         if (getCurrentTick() <= (contract.getStart()
                                 + renewableSupportScheme.getSupportSchemeDuration())
@@ -194,7 +186,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                                 // calculating
                                 // total production");
 
-                                electricityPrice = reps.segmentClearingPointRepository
+                                electricityPrice = reps
                                         .findOneSegmentClearingPointForMarketSegmentAndTime(getCurrentTick(),
                                                 segmentLoad.getSegment(), eMarket, false)
                                         .getPrice();
@@ -202,7 +194,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
                                 totalHoursOfAnnualGeneration += hours;
                                 sumRevenueOfElectricity += electricityPrice * hours;
 
-                                PowerPlantDispatchPlan ppdp = reps.powerPlantDispatchPlanRepository
+                                PowerPlantDispatchPlan ppdp = reps
                                         .findOnePowerPlantDispatchPlanForPowerPlantForSegmentForTime(plant,
                                                 segmentLoad.getSegment(), getCurrentTick(), false);
 
@@ -266,10 +258,9 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme> {
         }
     }
 
-    @Transactional
     public void createCashFlow(Regulator regulator, PowerPlant plant, double supportPrice) {
 
-        reps.nonTransactionalCreateRepository.createCashFlow(regulator, plant.getOwner(), supportPrice,
+        reps.createCashFlow(regulator, plant.getOwner(), supportPrice,
                 CashFlow.FEED_IN_PREMIUM, getCurrentTick(), plant);
 
         // logger.warn(

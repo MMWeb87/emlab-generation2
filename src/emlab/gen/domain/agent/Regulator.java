@@ -15,87 +15,54 @@
  ******************************************************************************/
 package emlab.gen.domain.agent;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-
-import agentspring.agent.Agent;
-import agentspring.simulation.SimulationParameter;
 import emlab.gen.domain.gis.Zone;
+import emlab.gen.domain.agent.EMLabAgent;
+import emlab.gen.engine.Agent;
+
 
 /**
  * @author Kaveri
+ * @author marcmelliger
  * 
  */
-@NodeEntity
-public class Regulator extends DecarbonizationAgent implements Agent {
 
-    @RelatedTo(type = "OF_ZONE", elementClass = Zone.class, direction = Direction.OUTGOING)
+public class Regulator extends EMLabAgent implements Agent {
+
     private Zone zone;
 
     // Investment related parameters
     private int numberOfYearsLookingBackToForecastDemand;
-    @SimulationParameter(label = "Equity Interest Rate", from = 0, to = 1)
     private double equityInterestRate;
 
     // this parameter is to indicate price risk component of equity rate, in
     // particular for renewable support policies, of the ex-post type
     private double equityRatePriceRiskComponent;
 
-    @SimulationParameter(label = "Debt ratio in investments", from = 0, to = 1)
     private double debtRatioOfInvestments;
     // Loan
-    @SimulationParameter(label = "Loan Interest Rate", from = 0, to = 1)
     private double loanInterestRate;
 
     // Capacity Market Related Parameters
 
-    @SimulationParameter(label = "Capacity Market Price Cap", from = 1000, to = 150000)
     private double capacityMarketPriceCap;
 
-    @SimulationParameter(label = "Reserve Margin", from = 0, to = 1)
     private double reserveMargin;
 
-    @SimulationParameter(label = "Reserve Demand Lower Margin", from = 0, to = 1)
     private double reserveDemandLowerMargin;
 
-    @SimulationParameter(label = "Reserve Demand Upper Margin", from = 0, to = 1)
     private double reserveDemandUpperMargin;
 
     private double demandTarget;
 
-    @SimulationParameter(label = "Capacity Market Target Period", from = 0, to = 10)
+    // Capacity Market Target Period
     private int targetPeriod; // number of years in the future that the capacity
     // is being planned for - set to zero
 
-    // Feed-in-Premium Related Pàrameters
-    @SimulationParameter(label = "FeedInPremiumFactor", from = 0, to = 1)
+    // Feed-in-Premium Related Parameters
     private double feedInPremiumFactor;
 
     // Tender parameters
     // moved to RenewableSupportSchemeTender
-    // private double annualRenewableTargetInMwh;
-    //
-    // public double getAnnualRenewableTargetInMwh() {
-    // return annualRenewableTargetInMwh;
-    // }
-    //
-    // public void setAnnualRenewableTargetInMwh(double
-    // annualRenewableTargetInMwh) {
-    // this.annualRenewableTargetInMwh = annualRenewableTargetInMwh;
-    // }
-
-    // private double annualTotalExpectedRenewableGeneration;
-    //
-    // public double getAnnualTotalExpectedRenewableGeneration() {
-    // return annualTotalExpectedRenewableGeneration;
-    // }
-    //
-    // public void setAnnualTotalExpectedRenewableGeneration(double
-    // annualTotalExpectedGeneration) {
-    // this.annualTotalExpectedRenewableGeneration =
-    // annualTotalExpectedGeneration;
-    // }
 
     public double getEquityInterestRate() {
         return equityInterestRate;

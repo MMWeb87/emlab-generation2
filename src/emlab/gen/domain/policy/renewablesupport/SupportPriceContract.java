@@ -15,9 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
 
 import emlab.gen.domain.contract.Contract;
 import emlab.gen.domain.technology.PowerPlant;
@@ -27,13 +24,13 @@ import emlab.gen.domain.technology.PowerPlant;
  *         duration. The price may have been generated either from a quantity
  *         based scheme or a price based scheme.
  */
-@NodeEntity
+
 public class SupportPriceContract extends Contract {
 
-    @RelatedTo(type = "CONTRACT_FOR_SUPPORTSCHEME", elementClass = RenewableSupportFipScheme.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "CONTRACT_FOR_SUPPORTSCHEME", elementClass = RenewableSupportFipScheme.class, direction = Direction.OUTGOING)
     private RenewableSupportFipScheme renewableSupportScheme;
 
-    @RelatedTo(type = "CONTRACT_FOR_POWERPLANT", elementClass = PowerPlant.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "CONTRACT_FOR_POWERPLANT", elementClass = PowerPlant.class, direction = Direction.OUTGOING)
     private PowerPlant plant;
 
     public RenewableSupportFipScheme getRenewableSupportScheme() {

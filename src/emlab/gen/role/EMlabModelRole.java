@@ -19,7 +19,10 @@ import cern.colt.Timer;
 import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
+import emlab.gen.domain.policy.renewablesupport.RenewableSupportFipScheme;
+import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.technology.PowerPlant;
+import emlab.gen.engine.AbstractAgent;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
@@ -48,7 +51,12 @@ import emlab.gen.role.operating.PayCO2AuctionRole;
 import emlab.gen.role.operating.PayCO2TaxRole;
 import emlab.gen.role.operating.PayForLoansRole;
 import emlab.gen.role.operating.PayOperatingAndMaintainanceCostsRole;
-import java.util.ArrayList;
+import emlab.gen.role.pricewarranty.ComputePremiumRoleExAnte;
+import emlab.gen.role.pricewarranty.ComputePremiumRoleExPost;
+import emlab.gen.role.pricewarranty.FeedInPremiumRole;
+import emlab.gen.role.tender.FilterTenderBidsByTechnologyPotentialRole;
+import emlab.gen.role.tender.TenderMainRole;
+
 import java.util.logging.Level;
 
 /**
@@ -84,8 +92,12 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
     private final MarketStabilityReserveRole marketStabilityReserveRole = new MarketStabilityReserveRole(schedule);
     private final DetermineResidualLoadCurvesForTwoCountriesRole determineResidualLoadCurve = new DetermineResidualLoadCurvesForTwoCountriesRole(schedule);
     private final CreatingFinancialReports creatingFinancialReports = new CreatingFinancialReports(schedule);
-    private final EmptyRoleBeginning emptyRoleBeginning = new EmptyRoleBeginning(schedule);
-
+	
+    private final TenderMainRole tenderMainRole = new TenderMainRole(schedule);
+    private final FeedInPremiumRole feedInPremiumRole = new FeedInPremiumRole(schedule);
+    private final ComputePremiumRoleExAnte computePremiumRoleExAnte = new ComputePremiumRoleExAnte(schedule);
+    private final ComputePremiumRoleExPost computePremiumRoleExPost  = new ComputePremiumRoleExPost(schedule);
+   
     public EMlabModelRole(Schedule schedule) {
         super(schedule);
     }
@@ -218,8 +230,35 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
         submitBidsToCommodityMarketRole.act(getReps().findEnergyProducersAtRandom());
         clearCommodityMarketRole.act(getReps().findCommodityMarketsAtRandom());
         processAcceptedBidsRole.act(getReps().findCommodityMarketsAtRandom());
+        
+        /*
+         * RENEWABLE TENDER
+         */
 
+        if (model.isRenewableTenderSchemeImplemented() && getCurrentTick() > 0) {
 
+            logger.log(Level.INFO," 6.a1 Running Renewable Tender Scheme");
+            
+            for (RenewableSupportSchemeTender scheme : getReps().renewableSupportSchemeTenders) {
+                tenderMainRole.act(scheme);
+            }
+
+        }
+
+        if (model.isFeedInPremiumImplemented() && getCurrentTick() > 0) {
+            logger.log(Level.INFO, " 6a. Run Feed In Premium Scheme");
+            for (RenewableSupportFipScheme scheme : getReps().renewableSupportFipSchemes) {
+
+                if (scheme.isEmRevenuePaidExpost()) {
+                    computePremiumRoleExPost.act(scheme);
+                } else {
+                    computePremiumRoleExAnte.act(scheme);
+                }
+                feedInPremiumRole.act(scheme);
+            }
+        }
+        
+        
         /*
         * Financial reports
          */

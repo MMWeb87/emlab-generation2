@@ -15,8 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author kaveri
@@ -30,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 
-@NodeEntity
 public class ForecastingInformationReport {
 
     long tick;
@@ -134,13 +131,5 @@ public class ForecastingInformationReport {
         this.forecastingForTick = forecastingForTick;
     }
 
-    @Transactional
-    public void PersistReport() {
-
-        // System.out.print("POWER PLANT BEING SPECIFIED AND PERSISTED!!");
-
-        this.persist();
-
-    }
 
 }

@@ -15,77 +15,49 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import agentspring.role.AbstractRole;
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
  * @author Kaveri3012
+ * @author marcmelliger
  *
  */
-@RoleComponent
-public class TenderMainRolePart extends AbstractRole<RenewableSupportSchemeTender>
+
+public class TenderMainRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see agentspring.role.Role#act(agentspring.agent.Agent)
-     */
-    @Autowired
+
     Reps reps;
 
-    @Autowired
     CalculateRenewableTargetForTenderRole calculateRenewableTargetForTenderRole;
 
-    @Autowired
     SubmitTenderBidRole submitTenderBidRole;
 
-    @Autowired
-    SubmitTenderBidRoleExpostRevenuePayment submitTenderBidRoleExpostRevenuePayment;
-
-    @Autowired
     FilterTenderBidsByTechnologyPotentialRole filterTenderBidsByTechnologyPotentialRole;
-    // FilterTenderBidsWithSufficientCashForDownpaymentRole
-    // filterTenderBidsWithSufficientCashflowRole;
-    //
-    @Autowired
+
     ClearRenewableTenderRole clearRenewableTenderRole;
 
-    @Autowired
     CreatePowerPlantsOfAcceptedTenderBidsRole createPowerPlantsOfAcceptedTenderBidsRole;
 
-    @Autowired
     OrganizeRenewableTenderPaymentsRole organizeRenewableTenderPaymentsRole;
 
-    @Autowired
     VerificationTargetCalculationRole verificationTargetCalculationRole;
+    
+    public TenderMainRole(Schedule schedule) {
+        super(schedule);
+    }
 
     @Override
-    @Transactional
     public void act(RenewableSupportSchemeTender scheme) {
 
         calculateRenewableTargetForTenderRole.act(scheme);
 
-        // if (scheme.isExpostRevenueCalculation() == true) {
-        // submitTenderBidRoleExpostRevenuePayment.act(scheme);
-        // } else {
         submitTenderBidRole.act(scheme);
-        // }
 
-        // this role needs to be adjusted for the techspec feature
-        // Regulator regulator = scheme.getRegulator();
-        // ElectricitySpotMarket market =
-        // reps.marketRepository.findElectricitySpotMarketForZone(regulator.getZone());
-        //
-        // for (EnergyProducer producer :
-        // reps.energyProducerRepository.findEnergyProducersByMarketAtRandom(market))
-        // {
         if (scheme.getAnnualRenewableTargetInMwh() > 0) {
             filterTenderBidsByTechnologyPotentialRole.act(scheme);
 

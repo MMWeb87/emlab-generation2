@@ -15,12 +15,6 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import agentspring.role.AbstractRole;
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.contract.CashFlow;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.PowerPlantDispatchPlan;
@@ -29,6 +23,8 @@ import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.policy.renewablesupport.TenderClearingPoint;
 import emlab.gen.domain.technology.PowerPlant;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
 import emlab.gen.repository.Reps;
 
 /**
@@ -36,24 +32,20 @@ import emlab.gen.repository.Reps;
  *
  */
 
-@RoleComponent
 public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    @Autowired
     Reps reps;
 
     @Override
-    @Transactional
     public void act(RenewableSupportSchemeTender scheme) {
 
         double annualTenderRevenue = 0d;
 
-        for (TenderBid currentTenderBid : reps.tenderBidRepository.findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
+        for (TenderBid currentTenderBid : reps.findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
                 getCurrentTick())) {
 
-            TenderClearingPoint tenderClearingPoint = reps.tenderClearingPointRepository
-                    .findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
+            TenderClearingPoint tenderClearingPoint = reps.findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
 
             annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
             // logger.warn("Accepted Amount " +
@@ -74,7 +66,7 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
                 annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
             }
 
-            reps.nonTransactionalCreateRepository.createCashFlow(scheme.getRegulator(), currentTenderBid.getBidder(),
+            reps.createCashFlow(scheme.getRegulator(), currentTenderBid.getBidder(),
                     annualTenderRevenue, CashFlow.TENDER_SUBSIDY, getCurrentTick(), currentTenderBid.getPowerPlant());
 
             // logger.warn("Producer's cash reserves after payment of tender
@@ -100,21 +92,20 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
         // price the plant earned
         // throughout the year, for its total production
         PowerPlant plant = bid.getPowerPlant();
-        ElectricitySpotMarket eMarket = reps.marketRepository
-                .findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
+        ElectricitySpotMarket eMarket = reps.findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
 
         for (SegmentLoad segmentLoad : eMarket.getLoadDurationCurve()) {
             // logger.warn("Inside segment loop for
             // calculating
             // total production");
 
-            electricityPrice = reps.segmentClearingPointRepository.findOneSegmentClearingPointForMarketSegmentAndTime(
+            electricityPrice = reps.findOneSegmentClearingPointForMarketSegmentAndTime(
                     getCurrentTick(), segmentLoad.getSegment(), eMarket, false).getPrice();
             double hours = segmentLoad.getSegment().getLengthInHours();
             totalAnnualHoursOfGeneration += hours;
             sumRevenueOfElectricity += electricityPrice * hours;
 
-            PowerPlantDispatchPlan ppdp = reps.powerPlantDispatchPlanRepository
+            PowerPlantDispatchPlan ppdp = reps
                     .findOnePowerPlantDispatchPlanForPowerPlantForSegmentForTime(plant, segmentLoad.getSegment(),
                             getCurrentTick(), false);
 

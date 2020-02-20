@@ -22,16 +22,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import org.apache.commons.math.stat.regression.SimpleRegression;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
-import emlab.gen.domain.agent.DecarbonizationModel;
+import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
 import emlab.gen.domain.agent.Regulator;
@@ -50,6 +45,7 @@ import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.domain.technology.SubstanceShareInFuelMix;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 import emlab.gen.role.AbstractEnergyProducerRole;
 import emlab.gen.util.MapValueComparator;
@@ -67,17 +63,13 @@ import emlab.gen.util.MapValueComparator;
  * 
  */
 
-@RoleComponent
-public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyProducer>
-        implements Role<EnergyProducer> {
+public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
 
-    @Transient
-    @Autowired
     Reps reps;
 
-    @Transient
-    @Autowired
-    Neo4jTemplate template;
+	public ComputePremiumRoleExPost(Schedule schedule) {
+	    super(schedule);
+	}
 
     public class Key2D {
         private final PowerGeneratingTechnology techKey;
@@ -89,15 +81,14 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Transactional
+
     public void act(RenewableSupportFipScheme scheme) {
 
         Regulator regulator = scheme.getRegulator();
         // should be close to the investor's future time point.
         long futureTimePoint = scheme.getFutureSchemeStartTime() + getCurrentTick();
 
-        ElectricitySpotMarket market = reps.marketRepository.findElectricitySpotMarketForZone(regulator.getZone());
+        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(regulator.getZone());
 
         Iterable<PowerGeneratingTechnology> eligibleTechnologies = scheme.getPowerGeneratingTechnologiesEligible();
 
@@ -107,20 +98,19 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
 
             // logger.warn("technology loop");
 
-            DecarbonizationModel model = reps.genericRepository.findAll(DecarbonizationModel.class).iterator().next();
+            EMLabModel model = getReps().emlabModel;
             if (technology.isIntermittent() && model.isNoPrivateIntermittentRESInvestment())
                 continue;
 
-            for (PowerGridNode node : reps.powerGridNodeRepository.findAllPowerGridNodesByZone(regulator.getZone())) {
+            for (PowerGridNode node : reps.findAllPowerGridNodesByZone(regulator.getZone())) {
 
                 // or create a new power plant if above statement returns
                 // null,
                 // and assign it to a random energy producer.
-                PowerPlant plant = new PowerPlant();
 
-                EnergyProducer producer = reps.energyProducerRepository.findAll().iterator().next();
+                EnergyProducer producer = getReps().energyProducers.iterator().next();
 
-                plant.specifyNotPersist(getCurrentTick(), producer, node, technology);
+                PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
                 // logger.warn("creating a new power plant for " +
                 // producer.getName() + ", of technology "
                 // + plant.getTechnology().getName() + ", with node" +
@@ -174,15 +164,15 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
                 // + " and operatingCost is " + operatingCost);
 
                 TreeMap<Integer, Double> discountedProjectCapitalOutflow = calculateSimplePowerPlantInvestmentCashFlow(
-                        (int) technology.getDepreciationTime(), (int) plant.getActualLeadTime(),
+                        (int) technology.getDepreciationTime(), (int) plant.getActualLeadtime(),
                         plant.getActualInvestedCapital(), 0);
 
                 // Creation of in cashflow during operation
                 TreeMap<Integer, Double> discountedProjectCashOutflow = calculateSimplePowerPlantInvestmentCashFlow(
-                        (int) technology.getDepreciationTime(), (int) plant.getActualLeadTime(), 0, operatingCost);
+                        (int) technology.getDepreciationTime(), (int) plant.getActualLeadtime(), 0, operatingCost);
 
                 TreeMap<Integer, Double> factorDiscountedGenerationSeries = calculateSimplePowerPlantInvestmentCashFlow(
-                        (int) durationOfSupportScheme, (int) plant.getActualLeadTime(), 0, 1);
+                        (int) durationOfSupportScheme, (int) plant.getActualLeadtime(), 0, 1);
 
                 // Calculation of weighted average cost of capital,
                 // based on regulator's assumption of companies debt-ratio, also
@@ -198,7 +188,7 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
                 double discountedOpCost = npv(discountedProjectCashOutflow, wacc);
                 double factorDiscountedGeneration = npv(factorDiscountedGenerationSeries, wacc);
                 // logger.warn("discountedOpCost " + discountedOpCost);
-                BiasFactor biasFactor = reps.renewableSupportSchemeRepository
+                BiasFactor biasFactor = reps
                         .findBiasFactorGivenTechnologyNodeAndScheme(technology.getName(), node.getName(), scheme);
 
                 if (scheme.isCostContainmentMechanismEnabled() && scheme.isTechnologySpecificityEnabled() == false) {
@@ -233,13 +223,12 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
                     baseCostFip.setNode(node);
                     baseCostFip.setTechnology(technology);
                     baseCostFip.setEndTime(futureTimePoint + scheme.getSupportSchemeDuration());
-                    baseCostFip.persist();
 
                     // logger.warn("Creating BaseCost object: technology " +
                     // technology.getName() + "premium " + lcoe);
                 } else {
 
-                    logger.warn("Creating base cost map: technology " + technology.getName() + "premium " + lcoe);
+                    logger.log(Level.INFO, "Creating base cost map: technology " + technology.getName() + "premium " + lcoe);
                     baseCostMap.put(new Key2D(technology, node), lcoe);
                     // Use that as a key, depending on the mode -
                     // technology,
@@ -284,7 +273,7 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
             // else
             // renewableTargetInMwh = 0;
 
-            logger.warn("Actual Target for tick " + futureTimePoint + "in MWh is " + renewableTargetInMwh);
+            logger.log(Level.INFO, "Actual Target for tick " + futureTimePoint + "in MWh is " + renewableTargetInMwh);
 
             for (Entry<Key2D, Double> technologyCost : meritOrderBaseCost.entrySet()) {
                 Key2D baseCostKey = technologyCost.getKey();
@@ -300,7 +289,7 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
                 // logger.warn(
                 // "technology name" + technology.getName() + "regulator name" +
                 // scheme.getRegulator().getName());
-                technologyPotential = reps.renewableTargetForTenderRepository
+                technologyPotential = reps
                         .findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(scheme.getRegulator(),
                                 technology.getName())
                         .getValue(futureTimePoint);
@@ -335,281 +324,11 @@ public class ComputePremiumRoleExPost extends AbstractEnergyProducerRole<EnergyP
             // baseCostFip.setNode(node);
             // baseCostFip.setTechnology(technology);
             baseCostFip.setEndTime(futureTimePoint + scheme.getSupportSchemeDuration());
-            baseCostFip.persist();
         }
 
     }
 
-    private void computeDegressionAndResetBiasFactor(RenewableSupportFipScheme scheme, BiasFactor biasFactor,
-            PowerGeneratingTechnology technology) {
 
-        // get target value of renewable generation
-        double renewableTargetInMwh = 0d; // computeRenewableGenerationTarget(scheme);
-        double generationFromRenewables = 0d; // totalExpectedGenerationFromRenewables(scheme);
 
-        double degressionFactor = biasFactor.getDegressionFactor();
-        double newBiasFactor = 0d;
-
-        if (scheme.isTechnologySpecificityEnabled()) {
-            renewableTargetInMwh = computeRenewableGenerationTarget(scheme, technology);
-            generationFromRenewables = totalExpectedGenerationFromRenewables(scheme, technology);
-        }
-
-        if (generationFromRenewables > renewableTargetInMwh) {
-            newBiasFactor = biasFactor.getFeedInPremiumBiasFactor() * (1 - degressionFactor);
-            biasFactor.setFeedInPremiumBiasFactor(newBiasFactor);
-            // logger.warn("DEGRESSING!!!");
-        } else if (generationFromRenewables < renewableTargetInMwh) {
-            newBiasFactor = biasFactor.getFeedInPremiumBiasFactor() * (1 - degressionFactor);
-            biasFactor.setFeedInPremiumBiasFactor(newBiasFactor);
-        }
-        // if expected generation exceeds target, degress by a certain
-        // percentage.
-        // else if expected generation is lower than a certain margin, increase
-        // bias factor. - will have to create targetLowerMargin and
-        // targetUpperMargin for it, best created in target object.
-
-    }
-
-    private double computeRenewableGenerationTarget(RenewableSupportFipScheme scheme,
-            PowerGeneratingTechnology technology) {
-        double demandFactor;
-        double targetFactor;
-        Zone zone = scheme.getRegulator().getZone();
-
-        // logger.warn("Calculate Renewable Target Role started of zone: " +
-        // zone);
-
-        ElectricitySpotMarket market = reps.marketRepository.findElectricitySpotMarketForZone(zone);
-
-        // Assuming perfect knowledge of demand
-        demandFactor = market.getDemandGrowthTrend().getValue(getCurrentTick() + scheme.getFutureSchemeStartTime());
-        /*
-         * it aggregates segments from both countries, so the boolean should
-         * actually be true here and the code adjusted to FALSE case. Or a query
-         * should be adjusted what probably will take less time.
-         */
-
-        RenewableTarget target = new RenewableTarget();
-        // get renewable energy target in factor (percent)
-        if (scheme.isTechnologySpecificityEnabled() == false) {
-            target = reps.renewableTargetForTenderRepository
-                    .findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator());
-        } else {
-            target = reps.renewableTargetForTenderRepository.findTechnologySpecificRenewableTargetForTenderByRegulator(
-                    scheme.getRegulator(), technology.getName());
-        }
-
-        // logger.warn("Renewable Target is " + target);
-
-        targetFactor = target.getYearlyRenewableTargetTimeSeries()
-                .getValue(getCurrentTick() + scheme.getFutureSchemeStartTime());
-                // logger.warn("targetFactor is " + targetFactor);
-
-        // get totalLoad in MWh
-        double totalExpectedConsumption = 0d;
-
-        for (SegmentLoad segmentLoad : market.getLoadDurationCurve()) {
-            // logger.warn("segmentLoad: " + segmentLoad);
-            totalExpectedConsumption += segmentLoad.getBaseLoad() * demandFactor
-                    * segmentLoad.getSegment().getLengthInHours();
-
-            // logger.warn("demand factor is: " + demandFactor);
-
-        }
-
-        double renewableTargetInMwh = targetFactor * totalExpectedConsumption;
-
-        return renewableTargetInMwh;
-    }
-
-    public double determineExpectedMarginalCost(PowerPlant plant, Map<Substance, Double> expectedFuelPrices,
-            double expectedCO2Price) {
-        double mc = determineExpectedMarginalFuelCost(plant, expectedFuelPrices);
-        double co2Intensity = plant.calculateEmissionIntensity();
-        mc += co2Intensity * expectedCO2Price;
-        return mc;
-    }
-
-    public double determineExpectedMarginalFuelCost(PowerPlant powerPlant, Map<Substance, Double> expectedFuelPrices) {
-        double fc = 0d;
-        for (SubstanceShareInFuelMix mix : powerPlant.getFuelMix()) {
-            double amount = mix.getShare();
-            double fuelPrice = expectedFuelPrices.get(mix.getSubstance());
-            fc += amount * fuelPrice;
-        }
-        return fc;
-    }
-
-    private double totalExpectedGenerationFromRenewables(RenewableSupportFipScheme scheme,
-            PowerGeneratingTechnology technologySpecified) {
-
-        double totalExpectedGeneration = 0d;
-        double expectedGenerationPerTechnology = 0d;
-        double expectedGenerationPerPlant = 0d;
-        long numberOfSegments = reps.segmentRepository.count();
-        // logger.warn("numberOfsegments: " + numberOfSegments);
-        ElectricitySpotMarket market = reps.marketRepository
-                .findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
-
-        if (scheme.isTechnologySpecificityEnabled() == false) {
-            for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
-                expectedGenerationPerTechnology = 0d;
-                for (PowerPlant plant : reps.powerPlantRepository.findOperationalPowerPlantsByMarketAndTechnology(
-                        market, technology, getCurrentTick() + scheme.getFutureSchemeStartTime())) {
-                    expectedGenerationPerPlant = 0d;
-                    for (Segment segment : reps.segmentRepository.findAll()) {
-                        double availablePlantCapacity = plant.getAvailableCapacity(
-                                getCurrentTick() + scheme.getFutureSchemeStartTime(), segment, numberOfSegments);
-                        double lengthOfSegmentInHours = segment.getLengthInHours();
-                        expectedGenerationPerPlant += availablePlantCapacity * lengthOfSegmentInHours;
-                    }
-                    expectedGenerationPerTechnology += expectedGenerationPerPlant;
-                }
-                totalExpectedGeneration += expectedGenerationPerTechnology;
-
-            }
-        } else {
-            for (PowerPlant plant : reps.powerPlantRepository.findOperationalPowerPlantsByMarketAndTechnology(market,
-                    technologySpecified, getCurrentTick() + scheme.getFutureSchemeStartTime())) {
-                expectedGenerationPerPlant = 0d;
-                for (Segment segment : reps.segmentRepository.findAll()) {
-                    double availablePlantCapacity = plant.getAvailableCapacity(
-                            getCurrentTick() + scheme.getFutureSchemeStartTime(), segment, numberOfSegments);
-                    double lengthOfSegmentInHours = segment.getLengthInHours();
-                    expectedGenerationPerPlant += availablePlantCapacity * lengthOfSegmentInHours;
-                }
-                expectedGenerationPerTechnology += expectedGenerationPerPlant;
-            }
-            totalExpectedGeneration += expectedGenerationPerTechnology;
-        }
-        return totalExpectedGeneration;
-    }
-
-    private TreeMap<Integer, Double> calculateSimplePowerPlantInvestmentCashFlow(int depreciationTime, int buildingTime,
-            double totalInvestment, double operatingProfit) {
-        TreeMap<Integer, Double> investmentCashFlow = new TreeMap<Integer, Double>();
-        double equalTotalDownPaymentInstallement = totalInvestment / buildingTime;
-        for (int i = 0; i < buildingTime; i++) {
-            investmentCashFlow.put(new Integer(i), equalTotalDownPaymentInstallement);
-        }
-        for (int i = buildingTime; i < depreciationTime + buildingTime; i++) {
-            investmentCashFlow.put(new Integer(i), operatingProfit);
-        }
-        return investmentCashFlow;
-    }
-
-    private double npv(TreeMap<Integer, Double> netCashFlow, double wacc) {
-        double npv = 0;
-        for (Integer iterator : netCashFlow.keySet()) {
-            npv += netCashFlow.get(iterator).doubleValue() / Math.pow(1 + wacc, iterator.intValue());
-        }
-        return npv;
-    }
-
-    /**
-     * Calculates expected CO2 price based on a geometric trend estimation, of
-     * the past years. The adjustmentForDetermineFuelMix needs to be set to 1,
-     * if this is used in the determine fuel mix role.
-     *
-     * @param futureTimePoint
-     *            Year the prediction is made for
-     * @param yearsLookingBackForRegression
-     *            How many years are used as input for the regression, incl. the
-     *            current tick.
-     * @return
-     */
-    protected HashMap<ElectricitySpotMarket, Double> determineExpectedCO2PriceInclTaxAndFundamentalForecast(
-            long futureTimePoint, long yearsLookingBackForRegression, int adjustmentForDetermineFuelMix,
-            long clearingTick) {
-        HashMap<ElectricitySpotMarket, Double> co2Prices = new HashMap<ElectricitySpotMarket, Double>();
-        CO2Auction co2Auction = reps.genericRepository.findFirst(CO2Auction.class);
-        Iterable<ClearingPoint> cps = reps.clearingPointRepository.findAllClearingPointsForMarketAndTimeRange(
-                co2Auction, clearingTick - yearsLookingBackForRegression + 1 - adjustmentForDetermineFuelMix,
-                clearingTick - adjustmentForDetermineFuelMix, false);
-        // Create regression object and calculate average
-        SimpleRegression sr = new SimpleRegression();
-        Government government = reps.template.findAll(Government.class).iterator().next();
-        double lastPrice = 0;
-        double averagePrice = 0;
-        int i = 0;
-        for (ClearingPoint clearingPoint : cps) {
-            sr.addData(clearingPoint.getTime(), clearingPoint.getPrice());
-            lastPrice = clearingPoint.getPrice();
-            averagePrice += lastPrice;
-            i++;
-        }
-        averagePrice = averagePrice / i;
-        double expectedCO2Price;
-        double expectedRegressionCO2Price;
-        if (i > 1) {
-            expectedRegressionCO2Price = sr.predict(futureTimePoint);
-            expectedRegressionCO2Price = Math.max(0, expectedRegressionCO2Price);
-            expectedRegressionCO2Price = Math.min(expectedRegressionCO2Price,
-                    government.getCo2Penalty(futureTimePoint));
-        } else {
-            expectedRegressionCO2Price = lastPrice;
-        }
-        ClearingPoint expectedCO2ClearingPoint = reps.clearingPointRepository.findClearingPointForMarketAndTime(
-                co2Auction,
-                getCurrentTick()
-                        + reps.genericRepository.findFirst(DecarbonizationModel.class).getCentralForecastingYear(),
-                true);
-        expectedCO2Price = (expectedCO2ClearingPoint == null) ? 0 : expectedCO2ClearingPoint.getPrice();
-        expectedCO2Price = (expectedCO2Price + expectedRegressionCO2Price) / 2;
-        for (ElectricitySpotMarket esm : reps.marketRepository.findAllElectricitySpotMarkets()) {
-            double nationalCo2MinPriceinFutureTick = reps.nationalGovernmentRepository
-                    .findNationalGovernmentByElectricitySpotMarket(esm).getMinNationalCo2PriceTrend()
-                    .getValue(futureTimePoint);
-            double co2PriceInCountry = 0d;
-            if (expectedCO2Price > nationalCo2MinPriceinFutureTick) {
-                co2PriceInCountry = expectedCO2Price;
-            } else {
-                co2PriceInCountry = nationalCo2MinPriceinFutureTick;
-            }
-            co2PriceInCountry += reps.genericRepository.findFirst(Government.class).getCO2Tax(futureTimePoint);
-            co2Prices.put(esm, Double.valueOf(co2PriceInCountry));
-        }
-        return co2Prices;
-    }
-
-    public Map<Substance, Double> predictFuelPrices(EnergyProducer agent, long futureTimePoint) {
-        // Fuel Prices
-        Map<Substance, Double> expectedFuelPrices = new HashMap<Substance, Double>();
-        for (Substance substance : reps.substanceRepository.findAllSubstancesTradedOnCommodityMarkets()) {
-            // Find Clearing Points for the last 5 years (counting current
-            // year
-            // as one of the last 5 years).
-            Iterable<ClearingPoint> cps = reps.clearingPointRepository
-                    .findAllClearingPointsForSubstanceTradedOnCommodityMarkesAndTimeRange(substance,
-                            getCurrentTick() - (agent.getNumberOfYearsBacklookingForForecasting() - 1),
-                            getCurrentTick(), false);
-            // logger.warn("{}, {}",
-            // getCurrentTick()-(agent.getNumberOfYearsBacklookingForForecasting()-1),
-            // getCurrentTick());
-            // Create regression object
-            SimpleRegression gtr = new SimpleRegression();
-            for (ClearingPoint clearingPoint : cps) {
-                // logger.warn("CP {}: {} , in" + clearingPoint.getTime(),
-                // substance.getName(), clearingPoint.getPrice());
-                gtr.addData(clearingPoint.getTime(), clearingPoint.getPrice());
-            }
-            gtr.addData(getCurrentTick(), findLastKnownPriceForSubstance(substance, getCurrentTick()));
-            expectedFuelPrices.put(substance, gtr.predict(futureTimePoint));
-            // logger.warn("Forecast {}: {}, in Step " + futureTimePoint,
-            // substance, expectedFuelPrices.get(substance));
-        }
-        return expectedFuelPrices;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see agentspring.role.Role#act(agentspring.agent.Agent)
-     */
-    public void act(EnergyProducer arg0) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

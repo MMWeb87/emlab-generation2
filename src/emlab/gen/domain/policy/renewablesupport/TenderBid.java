@@ -15,11 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.transaction.annotation.Transactional;
-
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.Bid;
@@ -31,22 +26,21 @@ import emlab.gen.domain.technology.PowerPlant;
  * @author Kaveri for tender
  *
  */
-@NodeEntity
 public class TenderBid extends Bid {
 
-    @RelatedTo(type = "FOR_NODE", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "FOR_NODE", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
     private PowerGridNode powerGridNode;
 
-    @RelatedTo(type = "FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     private PowerGeneratingTechnology technology;
 
-    @RelatedTo(type = "POWERPLANT_DISPATCHPLAN", elementClass = PowerPlant.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "POWERPLANT_DISPATCHPLAN", elementClass = PowerPlant.class, direction = Direction.OUTGOING)
     private PowerPlant powerPlant;
 
-    @RelatedTo(type = "TENDERBID_SUPPORTSCHEME", elementClass = RenewableSupportSchemeTender.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "TENDERBID_SUPPORTSCHEME", elementClass = RenewableSupportSchemeTender.class, direction = Direction.OUTGOING)
     private RenewableSupportSchemeTender renewableSupportSchemeTender;
 
-    @RelatedTo(type = "TENDERBID_ZONE", elementClass = Zone.class, direction = Direction.INCOMING)
+    //@RelatedTo(type = "TENDERBID_ZONE", elementClass = Zone.class, direction = Direction.INCOMING)
     private Zone zone;
 
     private long start;
@@ -129,7 +123,7 @@ public class TenderBid extends Bid {
         this.technology = technology;
     }
 
-    public void specifyNotPersist(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
+    public void specify(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
             long startTime, long finishTime, double bidPricePerMWh, PowerGeneratingTechnology technology,
             long currentTime, int status, RenewableSupportSchemeTender scheme, double cashNeededForPlantDownpayments,
             String investor) {
@@ -155,13 +149,12 @@ public class TenderBid extends Bid {
      */
 
     // All transactional methods below are signified by starting with update
-    @Transactional
     public void specifyAndPersist(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
             long startTime, long finishTime, double bidPricePerMWh, PowerGeneratingTechnology technology,
             long currentTime, int status, RenewableSupportSchemeTender scheme, double cashNeededForPlantDownpayments,
             String investor) {
-        this.persist();
-        this.specifyNotPersist(amount, plant, agent, zone, node, startTime, finishTime, bidPricePerMWh, technology,
+        //this.persist();
+        this.specify(amount, plant, agent, zone, node, startTime, finishTime, bidPricePerMWh, technology,
                 currentTime, status, scheme, cashNeededForPlantDownpayments, investor);
 
     }

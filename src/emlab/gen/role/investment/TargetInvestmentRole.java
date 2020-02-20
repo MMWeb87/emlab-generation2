@@ -106,15 +106,6 @@ public class TargetInvestmentRole extends GenericInvestmentRole<TargetInvestor> 
 
     }
 
-    private void createSpreadOutDownPayments(EnergyProducer agent, PowerPlantManufacturer manufacturer, double totalDownPayment,
-            PowerPlant plant) {
-        int buildingTime = (int) plant.getActualLeadtime();
-        for (int i = 0; i < buildingTime; i++) {
-            getReps().createCashFlow(agent, manufacturer, totalDownPayment / buildingTime,
-                    CashFlow.DOWNPAYMENT, getCurrentTick() + i, plant);
-        }
-    }
-
     @Override
     public double determineLoanAnnuities(double totalLoan, double payBackTime, double interestRate) {
 

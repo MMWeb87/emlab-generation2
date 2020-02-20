@@ -15,10 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGridNode;
 
@@ -27,15 +23,14 @@ import emlab.gen.domain.technology.PowerGridNode;
  *
  */
 
-@NodeEntity
 public class BaseCostFip {
 
     private double costPerMWh;
 
-    @RelatedTo(type = "BASECOST_FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "BASECOST_FOR_TECHNOLOGY", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     private PowerGeneratingTechnology technology;
 
-    @RelatedTo(type = "BASECOST_FOR_LOCATION", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
+    //@RelatedTo(type = "BASECOST_FOR_LOCATION", elementClass = PowerGridNode.class, direction = Direction.OUTGOING)
     private PowerGridNode node;
 
     private long startTime;
