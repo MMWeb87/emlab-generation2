@@ -28,6 +28,7 @@ import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
@@ -46,11 +47,14 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
     double limit;
 
 
-    Reps reps;
+    public FilterTenderBidsByTechnologyPotentialRole(Schedule schedule) {
+        super(schedule);
+    }
+
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
 
         // 1. Loop through all the technologies in the tech neutral scheme.
         // 2. For each technology, find a list of sorted bids
@@ -61,16 +65,16 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
         for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
 
             // POTENTIAL IN MWH ASSUMED TO BE THE SAME AS TARGET
-            sortedTenderBidsbyPriceTechnology = reps.findAllSubmittedSortedTenderBidsbyTechnology(getCurrentTick(), scheme, technology.getName());
+            sortedTenderBidsbyPriceTechnology = getReps().findAllSubmittedSortedTenderBidsbyTechnology(getCurrentTick(), scheme, technology.getName());
 
-            technologyPotential = reps
+            technologyPotential = getReps()
                     .findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(scheme.getRegulator(),
                             technology.getName())
                     .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
 
             logger.log(Level.INFO,"verification: technology potential =" + technologyPotential);
 
-            expectedInstalledCapacityOfTechnologyInNode = reps
+            expectedInstalledCapacityOfTechnologyInNode = getReps()
                     .calculateCapacityOfExpectedOperationalPowerPlantsInMarketAndTechnology(market, technology,
                             getCurrentTick() + scheme.getFutureTenderOperationStartTime());
             
@@ -78,8 +82,8 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
             // TODO why?
 
             EnergyProducer producer = getReps().energyProducers.iterator().next();
-            PowerGridNode node = reps.findFirstPowerGridNodeByElectricitySpotMarket(market);
-            PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
+            PowerGridNode node = getReps().findFirstPowerGridNodeByElectricitySpotMarket(market);
+            PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), producer, node, technology);
             
             limit = technologyPotential
                     - (expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
@@ -117,29 +121,29 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
     private Iterable<TenderBid> getSortedTenderBids(RenewableSupportSchemeTender scheme,
             PowerGeneratingTechnology technology) {
 
-        ElectricitySpotMarket market = reps
+        ElectricitySpotMarket market = getReps()
                 .findElectricitySpotMarketForZone(scheme.getRegulator().getZone());
 
-        for (PowerGridNode node : reps
+        for (PowerGridNode node : getReps()
                 .findAllPowerGridNodesByZone(scheme.getRegulator().getZone())) {
 
             // POTENTIAL IN MWH ASSUMED TO BE THE SAME AS TARGET
 
             // get
-            technologyAndNodePotential = reps
+            technologyAndNodePotential = getReps()
                     .findTechnologyAndNodeSpecificRenewableTargetTimeSeriesForTenderByRegulator(scheme.getRegulator(),
                             technology.getName(), node.getName())
                     .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime())
                     * scheme.getAnnualExpectedConsumption();
-            expectedInstalledCapacityOfTechnologyInNode = reps
+            expectedInstalledCapacityOfTechnologyInNode = getReps()
                     .calculateCapacityOfExpectedOperationalPowerPlantsByNodeAndTechnology(node, technology,
                             getCurrentTick() + scheme.getFutureTenderOperationStartTime());
-            PowerPlant plant = reps.findOperationalPowerPlantsByMarketAndTechnology(market,
+            PowerPlant plant = getReps().findOperationalPowerPlantsByMarketAndTechnology(market,
                     technology, getCurrentTick() + scheme.getFutureTenderOperationStartTime()).iterator().next();
             limit = technologyAndNodePotential
                     - (expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
 
-            sortedTenderBidsbyPriceTechnologyAndNode = reps
+            sortedTenderBidsbyPriceTechnologyAndNode = getReps()
                     .findAllSubmittedSortedTenderBidsbyTechnologyAndNode(getCurrentTick(), scheme, technology.getName(),
                             node.getName());
         }

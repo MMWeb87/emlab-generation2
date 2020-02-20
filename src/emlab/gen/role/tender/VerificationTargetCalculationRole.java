@@ -28,6 +28,7 @@ import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
@@ -38,7 +39,11 @@ import emlab.gen.repository.Reps;
 public class VerificationTargetCalculationRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    Reps reps;
+    public VerificationTargetCalculationRole(Schedule schedule) {
+        super(schedule);
+    }
+
+    
     final Map<Long, ArrayList<Double>> mapStorageGeneration = new HashMap<Long, ArrayList<Double>>();
 
     /*
@@ -53,7 +58,7 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
         double expectedGenInFuture = 0d;
         double actualGenThisTick = 0d;
         Zone zone = scheme.getRegulator().getZone();
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(zone);
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(zone);
 
         // get expected generation in future tick
         expectedGenInFuture = scheme.getExpectedRenewableGeneration();
@@ -115,7 +120,7 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
         long numberOfSegments = getReps().segments.size();
         int count = 0;
 
-        for (PowerPlant plant : reps.findExpectedOperationalPowerPlantsInMarketByTechnology(market,
+        for (PowerPlant plant : getReps().findExpectedOperationalPowerPlantsInMarketByTechnology(market,
                 technology, getCurrentTick())) {
             count++;
             expectedGenerationPerPlantAvailable = 0d;

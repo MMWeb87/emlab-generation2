@@ -24,6 +24,7 @@ import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.policy.renewablesupport.TenderClearingPoint;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 
 /**
@@ -32,7 +33,9 @@ import emlab.gen.repository.Reps;
 public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-	Reps reps;
+    public ClearRenewableTenderRole(Schedule schedule) {
+        super(schedule);
+    }
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
@@ -48,7 +51,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
         // Initialize a sorted list for tender bids
         Iterable<TenderBid> sortedTenderBidsbyPriceAndScheme = null;
-        sortedTenderBidsbyPriceAndScheme = reps
+        sortedTenderBidsbyPriceAndScheme = getReps()
                 .findAllSubmittedSortedTenderBidsbyTime(getCurrentTick(), scheme);
 
         double tenderQuota = scheme.getAnnualRenewableTargetInMwh();

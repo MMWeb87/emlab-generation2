@@ -35,6 +35,7 @@ import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.domain.technology.SubstanceShareInFuelMix;
 import emlab.gen.engine.Role;
+import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 import emlab.gen.role.AbstractRoleWithFunctionsRole;
 import emlab.gen.util.GeometricTrendRegression;
@@ -46,7 +47,10 @@ import emlab.gen.util.GeometricTrendRegression;
 public class SubmitTenderBidRole extends AbstractRoleWithFunctionsRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    Reps reps;
+    public SubmitTenderBidRole(Schedule schedule) {
+        super(schedule);
+    }
+
 
 
     // market expectations
@@ -57,7 +61,7 @@ public class SubmitTenderBidRole extends AbstractRoleWithFunctionsRole<Renewable
 
         Regulator regulator = scheme.getRegulator();
 
-        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(regulator.getZone());
+        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(regulator.getZone());
 //        double targetFactorOverall = reps.findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator())
 //                .getYearlyRenewableTargetTimeSeries()
 //                .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
@@ -65,7 +69,7 @@ public class SubmitTenderBidRole extends AbstractRoleWithFunctionsRole<Renewable
         double tenderTarget = scheme.getAnnualRenewableTargetInMwh();
         if (tenderTarget > 0) {
 
-            for (EnergyProducer agent : reps.findEnergyProducersByMarketAtRandom(market)) {
+            for (EnergyProducer agent : getReps().findEnergyProducersByMarketAtRandom(market)) {
 
                 long futureTimePoint = getCurrentTick() + agent.getInvestmentFutureTimeHorizon();
 
@@ -111,7 +115,7 @@ public class SubmitTenderBidRole extends AbstractRoleWithFunctionsRole<Renewable
                      * For intermittent evaluate all possibilities.
                      */
                     // if (technology.isIntermittent())
-                    possibleInstallationNodes = reps.findAllPowerGridNodesByZone(market.getZone());
+                    possibleInstallationNodes = getReps().findAllPowerGridNodesByZone(market.getZone());
                     // else {
                     // possibleInstallationNodes = new
                     // LinkedList<PowerGridNode>();
@@ -223,7 +227,7 @@ public class SubmitTenderBidRole extends AbstractRoleWithFunctionsRole<Renewable
 
                             runningHours = runningHours + hours;
                             if (technology.isIntermittent()) {
-                                loadFactor = reps
+                                loadFactor = getReps()
                                         .findIntermittentTechnologyNodeLoadFactorForNodeAndTechnology(node, technology)
                                         .getLoadFactorForSegment(segmentLoad.getSegment());
                                 //expectedGrossProfit += (expectedElectricityPrice - expectedMarginalCost) * hours
