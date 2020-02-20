@@ -186,6 +186,8 @@ public class Reps {
     
     public ArrayList<BiasFactor> biasFactors = new ArrayList<>();
 
+    public ArrayList<Regulator> regulators = new ArrayList<>();
+
     
 
     //private maps 
