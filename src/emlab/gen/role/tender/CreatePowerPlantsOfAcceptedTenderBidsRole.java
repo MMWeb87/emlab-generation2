@@ -15,14 +15,6 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.transaction.annotation.Transactional;
-
-import agentspring.role.AbstractRole;
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
@@ -31,25 +23,21 @@ import emlab.gen.domain.contract.Loan;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.technology.PowerPlant;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
 import emlab.gen.repository.Reps;
+import emlab.gen.role.AbstractRoleWithFunctionsRole;
 
 /**
  * @author rjjdejeu
  *
  */
-@RoleComponent
-public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<RenewableSupportSchemeTender>
+
+public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithFunctionsRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
-    @Transient
-    @Autowired
     Reps reps;
 
-    @Transient
-    @Autowired
-    Neo4jTemplate template;
-
     @Override
-    @Transactional
     public void act(RenewableSupportSchemeTender scheme) {
 
         // logger.warn("Create Power Plants Of Accepted Tender Bids Role started
@@ -63,7 +51,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
 
         // Initialize the accepted bids
         Iterable<TenderBid> acceptedTenderBidsByTime = null;
-        acceptedTenderBidsByTime = reps.tenderBidRepository.findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
+        acceptedTenderBidsByTime = reps.findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
 
         for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
 
@@ -71,19 +59,13 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
             // "current accepted bid: " + currentTenderBid + "for power plant" +
             // currentTenderBid.getPowerPlant());
 
-            // PowerPlant plant = currentTenderBid.getPowerPlant();
-            PowerPlant plant = new PowerPlant();
-            // plant.setRenewableTenderDummyPowerPlant(false);
-            currentTenderBid.setPowerPlant(plant);
-            EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
-            // check if all information exists
-            // plant.specifyAndPersist(currentTenderBid.getStart(), bidder,
-            // currentTenderBid.getPowerGridNode(),
-            // currentTenderBid.getTechnology());
-            plant.specifyAndPersist(getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(),
-                    currentTenderBid.getTechnology());
-            PowerPlantManufacturer manufacturer = reps.genericRepository.findFirst(PowerPlantManufacturer.class);
-            BigBank bigbank = reps.genericRepository.findFirst(BigBank.class);
+        	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
+            PowerPlant plant = reps.createAndSpecifyTemporaryPowerPlant(
+            		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
+            currentTenderBid.setPowerPlant(plant);                            
+                    
+            PowerPlantManufacturer manufacturer = getReps().powerPlantManufacturer;
+            BigBank bigbank = getReps().bigBank;
 
             double investmentCostPayedByEquity = plant.getActualInvestedCapital()
                     * (1 - bidder.getDebtRatioOfInvestments());
@@ -94,7 +76,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
             double amount = determineLoanAnnuities(investmentCostPayedByDebt,
                     plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
             // logger.warn("Loan amount is: " + amount);
-            Loan loan = reps.loanRepository.createLoan(currentTenderBid.getBidder(), bigbank, amount,
+            Loan loan = reps.createLoan(currentTenderBid.getBidder(), bigbank, amount,
                     plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
             // Create the loan
             plant.createOrUpdateLoan(loan);
@@ -103,24 +85,5 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
 
     }
 
-    @Transactional
-    private void createSpreadOutDownPayments(EnergyProducer agent, PowerPlantManufacturer manufacturer,
-            double totalDownPayment, PowerPlant plant) {
-        logger.warn("building power plant" + plant.getName());
-        int buildingTime = (int) plant.getActualLeadTime();
-        reps.nonTransactionalCreateRepository.createCashFlow(agent, manufacturer, totalDownPayment / buildingTime,
-                CashFlow.DOWNPAYMENT, getCurrentTick(), plant);
-        Loan downpayment = reps.loanRepository.createLoan(agent, manufacturer, totalDownPayment / buildingTime,
-                buildingTime - 1, getCurrentTick(), plant);
-        plant.createOrUpdateDownPayment(downpayment);
-    }
-
-    public double determineLoanAnnuities(double totalLoan, double payBackTime, double interestRate) {
-
-        double q = 1 + interestRate;
-        double annuity = totalLoan * (Math.pow(q, payBackTime) * (q - 1)) / (Math.pow(q, payBackTime) - 1);
-
-        return annuity;
-    }
 
 }

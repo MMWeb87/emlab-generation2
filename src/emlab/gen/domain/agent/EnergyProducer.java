@@ -40,6 +40,11 @@ public class EnergyProducer extends EMLabAgent {
     private int investmentFutureTimeHorizon;
 //    @SimulationParameter(label = "Equity Interest Rate", from = 0, to = 1)
     private double equityInterestRate;
+    
+    // for ex-post renewable policy scenarios where there is zero price risk
+    // involved.
+    private double equityRatePriceRiskComponent;
+    
     private double downpaymentFractionOfCash;
 //    @SimulationParameter(label = "Debt ratio in investments", from = 0, to = 1)
     private double debtRatioOfInvestments;
@@ -64,6 +69,8 @@ public class EnergyProducer extends EMLabAgent {
     private double historicalCVarInterestRateIncreaseForNewTechnologies;
     private long historicalCvarBacklookingYears;
     private boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+    
+    
 
     public boolean isWillingToInvest() {
         return willingToInvest;
@@ -137,7 +144,15 @@ public class EnergyProducer extends EMLabAgent {
         this.equityInterestRate = investmentDiscountRate;
     }
 
-    public double getLongTermContractMargin() {
+    public double getEquityRatePriceRiskComponent() {
+		return equityRatePriceRiskComponent;
+	}
+
+	public void setEquityRatePriceRiskComponent(double equityRatePriceRiskComponent) {
+		this.equityRatePriceRiskComponent = equityRatePriceRiskComponent;
+	}
+
+	public double getLongTermContractMargin() {
         return longTermContractMargin;
     }
 

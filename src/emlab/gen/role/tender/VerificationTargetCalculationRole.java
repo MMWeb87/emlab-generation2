@@ -18,30 +18,26 @@ package emlab.gen.role.tender;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import agentspring.role.AbstractRole;
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
 import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.Segment;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerPlant;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
 import emlab.gen.repository.Reps;
 
 /**
  * @author kaveri
  *
  */
-@RoleComponent
+
 public class VerificationTargetCalculationRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
 
-    @Autowired
     Reps reps;
     final Map<Long, ArrayList<Double>> mapStorageGeneration = new HashMap<Long, ArrayList<Double>>();
 
@@ -52,13 +48,12 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
      */
 
     @Override
-    @Transactional
     public void act(RenewableSupportSchemeTender scheme) {
 
         double expectedGenInFuture = 0d;
         double actualGenThisTick = 0d;
         Zone zone = scheme.getRegulator().getZone();
-        ElectricitySpotMarket market = reps.marketRepository.findElectricitySpotMarketForZone(zone);
+        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(zone);
 
         // get expected generation in future tick
         expectedGenInFuture = scheme.getExpectedRenewableGeneration();
@@ -117,14 +112,14 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
 
         double expectedGenerationPerTechnologyAvailable = 0d;
         double expectedGenerationPerPlantAvailable = 0d;
-        long numberOfSegments = reps.segmentRepository.count();
+        long numberOfSegments = getReps().segments.size();
         int count = 0;
 
-        for (PowerPlant plant : reps.powerPlantRepository.findExpectedOperationalPowerPlantsInMarketByTechnology(market,
+        for (PowerPlant plant : reps.findExpectedOperationalPowerPlantsInMarketByTechnology(market,
                 technology, getCurrentTick())) {
             count++;
             expectedGenerationPerPlantAvailable = 0d;
-            for (Segment segment : reps.segmentRepository.findAll()) {
+            for (Segment segment : getReps().segments) {
                 double availablePlantCapacity = plant.getAvailableCapacity(getCurrentTick(), segment, numberOfSegments);
 
                 double lengthOfSegmentInHours = segment.getLengthInHours();
@@ -139,7 +134,7 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
             // logger.warn("expectedGenerationPerTechnologyAvailable" +
             // expectedGenerationPerTechnologyAvailable);
         }
-        logger.warn(
+        logger.log(Level.INFO,
                 "verification : number of current powerplants for technology " + technology.getName() + " is " + count);
 
         return expectedGenerationPerTechnologyAvailable;

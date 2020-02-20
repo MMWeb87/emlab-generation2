@@ -13,6 +13,7 @@ import emlab.gen.domain.agent.Government;
 import emlab.gen.domain.agent.NationalGovernment;
 import emlab.gen.domain.agent.PowerPlantMaintainer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
+import emlab.gen.domain.agent.Regulator;
 import emlab.gen.domain.agent.StrategicReserveOperator;
 import emlab.gen.domain.agent.TargetInvestor;
 import emlab.gen.domain.contract.CashFlow;
@@ -38,6 +39,15 @@ import emlab.gen.domain.market.electricity.Segment;
 import emlab.gen.domain.market.electricity.SegmentClearingPoint;
 import emlab.gen.domain.market.electricity.SegmentLoad;
 import emlab.gen.domain.policy.PowerGeneratingTechnologyTarget;
+import emlab.gen.domain.policy.renewablesupport.BaseCostFip;
+import emlab.gen.domain.policy.renewablesupport.BiasFactor;
+import emlab.gen.domain.policy.renewablesupport.RenewablePotentialLimit;
+import emlab.gen.domain.policy.renewablesupport.RenewableSupportFipScheme;
+import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
+import emlab.gen.domain.policy.renewablesupport.RenewableTarget;
+import emlab.gen.domain.policy.renewablesupport.SupportPriceContract;
+import emlab.gen.domain.policy.renewablesupport.TenderBid;
+import emlab.gen.domain.policy.renewablesupport.TenderClearingPoint;
 import emlab.gen.domain.technology.Interconnector;
 import emlab.gen.domain.technology.IntermittentResourceProfile;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
@@ -47,6 +57,7 @@ import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.AbstractAgent;
 import emlab.gen.engine.Schedule;
+import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.trend.TimeSeriesImpl;
 import emlab.gen.util.Utils;
 import java.util.ArrayList;
@@ -62,8 +73,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+
+
+
 /**
- * @author EJL Chappin
+ * @author EJL Chappin, marcmel
  *
  */
 public class Reps {
@@ -147,6 +161,26 @@ public class Reps {
     public ArrayList<LongTermContractDuration> longTermContractDurations = new ArrayList<>();
 
     public ArrayList<CommodityMarket> commodityMarkets = new ArrayList<>();
+    
+    public ArrayList<RenewableTarget> renewableTargets = new ArrayList<>();
+    
+    public ArrayList<RenewablePotentialLimit> renewablePotentialLimits = new ArrayList<>();
+
+    public ArrayList<RenewableSupportSchemeTender> renewableSupportSchemeTenders = new ArrayList<>();
+    
+    public ArrayList<RenewableSupportFipScheme> renewableSupportFipSchemes = new ArrayList<>();
+
+    public ArrayList<TenderBid> tenderBids = new ArrayList<>();
+    
+    public ArrayList<TenderClearingPoint> tenderClearingPoints = new ArrayList<>();
+    
+    public ArrayList<BaseCostFip> baseCostFips = new ArrayList<>();
+    
+    public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>();
+    
+    public ArrayList<BiasFactor> biasFactors = new ArrayList<>();
+
+    
 
     //private maps 
     public HashMap<Substance, DecarbonizationMarket> marketForSubstance = new HashMap<>();
@@ -902,6 +936,48 @@ public class Reps {
     public double countPowerPlantsByOwner(EnergyProducer owner) {
         return powerPlantsForAgent.get(owner).size();
     }
+    
+    /**
+     * Original Gremlin query: "g.v(gridnode).in('LOCATION').filter{(it.__type__=='emlab.gen.domain.technology.PowerPlant')}.as('p')
+     * .out('TECHNOLOGY').filter{it.name==technologyName}.back('p')
+     * .filter{((it.constructionStartTime + it.actualPermittime + it.actualLeadtime) == tick) && (it.expectedEndOfLife > tick)}"
+     * 
+     * @param node
+     * @param technologyName
+     * @param tick
+     * @return
+     */
+    public Iterable<PowerPlant> findPowerPlantsStartingOperationThisTickByPowerGridNodeAndTechnology(
+            PowerGridNode node, String technologyName,long tick){
+    	
+    	return powerPlants.stream()
+    			.filter(p -> p.getLocation().equals(node))
+    			.filter(p -> p.getTechnology().getName().equals(technologyName))
+    			.filter(p -> (p.getConstructionStartTime() + p.getActualPermittime() + p.getActualLeadtime()) == tick)
+    			.filter(p -> p.getExpectedEndOfLife() > tick)
+    			.collect(Collectors.toList());
+    }
+    
+    
+    /**
+     * Original Gremlin: "g.v(gridnode).in('LOCATION').filter{(it.__type__=='emlab.gen.domain.technology.PowerPlant')}.as('p').out('TECHNOLOGY').filter{it.name==g.v(technology).name}.back('p').filter{((it.constructionStartTime + it.actualPermittime + it.actualLeadtime) <= tick) && (it.expectedEndOfLife > tick)}"
+     * @param node
+     * @param powerGeneratingTechnology
+     * @param tick
+     * @return
+     */
+    public Iterable<PowerPlant> findOperationalPowerPlantsByPowerGridNodeAndTechnology(PowerGridNode node,
+            PowerGeneratingTechnology powerGeneratingTechnology, long tick){
+    	
+    	return powerPlants.stream()
+    			.filter(p -> p.getLocation().equals(node))
+    			.filter(p -> p.getTechnology().equals(powerGeneratingTechnology))
+    			.filter(p -> (p.getConstructionStartTime() + p.getActualPermittime() + p.getActualLeadtime()) <= tick)
+    			.filter(p -> p.getExpectedEndOfLife() > tick)
+    			.collect(Collectors.toList());
+    }
+
+    
 
     /**
      * Finds operational plants (only use for current tick, since only
@@ -1077,6 +1153,33 @@ public class Reps {
         Logger.getGlobal().log(Level.SEVERE, "Not yet implemented...");
         throw new UnsupportedOperationException();
     }
+    
+    /**
+     * 
+     * Adopted from:
+     * <code>   @Query(value = "result = g.v(market).out('ZONE').in('REGION').in('LOCATION').filter{it.__type__=='emlab.gen.domain.technology.PowerPlant'}.as('x').out('TECHNOLOGY').filter{it.name==g.v(tech).name}.back('x').filter{((it.constructionStartTime + it.actualPermittime + it.actualLeadtime) <= tick) && (it.expectedEndOfLife > tick)};"
+     *       + "if(result == null){return 0;} else{return result;}", type = QueryType.Gremlin)
+     * public Iterable<PowerPlant> findExpectedOperationalPowerPlantsInMarketByTechnology(
+     *     @Param("market") ElectricitySpotMarket market, @Param("tech") PowerGeneratingTechnology technology,
+     *       @Param("tick") long tick);</code
+     * @param market
+     * @param technology
+     * @param tick
+     * @return
+     */
+    public Iterable<PowerPlant> findExpectedOperationalPowerPlantsInMarketByTechnology(
+            ElectricitySpotMarket market, PowerGeneratingTechnology technology, long tick) {
+
+    	return powerPlants.stream()
+    			.filter(p -> electricitySpotMarketForPowerPlant.get(p).equals(market))//TODO MM: why did emile implement it like that?
+    			.filter(p -> p.getTechnology().equals(technology))
+    			.filter(p -> (p.getConstructionStartTime() + p.getActualPermittime() + p.getActualLeadtime()) <= tick)
+    			.filter(p -> p.getExpectedEndOfLife() > tick)
+    			.collect(Collectors.toList());
+    	
+    }
+
+
 
     public double calculateCapacityOfExpectedOperationalPowerPlantsInMarketAndTechnology(
             ElectricitySpotMarket market, PowerGeneratingTechnology technology,
@@ -1141,6 +1244,27 @@ public class Reps {
         return powerPlantsForAgent.get(owner).stream().filter(p -> p.isOperational(tick)).filter(p -> findElectricitySpotMarketByPowerPlant(p).equals(market)).collect(Collectors.toList());
 
     }
+    
+    /**
+     * Original Gremlin: "g.v(market).out('ZONE').in('REGION').in('LOCATION')
+     * .filter{(it.__type__=='emlab.gen.domain.technology.PowerPlant')}.as('p').out('TECHNOLOGY').filter{it==g.v(technology)}.back('p')
+     * .filter{((it.constructionStartTime + it.actualPermittime + it.actualLeadtime)<= tick) && (it.expectedEndOfLife > tick)}"
+     * @param market
+     * @param powerGeneratingTechnology
+     * @param tick
+     * @return
+     */    
+    public Iterable<PowerPlant> findOperationalPowerPlantsByMarketAndTechnology(ElectricitySpotMarket market,
+            PowerGeneratingTechnology powerGeneratingTechnology, long tick){
+    	
+        return powerPlants.stream()
+        		.filter(p -> findElectricitySpotMarketByPowerPlant(p).equals(market))
+        		.filter(p -> p.getTechnology().equals(powerGeneratingTechnology))
+    			.filter(p -> (p.getConstructionStartTime() + p.getActualPermittime() + p.getActualLeadtime()) <= tick)
+    			.filter(p -> p.getExpectedEndOfLife() > tick)
+        		.collect(Collectors.toList());
+    }
+    
 
     public Iterable<PowerPlant> findPowerPlantsByOwnerAndMarketInPipeline(EnergyProducer owner,
             ElectricitySpotMarket market, long tick) {
@@ -1222,7 +1346,16 @@ public class Reps {
         ArrayList<EnergyProducer> copy = new ArrayList<>(energyProducers);
         Collections.shuffle(copy);
         return copy;
-    }
+    } // TODO check: what happened to markets? Could this be source of the bug?
+    
+    public ArrayList<EnergyProducer> findEnergyProducersByMarketAtRandom(ElectricitySpotMarket market) {
+        ArrayList<EnergyProducer> copy = new ArrayList<>(energyProducers.stream().filter(p -> p.getInvestorMarket() == market).collect(Collectors.toList()));
+        Collections.shuffle(copy);
+        return copy;
+    } // TODO MMcheck
+    
+    
+    
 
     public ArrayList<EnergyConsumer> findEnergyConsumersAtRandom() {
         ArrayList<EnergyConsumer> copy = new ArrayList<>(energyConsumers);
@@ -1468,6 +1601,327 @@ public class Reps {
         marketForSubstance.put(substance, co2Auction);
         return co2Auction;
     }
+    
+    
+    // RenewableTargetForTenderReps
+ 
+    /**
+     * Read TimesSeries for Tender by a Scheme (Like what? FIT)
+     * 
+     * Adopted from original version by Kaveri (RenewableTargetForTenderRepositor:45)
+     * @param scheme
+     * @param technology
+     * @return TimeSeriesCSVReader
+     * @author marcmel
+     */
+    public TimeSeriesCSVReader findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(RenewableSupportSchemeTender scheme,  String technologyName) {
+    	        	
+    	return renewableTargets.stream()
+    			.filter(p -> p.getRegulator().equals(scheme.getRegulator())) // Only consider target of the regulator of this scheme
+    			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
+    			.findFirst().get().getYearlyRenewableTargetTimeSeries();
+    	
+    	// TODO MM transformed technologyName to technology -> may be a problem for definition? Is it?
+    	// TODO MM maybe implement isPresent()
+    }
+    
+    /**
+     * Original Gremlin query: "g.v(regulator).out('SET_BY_REGULATOR')
+     * .filter{it.__type__=='emlab.gen.domain.policy.renewablesupport.RenewableTarget'}.as('x')
+     * .out('FOR_TECHNOLOGY').filter{it.name==technologyName}.back('x')
+     * .out('AT_NODE').filter{it.name == nodeName}.back('x')
+     * .filter{it.targetTechnologySpecific == true}.out('TARGET_TREND')"
+     * 
+     * @param regulator
+     * @param technologyName
+     * @param nodeName
+     * @return
+     */    
+    public TimeSeriesCSVReader findTechnologyAndNodeSpecificRenewableTargetTimeSeriesForTenderByRegulator(
+            Regulator regulator, String technologyName, String nodeName) {
+    	
+    	return renewableTargets.stream()
+    			.filter(p -> p.getRegulator().equals(regulator)) // Only consider target of the regulator of this scheme
+    			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
+    			.filter(p -> p.getPowerGridNode().equals(nodeName))
+    			.filter(p -> p.isTargetTechnologySpecific() == true)
+    			.findFirst().get().getYearlyRenewableTargetTimeSeries();	
+    }
+    
+    // RenewablePotentialLimit Reps
+    
+    /**
+     * Original Germlin query: "g.v(regulator).out('SET_BY_REGULATOR')
+     *   .filter{it.__type__=='emlab.gen.domain.policy.renewablesupport.RenewablePotentialLimit'}.as('x')
+     *   .out('FOR_TECHNOLOGY').filter{it.name==technologyName}.back('x').filter{it.targetTechnologySpecific == true}.out('TARGET_TREND')"
+     * 
+     * @param regulator
+     * @param technologyName
+     * @return
+     */
+    public TimeSeriesCSVReader findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(
+            Regulator regulator, String technologyName) {
+
+       	return renewablePotentialLimits.stream()
+    			.filter(p -> p.getRegulator().equals(regulator))
+    			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
+    			.filter(p -> p.isTargetTechnologySpecific() == true)
+    			.findFirst().get().getYearlyRenewableTargetTimeSeries();	
+    }
+    
+
+    
+    /**
+     * Adopted from original version by Kaveri (RenewableTargetForTenderRepositor:38)
+     * @param regulator
+     * @return
+     */
+    public RenewableTarget findTechnologyNeutralRenewableTargetForTenderByRegulator(Regulator regulator) {
+    	return renewableTargets.stream().filter(p -> p.getRegulator().equals(regulator)).filter(p -> p.isTargetTechnologySpecific() == false).findFirst().get();
+    	
+    	
+    }
+    
+    
+    /**
+     * Gremlin: "g.v(regulator).out('SET_BY_REGULATOR')
+     * .filter{it.__type__=='emlab.gen.domain.policy.renewablesupport.RenewableTarget'}.as('x')
+     * .out('FOR_TECHNOLOGY').filter{it.name==technologyName}.back('x')
+     * .filter{it.targetTechnologySpecific == true}"
+     * @param regulator
+     * @param technologyName
+     * @return
+     */
+   
+    public RenewableTarget findTechnologySpecificRenewableTargetForTenderByRegulator(
+            Regulator regulator, String technologyName) {
+    	
+    	return renewableTargets.stream()
+    			.filter(p -> p.getRegulator().equals(regulator))
+    			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
+    			.filter(p -> p.isTargetTechnologySpecific() == true)
+    			.findFirst().get();
+    	
+    }
+    
+    
+    // TenderBidReps
+        
+    /**
+     * This sorts the submitted tender bids by price
+     * Original gremlin query: "@Query(value = "g.v(scheme).in('TENDERBID_SUPPORTSCHEME').filter{it.status == 1}.filter{it.time == tick}.sort{it.price}._()", type = QueryType.Gremlin)"
+     * 
+     * @param time
+     * @param scheme
+     * @return
+     */
+    public Iterable<TenderBid> findAllSubmittedSortedTenderBidsbyTime(long time, RenewableSupportSchemeTender scheme){
+    	
+    	return tenderBids.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
+    			.filter(p -> p.getStatus() == 1)
+    			.filter(p -> p.getTime() == time)
+    			.sorted(Comparator.comparing(o -> o.getPrice()))
+    			.collect(Collectors.toList());  	
+
+    }
+    
+    
+    /**
+     * Original Germlin query: "g.v(scheme).in('TENDERBID_SUPPORTSCHEME').as('x').out('FOR_TECHNOLOGY').filter{it.name == technologyName}.back('x').filter{it.status == 1}.filter{it.time == tick}.sort{it.price}._()"
+     *  
+     * @param time
+     * @param scheme
+     * @param technologyName
+     * @return
+     */
+    public Iterable<TenderBid> findAllSubmittedSortedTenderBidsbyTechnology(long time, RenewableSupportSchemeTender scheme, String technologyName){
+    	
+    	return tenderBids.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
+    			.filter(p -> p.getTechnology().getName().equals(technologyName))
+    			.filter(p -> p.getStatus() == 1)
+    			.filter(p -> p.getTime() == time)
+    			.sorted(Comparator.comparing(o -> o.getPrice()))
+    			.collect(Collectors.toList());  	
+    }
+    
+    /**
+     * Original Gremlin: "g.v(scheme).in('TENDERBID_SUPPORTSCHEME').as('x')
+     * .out('FOR_TECHNOLOGY').filter{it.name == technologyName}.back('x')
+     * .out('FOR_NODE').filter{it.name == nodeName}.back('x')
+     * .filter{it.status == 1}
+     * .filter{it.time == tick}
+     * .sort{it.price}._()"
+     * 
+     * @param time
+     * @param scheme
+     * @param technologyName
+     * @param nodeName
+     * @return
+     */
+    public Iterable<TenderBid> findAllSubmittedSortedTenderBidsbyTechnologyAndNode(long time,
+            RenewableSupportSchemeTender scheme, String technologyName,
+            String nodeName){
+    	
+    	return tenderBids.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
+    			.filter(p -> p.getTechnology().getName().equals(technologyName))
+    			.filter(p -> p.getPowerGridNode().equals(nodeName))
+    			.filter(p -> p.getStatus() == 1)
+    			.filter(p -> p.getTime() == time)
+    			.sorted(Comparator.comparing(o -> o.getPrice()))
+    			.collect(Collectors.toList());  	
+
+    }
+    
+    
+    /**
+     * This returns the (partly) accepted bids for the current tick, needed to create the corresponding power plant
+     * 
+     * Original Gremlin query: "g.v(scheme).in('TENDERBID_SUPPORTSCHEME')"
+     *       + ".propertyFilter('time', FilterPipe.Filter.EQUAL, tick)"
+     *       + ".propertyFilter('status', FilterPipe.Filter.GREATER_THAN_EQUAL, 2)"
+     *
+     * @param renewableSupportSchemeTender
+     * @param time
+     * @return Iterable<TenderBid>
+     */
+    public Iterable<TenderBid> findAllAcceptedTenderBidsByTime(
+    		RenewableSupportSchemeTender scheme, long time){
+    	
+    	return tenderBids.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
+    			.filter(p -> p.getTime() == time)
+    			.filter(p -> p.getStatus() >= 2)
+    			.collect(Collectors.toList());
+    }
+    
+    
+    /**
+     * This returns the accepted tender bids by scheme that needs to be paid out
+     * 
+     * Original Gremlin query: "g.v(scheme).in('TENDERBID_SUPPORTSCHEME')"
+     *       + ".propertyFilter('start', FilterPipe.Filter.LESS_THAN_EQUAL, tick)"
+     *       + ".propertyFilter('finish', FilterPipe.Filter.GREATER_THAN, tick)"
+     *       + ".propertyFilter('status', FilterPipe.Filter.GREATER_THAN_EQUAL, 2)"
+     * 
+     * @param renewableSupportSchemeTender
+     * @param time
+     * @return Iterable<TenderBid>
+     */    
+    public Iterable<TenderBid> findAllTenderBidsThatShouldBePaidInTimeStep(
+            RenewableSupportSchemeTender scheme, long time){
+    	
+    	return tenderBids.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
+    			.filter(p -> p.getStart() <= time)
+    			.filter(p -> p.getFinish() > time)
+    			.filter(p -> p.getStatus() >= 2)
+    			.collect(Collectors.toList());
+    }
+    
+    
+    // TenderClearingPointRepository
+    
+    /**
+     * 
+     * Original Gremlin query: "g.v(scheme).in('RENEWABLE_SUPPORT_SCHEME_TENDER_CP').propertyFilter('time', FilterPipe.Filter.EQUAL, time)"
+     * 
+     * @param time
+     * @param renewableSupportSchemeTender
+     * @return
+     */
+    
+    public TenderClearingPoint findOneClearingPointForTimeAndRenewableSupportSchemeTender(long time,
+            RenewableSupportSchemeTender renewableSupportSchemeTender) {
+    	
+    	return tenderClearingPoints.stream()
+    			.filter(p -> p.getRenewableSupportSchemeTender().equals(renewableSupportSchemeTender))
+    			.filter(p -> p.getTime() == time)
+    			.findFirst().get();
+    	
+    }
+
+
+    // BaseCostFipRepository
+    
+    /**
+     * Original Gremlin: "g.v(tech).in('BASECOST_FOR_TECHNOLOGY').as('x').out('BASECOST_FOR_LOCATION').filter{it.name==nodeName}.back('x').filter{it.startTime==tick}"
+
+     * 
+     * @param nodeName
+     * @param technology
+     * @param tick
+     * @return
+     * @author Kaveri3012, marcmel
+     */
+    public BaseCostFip findOneBaseCostForTechnologyAndNodeAndTime(String nodeName,
+    		PowerGeneratingTechnology technology, long tick) {
+    	
+    	return baseCostFips.stream()
+    			.filter(p -> p.getTechnology().equals(technology))
+    			.filter(p -> p.getNode().equals(nodeName))
+    			.filter(p -> p.getStartTime() == tick)
+    			.findFirst().get();
+    			
+    	
+    }
+
+    /**
+     * Gremlin query: "g.idx('__types__')[[className:'emlab.gen.domain.policy.renewablesupport.BaseCostFip']].filter{it.startTime==tick}"
+     * @param tick
+     * @return
+     */
+    public BaseCostFip findOneTechnologyNeutralBaseCostForTime(long tick) {
+    	
+    	return baseCostFips.stream()
+    			.filter(p -> p.getStartTime() == tick)
+    			.findAny().get();
+
+    	// TODO check
+    }
+    
+    // Support Price Contract Reps
+    
+    /**
+     * Gremlin: "g.v(plant).in('CONTRACT_FOR_POWERPLANT')"
+     * @param plant
+     * @return
+     */
+    
+    public SupportPriceContract findOneContractByPowerPlant(PowerPlant plant) {
+    	
+    	return supportPriceContracts.stream().filter(p -> p.getPlant().equals(plant)).findFirst().get();
+    	
+    }
+
+    
+    
+    // RenewableSupportSchemeRepository
+    
+    /**
+     * Gremlin: "g.v(scheme).in('BIASFACTOR_FOR_SUPPORTSCHEME').as('x').out('BIASFACTOR_FOR_NODE').filter{it.name==node}.back('x').out('BIASFACTOR_FOR_TECHNOLOGY').filter{it.name==technology}.back('x')"
+     * @param technologyName
+     * @param nodeName
+     * @param scheme
+     * @return
+     */
+    public BiasFactor findBiasFactorGivenTechnologyNodeAndScheme(String technologyName,
+            String nodeName, RenewableSupportFipScheme scheme) {
+    	
+    	return biasFactors.stream()
+    			.filter(p -> p.getScheme().equals(scheme))
+    			.filter(p -> p.getTechnology().getName().equals(technologyName))
+    			.filter(p -> p.getNode().getName(). equals(nodeName))
+    			.findFirst().get();
+    }
+
+    //@Query(value = "g.v(zone).in('RES_SCHEME_FOR_ZONE')", type = QueryType.Gremlin)
+    //public Set<RenewableSupportFipScheme> findSchemesGivenZone(@Param("zone") Zone zone);
+
+
+    
 
     public class PowerPlantDispatchPlanPriceComparator implements Comparator<PowerPlantDispatchPlan> {
 
@@ -1486,5 +1940,6 @@ public class Reps {
             return d.intValue();
         }
     }
+
 
 }

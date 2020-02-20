@@ -322,5 +322,6 @@ public class InvestInPowerGenerationTechnologiesWithCO2ForecastRole<T extends En
 //            setNotWillingToInvest(agent);
 //        }
     }
+ 
 
 }

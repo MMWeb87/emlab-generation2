@@ -19,9 +19,11 @@ import java.util.Set;
 
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.contract.Loan;
+import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.IntermittentTechnologyNodeLoadFactor;
 import emlab.gen.domain.market.electricity.PowerPlantDispatchPlan;
 import emlab.gen.domain.market.electricity.Segment;
+import emlab.gen.domain.market.electricity.SegmentLoad;
 import emlab.gen.repository.Reps;
 import java.util.logging.Logger;
 
@@ -184,6 +186,39 @@ public class PowerPlant {
             return 0;
         }
     }
+    
+    public double getAnnualFullLoadHours() {
+        double factor = 0d;
+        double fullLoadHours = 0d;
+        long numberOfSegments = reps.segments.size();
+        ElectricitySpotMarket market = reps.findElectricitySpotMarketForZone(this.getLocation().getZone());
+        for (SegmentLoad segmentLoad : market.getLoadDurationCurve()) {
+            Segment segment = segmentLoad.getSegment();
+
+            if (technology.isIntermittent()) {
+                factor = this.getIntermittentTechnologyNodeLoadFactor().getLoadFactorForSegment(segment);
+            } else {
+                double segmentID = segment.getSegmentID();
+                double min = technology.getPeakSegmentDependentAvailability();
+                double max = technology.getBaseSegmentDependentAvailability();
+                double segmentPortion = (numberOfSegments - segmentID) / (numberOfSegments - 1); // start
+                // counting
+                // at
+                // 1.
+
+                double range = max - min;
+                factor = max - segmentPortion * range;
+
+            }
+
+            fullLoadHours += factor * segment.getLengthInHours();
+
+        }
+
+        return fullLoadHours;
+
+    }
+
 
     public double getExpectedAvailableCapacity(long futureTick,
             Segment segment, long numberOfSegments) {

@@ -17,27 +17,23 @@ package emlab.gen.domain.policy.renewablesupport;
 
 import java.util.Set;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
+import emlab.gen.engine.Agent;
 
-import agentspring.agent.Agent;
-import agentspring.simulation.SimulationParameter;
-import emlab.gen.domain.agent.DecarbonizationAgent;
+import emlab.gen.domain.agent.EMLabAgent;
 import emlab.gen.domain.agent.Regulator;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 
 /**
- * @author Kaveri3012 A generic renewable support scheme role, meant to be able
+ * A generic renewable support scheme role, meant to be able
  *         to model both price based and quantity based schemes.
+ *         
+ * @author Kaveri3012, marcmel
  */
-@NodeEntity
-public class RenewableSupportSchemeTender extends DecarbonizationAgent implements Agent {
 
-    @RelatedTo(type = "WITH_REGULATOR", elementClass = Regulator.class, direction = Direction.OUTGOING)
+public class RenewableSupportSchemeTender extends EMLabAgent implements Agent {
+
     private Regulator regulator;
 
-    @RelatedTo(type = "TECHNOLOGIES_ELIGIBLE_ARE", elementClass = PowerGeneratingTechnology.class, direction = Direction.OUTGOING)
     private Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligible;
 
     // This target is for the 'actual target' that the regulator must set each
@@ -73,7 +69,6 @@ public class RenewableSupportSchemeTender extends DecarbonizationAgent implement
 
     private boolean revenueByAverageElectricityPrice;
 
-    @SimulationParameter(label = "Support Scheme Duration", from = 0, to = 50)
     private long supportSchemeDuration;
 
     private long futureTenderOperationStartTime;
@@ -182,41 +177,5 @@ public class RenewableSupportSchemeTender extends DecarbonizationAgent implement
     public void setRevenueByAverageElectricityPrice(boolean revenueByAverageElectricityPrice) {
         this.revenueByAverageElectricityPrice = revenueByAverageElectricityPrice;
     }
-    // public double getTotalExpectedConsumption() {
-    // return totalExpectedConsumption;
-    // }
-    //
-    // public void setTotalExpectedConsumption(double totalExpectedConsumption)
-    // {
-    // this.totalExpectedConsumption = totalExpectedConsumption;
-    // }
-    //
-    // public long getTime() {
-    // return time;
-    // }
-    //
-    // public void setTime(long time) {
-    // this.time = time;
-    // }
-
-    // public void specifyNotPersist(double totalExpectedConsumption, long
-    // currentTime) {
-    // this.setTotalExpectedConsumption(totalExpectedConsumption);
-    // this.setTime(currentTime);
-    //
-    // }
-
-    // /**
-    // * @param plant
-    // */
-    //
-    // // All transactional methods below are signified by starting with update
-    // @Transactional
-    // public void specifyAndPersist(double totalExpectedConsumption, long
-    // currentTime) {
-    // this.persist();
-    // this.specifyNotPersist(totalExpectedConsumption, currentTime);
-    //
-    // } Consumer
 
 }

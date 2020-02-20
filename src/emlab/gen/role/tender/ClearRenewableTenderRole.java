@@ -15,33 +15,26 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
-import agentspring.role.AbstractRole;
-import agentspring.role.Role;
-import agentspring.role.RoleComponent;
+import java.util.logging.Level;
+
 import emlab.gen.domain.market.Bid;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.policy.renewablesupport.TenderClearingPoint;
+import emlab.gen.engine.AbstractRole;
+import emlab.gen.engine.Role;
 import emlab.gen.repository.Reps;
 
 /**
  * @author rjjdejeu
  */
-@RoleComponent
 public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
-    @Autowired
-    Reps reps;
 
-    @Autowired
-    Neo4jTemplate template;
+	Reps reps;
 
     @Override
-    @Transactional
     public void act(RenewableSupportSchemeTender scheme) {
 
         // logger.warn("Clear Renewable Tender Role started for: " + scheme);
@@ -55,11 +48,11 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
         // Initialize a sorted list for tender bids
         Iterable<TenderBid> sortedTenderBidsbyPriceAndScheme = null;
-        sortedTenderBidsbyPriceAndScheme = reps.tenderBidRepository
+        sortedTenderBidsbyPriceAndScheme = reps
                 .findAllSubmittedSortedTenderBidsbyTime(getCurrentTick(), scheme);
 
         double tenderQuota = scheme.getAnnualRenewableTargetInMwh();
-        logger.warn("For scheme: " + scheme.getName() + " Tender Quota IN TENDER CLEARING; " + tenderQuota);
+        logger.log(Level.INFO, "For scheme: " + scheme.getName() + " Tender Quota IN TENDER CLEARING; " + tenderQuota);
         double sumOfTenderBidQuantityAccepted = 0d;
         double acceptedSubsidyPrice = 0d;
         boolean isTheTenderCleared = false;
@@ -99,16 +92,17 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
                     sumOfTenderBidQuantityAccepted = sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount();
 
-                    logger.warn("sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
+                    logger.log(Level.INFO, "sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
 
                 }
 
                 // it collects a bid partially if that bid fulfills the quota
                 // partially
+                // TODO MM ?
                 else if (tenderQuota
                         - (sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount()) < clearingEpsilon) {
 
-                    logger.warn("Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
+                    logger.log(Level.INFO, "Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
                             + currentTenderBid.getTechnology() + "bidAmount; " + currentTenderBid.getAmount()
                             + "acceptedSubsidyPrice; " + acceptedSubsidyPrice);
 
@@ -126,35 +120,32 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
                 currentTenderBid.setAcceptedAmount(0);
 
             }
-            currentTenderBid.persist();
+            
+            //currentTenderBid.persist();
 
         } // FOR Loop ends here
 
-        logger.warn("Total No of Bids Accepted " + noOfBidsAccepted + "Accepted subsidy price " + acceptedSubsidyPrice
+        logger.log(Level.INFO, "Total No of Bids Accepted " + noOfBidsAccepted + "Accepted subsidy price " + acceptedSubsidyPrice
                 + "accepted subsidy quantity" + sumOfTenderBidQuantityAccepted);
         // This creates a clearing point that contains general information about
         // the cleared tender
         // volume, subsidy price, current tick, and stores it in the graph
         // database
+        
+        TenderClearingPoint tenderClearingPoint = new TenderClearingPoint();
+        tenderClearingPoint.setPrice(acceptedSubsidyPrice);
+        tenderClearingPoint.setVolume(sumOfTenderBidQuantityAccepted);
+        tenderClearingPoint.setRenewableSupportSchemeTender(scheme);
+        tenderClearingPoint.setTime(getCurrentTick());
 
         if (isTheTenderCleared == true) {
-            TenderClearingPoint tenderClearingPoint = new TenderClearingPoint();
-            tenderClearingPoint.setPrice(acceptedSubsidyPrice);
-            tenderClearingPoint.setRenewableSupportSchemeTender(scheme);
-            tenderClearingPoint.setVolume(sumOfTenderBidQuantityAccepted);
-            tenderClearingPoint.setTime(getCurrentTick());
-            tenderClearingPoint.persist();
+            //tenderClearingPoint.persist();
             // logger.warn("Tender CLEARED at price {} and volume " +
             // tenderClearingPoint.getVolume(),
             // tenderClearingPoint.getPrice());
 
         } else {
-            TenderClearingPoint tenderClearingPoint = new TenderClearingPoint();
-            tenderClearingPoint.setPrice(acceptedSubsidyPrice);
-            tenderClearingPoint.setVolume(sumOfTenderBidQuantityAccepted);
-            tenderClearingPoint.setRenewableSupportSchemeTender(scheme);
-            tenderClearingPoint.setTime(getCurrentTick());
-            tenderClearingPoint.persist();
+            //enderClearingPoint.persist();
             // logger.warn("Tender UNCLEARED at price {} and volume " +
             // tenderClearingPoint.getVolume(),
             // tenderClearingPoint.getPrice());

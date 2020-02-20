@@ -33,6 +33,8 @@ public class CashFlow {
     public static final int STRRESPAYMENT = 10;
     public static final int CAPMARKETPAYMENT = 11;
     public static final int CO2HEDGING = 12;
+    public static final int FEED_IN_PREMIUM = 13;
+    public static final int TENDER_SUBSIDY = 14;
 
 //    @RelatedTo(type = "FROM_AGENT", elementClass = EMLabAgent.class, direction = Direction.OUTGOING)
     private EMLabAgent from;
