@@ -44,8 +44,8 @@ public class Startup {
         boolean haveGUI = false;
         boolean logForApp = true;
 
-
-        Logger.getGlobal().setLevel(Level.WARNING);
+        Logger.getGlobal().setLevel(Level.FINE);
+        
         try {
             FileHandler handler = new FileHandler(reporterDirectoryName + runID + "-log.txt");
             

@@ -191,7 +191,6 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                } else {
 		
 		                    double fixedOMCost = calculateFixedOperatingCost(plant, getCurrentTick());// /
-		                    // plant.getActualNominalCapacity();
 		
 		                    double operatingProfit = expectedGrossProfit - fixedOMCost;
 		
@@ -210,11 +209,16 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    TreeMap<Integer, Double> discountedProjectCapitalOutflow = calculateSimplePowerPlantInvestmentCashFlow(
 		                            technology.getDepreciationTime(), (int) plant.getActualLeadtime(),
 		                            plant.getActualInvestedCapital(), 0);
+		                    logger.log(Level.FINE,"Discounted capital outflow: during building" + discountedProjectCapitalOutflow.toString());
+
 		                    // Creation of in cashflow during operation
 		                    TreeMap<Integer, Double> discountedProjectCashInflow = calculateSimplePowerPlantInvestmentCashFlow(
 		                            technology.getDepreciationTime(), (int) plant.getActualLeadtime(), 0, operatingProfit);
-		
+		                    logger.log(Level.FINE,"Discounted cash inflow during operation:" + discountedProjectCashInflow.toString());
+		                    
 		                    double discountedCapitalCosts = npv(discountedProjectCapitalOutflow, wacc);// are
+		                    logger.log(Level.FINE,"Discounted Capital Costs:" + discountedCapitalCosts);
+		                    
 		                    // defined
 		                    // negative!!
 		                    // plant.getActualNominalCapacity();
@@ -223,6 +227,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    // + discountedCapitalCosts, agent,
 		                    // technology);
 		                    double discountedOpProfit = npv(discountedProjectCashInflow, wacc);
+		                    logger.log(Level.FINE,"Discounted Profit:" + discountedOpProfit);
 		
 		                    //logger.warning(agent + " found that the projected discounted inflows for technology " + technology + " to be " + discountedOpProfit);
 		                    double projectValue = discountedOpProfit + discountedCapitalCosts;
@@ -247,7 +252,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 		                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 		
-		                    logger.warning(
+		                    logger.log(Level.INFO, 
 		                    		"Agent " + agent + " found in market " + market.getName() + "\n"
 		                    				+ " for technology " + technology + "\n "
 		                            		+ " the utility for technology " + technology + " to be " + partWorthUtilityTechnology + "\n"
