@@ -29,6 +29,8 @@ import emlab.gen.domain.technology.Substance;
 import emlab.gen.domain.technology.SubstanceShareInFuelMix;
 import emlab.gen.engine.Schedule;
 import emlab.gen.util.GeometricTrendRegression;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -94,7 +96,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 	        	// This investor role only considers investing into technologies for which it has preferences
 	        	if(agent.getUtilityTechnology().containsKey(technology.getName())) {	        	
 		
-		            PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), agent, getNodeForZone(market.getZone()), technology);
+		            PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), agent, getNodeForZone(market.getZone()), technology);		            		            
 		//            plant.specifyNotPersist(getCurrentTick(), agent, getNodeForZone(market.getZone()), technology);
 		            // if too much capacity of this technology in the pipeline (not
 		            // limited to the 5 years)
@@ -170,19 +172,27 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		
 		                long numberOfSegments = getReps().segments.size();
 		
+		                ArrayList<Double> expectedElectricityPrices = new ArrayList<>();
+		                
 		                // TODO somehow the prices of long-term contracts could also
 		                // be used here to determine the expected profit. Maybe not
 		                // though...
+		                
 		                for (SegmentLoad segmentLoad : market.getLoadDurationCurve()) {
 		                    double expectedElectricityPrice = marketInformation.expectedElectricityPricesPerSegment.get(segmentLoad
 		                            .getSegment());
 		                    double hours = segmentLoad.getSegment().getLengthInHours();
+		                    
+		                    expectedElectricityPrices.add(expectedElectricityPrice);
+		                    
 		                    if (expectedMarginalCost <= expectedElectricityPrice) {
 		                        runningHours += hours;
 		                        expectedGrossProfit += (expectedElectricityPrice - expectedMarginalCost) * hours
-		                                * plant.getAvailableCapacity(futureTimePoint, segmentLoad.getSegment(), numberOfSegments);
+		                        		* plant.getAvailableCapacity(futureTimePoint, segmentLoad.getSegment(), numberOfSegments);
 		                    }
 		                }
+		                
+		                logger.log(Level.FINE, "expect the prices" + expectedElectricityPrices.toString());
 		
 		                //logger.warning(agent + "expects technology " + technology + " to have " + runningHours + " hours running");
 		                //expect to meet minimum running hours?
@@ -209,7 +219,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    TreeMap<Integer, Double> discountedProjectCapitalOutflow = calculateSimplePowerPlantInvestmentCashFlow(
 		                            technology.getDepreciationTime(), (int) plant.getActualLeadtime(),
 		                            plant.getActualInvestedCapital(), 0);
-		                    logger.log(Level.FINE,"Discounted capital outflow: during building" + discountedProjectCapitalOutflow.toString());
+		                    logger.log(Level.FINE,"Discounted capital outflow during building" + discountedProjectCapitalOutflow.toString());
 
 		                    // Creation of in cashflow during operation
 		                    TreeMap<Integer, Double> discountedProjectCashInflow = calculateSimplePowerPlantInvestmentCashFlow(
@@ -228,45 +238,50 @@ public class InvestInPowerGenerationTechnologiesWithPreferenceRole<T extends Ene
 		                    // technology);
 		                    double discountedOpProfit = npv(discountedProjectCashInflow, wacc);
 		                    logger.log(Level.FINE,"Discounted Profit:" + discountedOpProfit);
-		
 		                    //logger.warning(agent + " found that the projected discounted inflows for technology " + technology + " to be " + discountedOpProfit);
+		                    
 		                    double projectValue = discountedOpProfit + discountedCapitalCosts;
-		
-		                    logger.info(agent + " found the project value for technology " + technology + " to be " + Math.round(projectValue / (plant.getActualNominalCapacity() * 1e3)) / 1e3 + " million EUR/kW (running hours: " + runningHours + ")");
-		                    // double projectTotalValue = projectValuePerMW *
-		                    // plant.getActualNominalCapacity();
-		                    // double projectReturnOnInvestment = discountedOpProfit
-		                    // / (-discountedCapitalCosts);
-		                                        
+		                    logger.log(Level.INFO, agent + " found the project value for technology " + technology + " to be " + 
+		                    		Math.round(projectValue / (plant.getActualNominalCapacity() * 1e3)) / 1e3 + " million EUR/kW (running hours: " + runningHours + ")");
+
+		                    // Assuming investor would not want to make a loss
+		                    if (projectValue > 0) {
+		                    	logger.log(Level.INFO, "Because the project value is positive (gain), " + agent + " considers investment options and evaluates other investment attributes.");
 		                    
-		                    double projectReturnOnInvestment = discountedOpProfit / (-discountedCapitalCosts);
-		                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-		
-		                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
-		                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
-		                    double partWorthUtilityCountry = determineUtilityCountry(market, agent);
+			                    double projectReturnOnInvestment = (discountedOpProfit + discountedCapitalCosts) / (-discountedCapitalCosts);
+			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+			
+			                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
+			                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
+			                    double partWorthUtilityCountry = determineUtilityCountry(market, agent);
+			                    
+			                    // TODO MM
+			                    double partWorthUtilityPolicy = 0; 
+			                    
+			                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
+			                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
+			
+			                    logger.log(Level.INFO, 
+			                    		"Agent " + agent + " considers in market " + market.getName() + " for technology " + technology + "\n "
+			                            		+ " the part-worth utility for technology " + technology + " to be " + partWorthUtilityTechnology + "\n"
+			                            		+ " the part-worth utility for return " + technology + " to be " + partWorthUtilityReturn + "\n"
+			                            		+ " the part-worth utility for market " + market + " to be " + partWorthUtilityCountry + "\n"
+			                            		+ " the part-worth utility for policy " + market + " to be " + partWorthUtilityPolicy + "\n"
+
+			                            		+ " the ROI to be " + projectReturnOnInvestment + "\n" 
+			                            		+ " the ROE to be " + projectReturnOnEquity + "\n" 
+
+			                            		+ " the total utility to be " + totalUtility + "\n"
+			                            		+ " the total random utility to be " + totalRandomUtility + "\n");
+			                    	                    	                    
+			                    if(totalRandomUtility > highestValue) {
+			                    	highestValue = totalRandomUtility;
+			                    	bestPlant = plant;
+			                    	bestPlantMarket = market;
+			                    } 
 		                    
-		                    // TODO MM
-		                    double partWorthUtilityPolicy = 0; 
-		                    
-		                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
-		                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
-		
-		                    logger.log(Level.INFO, 
-		                    		"Agent " + agent + " found in market " + market.getName() + "\n"
-		                    				+ " for technology " + technology + "\n "
-		                            		+ " the utility for technology " + technology + " to be " + partWorthUtilityTechnology + "\n"
-		                            		+ " the ROI to be " + projectReturnOnInvestment + "\n" 
-		                            		+ " the ROE to be " + projectReturnOnEquity + "\n" 
-		                            		+ " the utility for return " + technology + " to be " + partWorthUtilityReturn + "\n"
-		                            		+ " the utility for market " + market + " to be " + partWorthUtilityCountry + "\n"
-		                            		+ " the total utility to be " + totalUtility + "\n"
-		                            		+ " the total random utility to be " + totalRandomUtility + "\n");
-		                    	                    	                    
-		                    if(totalRandomUtility > highestValue) {
-		                    	highestValue = totalRandomUtility;
-		                    	bestPlant = plant;
-		                    	bestPlantMarket = market;
+		                    } else {
+		                    	logger.log(Level.INFO, "Because the project value is negative (loss), " + agent + " does not consider this investment option.");
 		                    }
 			                    
 		                }
