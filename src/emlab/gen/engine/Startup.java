@@ -35,6 +35,8 @@ public class Startup {
         //String scenarioName = "Scenario_NL_DE";
         //String scenarioName = "Scenario_NL_hourly"; TODO should be deleted
         //String scenarioName = "Scenario_NL_DE_toy";
+        //String scenarioName = "Scenario_NL_DE_pref";
+        String scenarioName = "Scenario_NL_intermittent_pref2";
 
         String modelRole = "EMlabModelRole";
         String reporterClassName = "DefaultReporter";
@@ -44,7 +46,7 @@ public class Startup {
         boolean haveGUI = false;
         boolean logForApp = true;
 
-        Logger.getGlobal().setLevel(Level.FINE);
+        Logger.getGlobal().setLevel(Level.WARNING);
         
         try {
             FileHandler handler = new FileHandler(reporterDirectoryName + runID + "-log.txt");
