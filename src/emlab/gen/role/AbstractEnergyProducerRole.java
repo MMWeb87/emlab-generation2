@@ -49,12 +49,21 @@ import emlab.gen.trend.GeometricTrend;
 import emlab.gen.util.GeometricTrendRegression;
 import java.util.logging.Level;
 
-public abstract class AbstractEnergyProducerRole<T extends EnergyProducer> extends AbstractRoleWithFunctionsRole<T> {
+public abstract class AbstractEnergyProducerRole<T extends EnergyProducer> extends AbstractRole<T> {
 
     public AbstractEnergyProducerRole(Schedule schedule) {
         super(schedule);
     }
 
+    
+    public double calculateMarginalCO2Cost(PowerPlant powerPlant, long tick, boolean forecast) {
+        double mc = 0d;
+        // fuel cost
+        mc += calculateCO2TaxMarginalCost(powerPlant, tick);
+        mc += calculateCO2MarketMarginalCost(powerPlant, tick, forecast);
+//        logger.info("Margincal cost for plant {} is {}", powerPlant.getName(), mc);
+        return mc;
+    }
 
     public double calculateMarginalCostExclCO2MarketCost(PowerPlant powerPlant, long clearingTick) {
         double mc = 0d;
