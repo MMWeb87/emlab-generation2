@@ -144,6 +144,7 @@ public class EnergyProducer extends EMLabAgent {
         this.equityInterestRate = investmentDiscountRate;
     }
 
+    // TODO integrate in main EMLab?
     public double getEquityRatePriceRiskComponent() {
 		return equityRatePriceRiskComponent;
 	}

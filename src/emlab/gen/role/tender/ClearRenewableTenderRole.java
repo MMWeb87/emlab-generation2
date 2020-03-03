@@ -16,6 +16,7 @@
 package emlab.gen.role.tender;
 
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import emlab.gen.domain.market.Bid;
@@ -40,7 +41,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
 
-        // logger.warn("Clear Renewable Tender Role started for: " + scheme);
+        logger.log(Level.INFO, "Clear Renewable Tender Role started for: " + scheme);
 
         // Zone zone = regulator.getZone();
         // RenewableSupportSchemeTender scheme =
@@ -123,35 +124,25 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
                 currentTenderBid.setAcceptedAmount(0);
 
             }
-            
-            //currentTenderBid.persist();
 
         } // FOR Loop ends here
 
-        logger.log(Level.INFO, "Total No of Bids Accepted " + noOfBidsAccepted + "Accepted subsidy price " + acceptedSubsidyPrice
-                + "accepted subsidy quantity" + sumOfTenderBidQuantityAccepted);
+        logger.log(Level.FINE, "Total No of Bids accepted: " + noOfBidsAccepted + ". Accepted subsidy price: " + acceptedSubsidyPrice
+                + " and accepted subsidy quantity: " + sumOfTenderBidQuantityAccepted);
+        
         // This creates a clearing point that contains general information about
         // the cleared tender
         // volume, subsidy price, current tick, and stores it in the graph
         // database
         
-        TenderClearingPoint tenderClearingPoint = new TenderClearingPoint();
-        tenderClearingPoint.setPrice(acceptedSubsidyPrice);
-        tenderClearingPoint.setVolume(sumOfTenderBidQuantityAccepted);
-        tenderClearingPoint.setRenewableSupportSchemeTender(scheme);
-        tenderClearingPoint.setTime(getCurrentTick());
+        TenderClearingPoint tenderClearingPoint = getReps().createTenderClearingPoint(scheme, acceptedSubsidyPrice, sumOfTenderBidQuantityAccepted, getCurrentTick());
+        // TODO MM what about forecast and AbstractMarket of object?
 
         if (isTheTenderCleared == true) {
-            //tenderClearingPoint.persist();
-            // logger.warn("Tender CLEARED at price {} and volume " +
-            // tenderClearingPoint.getVolume(),
-            // tenderClearingPoint.getPrice());
+             logger.log(Level.FINE, "Tender CLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
 
         } else {
-            //enderClearingPoint.persist();
-            // logger.warn("Tender UNCLEARED at price {} and volume " +
-            // tenderClearingPoint.getVolume(),
-            // tenderClearingPoint.getPrice());
+            logger.log(Level.FINE, "Tender UNCLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
 
         }
 
