@@ -21,10 +21,13 @@ import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.SegmentLoad;
 import emlab.gen.domain.policy.PowerGeneratingTechnologyTarget;
+import emlab.gen.domain.policy.renewablesupport.BiasFactor;
 import emlab.gen.domain.policy.renewablesupport.RenewablePotentialLimit;
+import emlab.gen.domain.policy.renewablesupport.RenewableSupportFipScheme;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.RenewableTarget;
 import emlab.gen.domain.technology.Interconnector;
+import emlab.gen.domain.technology.IntermittentResourceProfile;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
@@ -35,17 +38,21 @@ import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesRole;
 import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesWithTenderRole;
 import emlab.gen.role.investment.TargetInvestmentRole;
 import emlab.gen.trend.GeometricTrend;
+import emlab.gen.trend.HourlyCSVTimeSeries;
 import emlab.gen.trend.StepTrend;
 import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.trend.TriangularTrend;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ejlchappin
+ * @author marcmel
  */
-public class Scenario_NL_auctiontest implements Scenario {
+public class Scenario_NL_intermittent_auction_toy implements Scenario {
 
     private String name;
 
@@ -73,17 +80,14 @@ public class Scenario_NL_auctiontest implements Scenario {
         reps.emlabModel.setCapDeviationCriterion(0.03);
         reps.emlabModel.setIterationSpeedCriterion(0.005);
         reps.emlabModel.setIterationSpeedFactor(3);
-        reps.emlabModel.setRealRenewableDataImplemented(false);
+        reps.emlabModel.setRealRenewableDataImplemented(true);
         reps.emlabModel.setCo2TradingImplemented(true);
         
-        reps.emlabModel.setFeedInPremiumImplemented(false);
+        reps.emlabModel.setFeedInPremiumImplemented(true);
         reps.emlabModel.setRenewableTenderSchemeImplemented(true);
        
         reps.emlabModel.setName("EMLab Model");
 
-        
-       
-        
         //Demand
         TriangularTrend demandGrowthTrendNL = new TriangularTrend();
         demandGrowthTrendNL.setTop(1.02);
@@ -121,16 +125,49 @@ public class Scenario_NL_auctiontest implements Scenario {
         Zone nl = new Zone();
         nl.setName("nl");
         reps.zones.add(nl);
-
+  
         Zone de = new Zone();
         de.setName("de");
         reps.zones.add(de);
-        
+
         PowerGridNode nlNode = new PowerGridNode();
-            nlNode.setName("nlNode");
+        nlNode.setName("nlNode");
         nlNode.setCapacityMultiplicationFactor(1.0);
         nlNode.setZone(nl);
         reps.powerGridNodes.add(nlNode);
+        
+        
+        TimeSeriesCSVReader lcReaderNL = new TimeSeriesCSVReader();
+        lcReaderNL.setFilename("/data/ldcNLDE-hourly.csv");
+        lcReaderNL.setDelimiter(",");
+        lcReaderNL.readCSVVariable("NL");
+        nlNode.setHourlyDemand(lcReaderNL);
+
+        //  Intermittent Production Profiles
+        IntermittentResourceProfile windProfileOffShoreNL = new IntermittentResourceProfile();
+        windProfileOffShoreNL.setFilename("/data/renewablesNinja2015Profiles.csv");
+        windProfileOffShoreNL.setDelimiter(",");
+        windProfileOffShoreNL.readCSVVariable("OFF_NL");
+        //windProfileOffShoreNL.setTimeSeries(new Random().doubles(8760).toArray()); //TODO random nrs for now
+        windProfileOffShoreNL.setIntermittentProductionNode(nlNode);
+        reps.intermittentResourceProfiles.add(windProfileOffShoreNL);
+
+        IntermittentResourceProfile windProfileOnShoreNL = new IntermittentResourceProfile();
+        windProfileOnShoreNL.setFilename("/data/renewablesNinja2015Profiles.csv");
+        windProfileOnShoreNL.setDelimiter(",");
+        windProfileOnShoreNL.readCSVVariable("ON_NL");
+        //windProfileOnShoreNL.setTimeSeries(new Random().doubles(8760).toArray()); //TODO random nrs for now
+        windProfileOnShoreNL.setIntermittentProductionNode(nlNode);
+        reps.intermittentResourceProfiles.add(windProfileOnShoreNL);
+        
+        IntermittentResourceProfile solarProfileNL = new IntermittentResourceProfile();
+        solarProfileNL.setFilename("/data/renewablesNinja2015Profiles.csv");
+        solarProfileNL.setDelimiter(",");
+        solarProfileNL.readCSVVariable("PV_NL");
+        //solarProfileNL.setTimeSeries(new Random().doubles(8760).toArray()); //TODO random nrs for now
+        solarProfileNL.setIntermittentProductionNode(nlNode);
+        reps.intermittentResourceProfiles.add(solarProfileNL);
+        
         
         Interconnector interconnectorNetherlandsGermany = new Interconnector();
         interconnectorNetherlandsGermany.setCapacity(0);
@@ -151,6 +188,7 @@ public class Scenario_NL_auctiontest implements Scenario {
         ldcReader.readCSVVariable("load");
         Set<SegmentLoad> loadDurationCurveNL = ldcFactory.createLDC(ldcReader.getTimeSeries());
         
+        
         ElectricitySpotMarket netherlandsElectricitySpotMarket = reps.createElectricitySpotMarket("DutchMarket", 2000, 40, false, electricity, demandGrowthTrendNL, loadDurationCurveNL, nl);
         
         reps.createCO2Auction("CO2Auction", 0, true, co2);      
@@ -161,12 +199,10 @@ public class Scenario_NL_auctiontest implements Scenario {
         energyConsumer.setContractDurationPreferenceFactor(.03);
         energyConsumer.setLtcMaximumCoverageFraction(0.8);
         reps.energyConsumers.add(energyConsumer);
-        
-        
 
-        // TODO Investmentole here
         //InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
         InvestInPowerGenerationTechnologiesWithTenderRole tenderInvestmentRole = new InvestInPowerGenerationTechnologiesWithTenderRole(schedule);
+
 
         EnergyProducer energyProducerNLA = reps.createEnergyProducer();
         energyProducerNLA.setName("Energy Producer NL A");
@@ -206,62 +242,62 @@ public class Scenario_NL_auctiontest implements Scenario {
         energyProducerNLB.setCash(3e9);
         energyProducerNLB.setInvestmentRole(tenderInvestmentRole);
         
-        EnergyProducer energyProducerINTA = reps.createEnergyProducer();
-        energyProducerINTA.setName("Energy Producer International A");
-        energyProducerINTA.setInvestorMarket(netherlandsElectricitySpotMarket);
-        energyProducerINTA.setNumberOfYearsBacklookingForForecasting(5);
-        energyProducerINTA.setPriceMarkUp(1.0);
-        energyProducerINTA.setWillingToInvest(true);
-        energyProducerINTA.setDownpaymentFractionOfCash(.5);
-        energyProducerINTA.setDismantlingRequiredOperatingProfit(0);
-        energyProducerINTA.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
-        energyProducerINTA.setDebtRatioOfInvestments(0.7);
-        energyProducerINTA.setLoanInterestRate(0.1);
-        energyProducerINTA.setEquityInterestRate(0.1);
-        energyProducerINTA.setPastTimeHorizon(5);
-        energyProducerINTA.setInvestmentFutureTimeHorizon(7);
-        energyProducerINTA.setLongTermContractPastTimeHorizon(3);
-        energyProducerINTA.setLongTermContractMargin(0.1);
-        energyProducerINTA.setCash(3e9);
-        energyProducerINTA.setInvestmentRole(tenderInvestmentRole);
-
-        EnergyProducer energyProducerINTB = reps.createEnergyProducer();
-        energyProducerINTB.setName("Energy Producer International B");
-        energyProducerINTB.setInvestorMarket(netherlandsElectricitySpotMarket);
-        energyProducerINTB.setNumberOfYearsBacklookingForForecasting(5);
-        energyProducerINTB.setPriceMarkUp(1.0);
-        energyProducerINTB.setWillingToInvest(true);
-        energyProducerINTB.setDownpaymentFractionOfCash(.5);
-        energyProducerINTB.setDismantlingRequiredOperatingProfit(0);
-        energyProducerINTB.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
-        energyProducerINTB.setDebtRatioOfInvestments(0.7);
-        energyProducerINTB.setLoanInterestRate(0.1);
-        energyProducerINTB.setEquityInterestRate(0.1);
-        energyProducerINTB.setPastTimeHorizon(5);
-        energyProducerINTB.setInvestmentFutureTimeHorizon(7);
-        energyProducerINTB.setLongTermContractPastTimeHorizon(3);
-        energyProducerINTB.setLongTermContractMargin(0.1);
-        energyProducerINTB.setCash(3e9);
-        energyProducerINTB.setInvestmentRole(tenderInvestmentRole);
-        
-        EnergyProducer energyProducerINTC = reps.createEnergyProducer();
-        energyProducerINTC.setName("Energy Producer International C");
-        energyProducerINTC.setInvestorMarket(netherlandsElectricitySpotMarket);
-        energyProducerINTC.setNumberOfYearsBacklookingForForecasting(5);
-        energyProducerINTC.setPriceMarkUp(1.0);
-        energyProducerINTC.setWillingToInvest(true);
-        energyProducerINTC.setDownpaymentFractionOfCash(.5);
-        energyProducerINTC.setDismantlingRequiredOperatingProfit(0);
-        energyProducerINTC.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
-        energyProducerINTC.setDebtRatioOfInvestments(0.7);
-        energyProducerINTC.setLoanInterestRate(0.1);
-        energyProducerINTC.setEquityInterestRate(0.1);
-        energyProducerINTC.setPastTimeHorizon(5);
-        energyProducerINTC.setInvestmentFutureTimeHorizon(7);
-        energyProducerINTC.setLongTermContractPastTimeHorizon(3);
-        energyProducerINTC.setLongTermContractMargin(0.1);
-        energyProducerINTC.setCash(3e9);
-        energyProducerINTC.setInvestmentRole(tenderInvestmentRole);
+//        EnergyProducer energyProducerINTA = reps.createEnergyProducer();
+//        energyProducerINTA.setName("Energy Producer International A");
+//        energyProducerINTA.setInvestorMarket(netherlandsElectricitySpotMarket);
+//        energyProducerINTA.setNumberOfYearsBacklookingForForecasting(5);
+//        energyProducerINTA.setPriceMarkUp(1.0);
+//        energyProducerINTA.setWillingToInvest(true);
+//        energyProducerINTA.setDownpaymentFractionOfCash(.5);
+//        energyProducerINTA.setDismantlingRequiredOperatingProfit(0);
+//        energyProducerINTA.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+//        energyProducerINTA.setDebtRatioOfInvestments(0.7);
+//        energyProducerINTA.setLoanInterestRate(0.1);
+//        energyProducerINTA.setEquityInterestRate(0.1);
+//        energyProducerINTA.setPastTimeHorizon(5);
+//        energyProducerINTA.setInvestmentFutureTimeHorizon(7);
+//        energyProducerINTA.setLongTermContractPastTimeHorizon(3);
+//        energyProducerINTA.setLongTermContractMargin(0.1);
+//        energyProducerINTA.setCash(3e9);
+//        energyProducerINTA.setInvestmentRole(tenderInvestmentRole);
+//
+//        EnergyProducer energyProducerINTB = reps.createEnergyProducer();
+//        energyProducerINTB.setName("Energy Producer International B");
+//        energyProducerINTB.setInvestorMarket(netherlandsElectricitySpotMarket);
+//        energyProducerINTB.setNumberOfYearsBacklookingForForecasting(5);
+//        energyProducerINTB.setPriceMarkUp(1.0);
+//        energyProducerINTB.setWillingToInvest(true);
+//        energyProducerINTB.setDownpaymentFractionOfCash(.5);
+//        energyProducerINTB.setDismantlingRequiredOperatingProfit(0);
+//        energyProducerINTB.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+//        energyProducerINTB.setDebtRatioOfInvestments(0.7);
+//        energyProducerINTB.setLoanInterestRate(0.1);
+//        energyProducerINTB.setEquityInterestRate(0.1);
+//        energyProducerINTB.setPastTimeHorizon(5);
+//        energyProducerINTB.setInvestmentFutureTimeHorizon(7);
+//        energyProducerINTB.setLongTermContractPastTimeHorizon(3);
+//        energyProducerINTB.setLongTermContractMargin(0.1);
+//        energyProducerINTB.setCash(3e9);
+//        energyProducerINTB.setInvestmentRole(tenderInvestmentRole);
+//        
+//        EnergyProducer energyProducerINTC = reps.createEnergyProducer();
+//        energyProducerINTC.setName("Energy Producer International C");
+//        energyProducerINTC.setInvestorMarket(netherlandsElectricitySpotMarket);
+//        energyProducerINTC.setNumberOfYearsBacklookingForForecasting(5);
+//        energyProducerINTC.setPriceMarkUp(1.0);
+//        energyProducerINTC.setWillingToInvest(true);
+//        energyProducerINTC.setDownpaymentFractionOfCash(.5);
+//        energyProducerINTC.setDismantlingRequiredOperatingProfit(0);
+//        energyProducerINTC.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+//        energyProducerINTC.setDebtRatioOfInvestments(0.7);
+//        energyProducerINTC.setLoanInterestRate(0.1);
+//        energyProducerINTC.setEquityInterestRate(0.1);
+//        energyProducerINTC.setPastTimeHorizon(5);
+//        energyProducerINTC.setInvestmentFutureTimeHorizon(7);
+//        energyProducerINTC.setLongTermContractPastTimeHorizon(3);
+//        energyProducerINTC.setLongTermContractMargin(0.1);
+//        energyProducerINTC.setCash(3e9);
+//        energyProducerINTC.setInvestmentRole(tenderInvestmentRole);
         
         reps.bigBank = new BigBank();
 
@@ -530,7 +566,7 @@ public class Scenario_NL_auctiontest implements Scenario {
         PowerGeneratingTechnology pv = reps.createPowerGeneratingTechnology();
         pv.setName("Photovoltaic PGT");
         pv.setCapacity(500);
-        //pv.setIntermittent(true);//TODO EC added
+        pv.setIntermittent(true);
         pv.setApplicableForLongTermContract(true);
         pv.setPeakSegmentDependentAvailability(0.08);
         pv.setBaseSegmentDependentAvailability(0.16);
@@ -591,7 +627,7 @@ public class Scenario_NL_auctiontest implements Scenario {
         PowerGeneratingTechnology windOnshore = reps.createPowerGeneratingTechnology();
         windOnshore.setName("Onshore wind PGT");
         windOnshore.setCapacity(600);
-        //windOnshore.setIntermittent(true);//TODO EC added
+        windOnshore.setIntermittent(true);
         windOnshore.setApplicableForLongTermContract(true);
         windOnshore.setPeakSegmentDependentAvailability(0.05);
         windOnshore.setBaseSegmentDependentAvailability(0.40);
@@ -622,7 +658,7 @@ public class Scenario_NL_auctiontest implements Scenario {
         PowerGeneratingTechnology windOffshore = reps.createPowerGeneratingTechnology();
         windOffshore.setName("Offshore wind PGT");
         windOffshore.setCapacity(600);
-       //windOffshore.setIntermittent(true);//TODO EC added
+        windOffshore.setIntermittent(true);
         windOffshore.setApplicableForLongTermContract(true);
         windOffshore.setPeakSegmentDependentAvailability(0.08);
         windOffshore.setBaseSegmentDependentAvailability(0.65);
@@ -667,23 +703,63 @@ public class Scenario_NL_auctiontest implements Scenario {
         investor.setName("TargetInvestorNL");
         investor.setPowerGenerationTechnologyTargets(targets);
         investor.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
+        investor.setInvestorMarket(netherlandsElectricitySpotMarket);
         reps.targetInvestors.add(investor);
         
+        
+        
+        windProfileOnShoreNL.setIntermittentTechnology(windOnshore);
+        windProfileOffShoreNL.setIntermittentTechnology(windOffshore);
+        solarProfileNL.setIntermittentTechnology(pv);
+                
         PowerPlantCSVFactory powerPlantCSVFactory = new PowerPlantCSVFactory(reps);
-        powerPlantCSVFactory.setCsvFile("/data/dutchPlants2015.csv");
+        powerPlantCSVFactory.setCsvFile("/data/dutchPlants2015-toy.csv");
         for (PowerPlant plant : powerPlantCSVFactory.read()) {
             reps.createPowerPlantFromPlant(plant);
-        
+
+        }
         
         // Policy
-            
-      	// Regulator NL
+        
+    	// Regulator NL
         Regulator regulatorNl = new Regulator();
         regulatorNl.setName("regulatorNetherlands");
         regulatorNl.setNumberOfYearsLookingBackToForecastDemand(4);
         regulatorNl.setZone(nl);
         reps.regulators.add(regulatorNl);
+        
+        //<!-- Feed in Premium -->
+        
+        RenewableSupportFipScheme premiumNL = new RenewableSupportFipScheme();
+        premiumNL.setSupportSchemeDuration(10);
+        premiumNL.setEmRevenuePaidExpost(true);
+        premiumNL.setFutureSchemeStartTime(5);
+        premiumNL.setAvgElectricityPriceBasedPremiumEnabled(false);
+        premiumNL.setTechnologySpecificityEnabled(false);
+        premiumNL.setCostContainmentMechanismEnabled(false);
+        premiumNL.setRegulator(regulatorNl);
+        premiumNL.setZone(nl);
+        HashSet<PowerGeneratingTechnology> powerGeneratingTechnologiesEligible = new HashSet<>();
+        powerGeneratingTechnologiesEligible.add(windOnshore);
+        powerGeneratingTechnologiesEligible.add(biomassCHP);
+        premiumNL.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligible);
+        reps.renewableSupportFipSchemes.add(premiumNL);
+        
+        BiasFactor biasFactorNL1Wind  = new BiasFactor();
+        biasFactorNL1Wind.setFeedInPremiumBiasFactor(1);
+        biasFactorNL1Wind.setDegressionFactor(0.06);
+        biasFactorNL1Wind.setNode(nlNode);
+        biasFactorNL1Wind.setScheme(premiumNL);
+        biasFactorNL1Wind.setTechnology(windOnshore);
+        reps.biasFactors.add(biasFactorNL1Wind);
+        
+        BiasFactor biasFactorNL1biomass  = new BiasFactor();
+        biasFactorNL1biomass.setFeedInPremiumBiasFactor(1);
+        biasFactorNL1biomass.setDegressionFactor(0.06);
+        biasFactorNL1biomass.setNode(nlNode);
+        biasFactorNL1biomass.setScheme(premiumNL);
+        biasFactorNL1biomass.setTechnology(biomassCHP);
+        reps.biasFactors.add(biasFactorNL1biomass);
         
         
         // Renewable Tender Scheme
@@ -792,10 +868,7 @@ public class Scenario_NL_auctiontest implements Scenario {
         renewablePotentialLimitNLwindOnshore.setRegulator(regulatorNl);
         reps.renewablePotentialLimits.add(renewablePotentialLimitNLwindOnshore);
         
-               				
-
-       
         
-        }
+
     }
 }
