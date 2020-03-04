@@ -77,7 +77,6 @@ import java.util.stream.Collectors;
 
 
 
-
 /**
  * @author EJL Chappin, marcmel
  *
@@ -180,13 +179,13 @@ public class Reps {
     
     public ArrayList<TenderClearingPoint> tenderClearingPoints = new ArrayList<>();
     
-    public ArrayList<BaseCostFip> baseCostFips = new ArrayList<>();
+    public ArrayList<BaseCostFip> baseCostFips = new ArrayList<>(); // TODO empty?
     
-    public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>();
+    public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>(); // TODO empty?
     
-    public ArrayList<BiasFactor> biasFactors = new ArrayList<>();
+    public ArrayList<BiasFactor> biasFactors = new ArrayList<>(); // TODO empty?
 
-    public ArrayList<Regulator> regulators = new ArrayList<>();
+    public ArrayList<Regulator> regulators = new ArrayList<>(); // TODO empty?
 
     
 
@@ -523,6 +522,9 @@ public class Reps {
         point.setForecast(forecast);
         return point;
     }
+    
+    
+ 
 
     public Iterable<LongTermContract> findLongTermContractsForEnergyProducerActiveAtTime(EnergyProducer energyProducer, long time) {
         Logger.getGlobal().log(Level.SEVERE, "Not yet implemented...");
@@ -853,13 +855,13 @@ public class Reps {
             boolean forecast) {
 
         Optional<PowerPlantDispatchPlan> plan = powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time).filter(p -> p.getPowerPlant().equals(plant)).filter(p -> p.getSegment().equals(segment)).filter(p -> p.isForecast() == forecast).findFirst();
-        return plan.get();
+        //return plan.get();
        // return plan.orElse(null);
-//        if (plan.isPresent()) {
-//            return plan.get();
-//        } else {
-//            return null;
-//        }
+        if (plan.isPresent()) {
+            return plan.get();
+        } else {
+            return null;
+        }
     }
 
     //TODO this is an expensive method!!
@@ -1692,11 +1694,17 @@ public class Reps {
     public TimeSeriesCSVReader findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(
             Regulator regulator, String technologyName) {
 
-       	return renewablePotentialLimits.stream()
+    	Optional<RenewablePotentialLimit> optional = renewablePotentialLimits.stream()
     			.filter(p -> p.getRegulator().equals(regulator))
     			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
     			.filter(p -> p.isTargetTechnologySpecific() == true)
-    			.findFirst().get().getYearlyRenewableTargetTimeSeries();	
+    			.findFirst();
+       	
+        if (optional.isPresent()) {
+            return optional.get().getYearlyRenewableTargetTimeSeries();
+        } else {
+            return null;
+        }
     }
     
 
@@ -1852,6 +1860,34 @@ public class Reps {
     }
     
     
+    public TenderBid submitTenderBidToMarket(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
+            long startTime, long finishTime, double bidPricePerMWh, PowerGeneratingTechnology technology,
+            long currentTime, int status, RenewableSupportSchemeTender scheme, double cashNeededForPlantDownpayments,
+            String investor) {
+
+        TenderBid tenderBid = new TenderBid();
+        
+        tenderBid.setAmount(amount);
+        tenderBid.setPowerPlant(plant);
+        tenderBid.setBidder(agent);
+        tenderBid.setZone(zone);
+        tenderBid.setPowerGridNode(node);
+        tenderBid.setStart(startTime);
+        tenderBid.setFinish(finishTime);
+        tenderBid.setPrice(bidPricePerMWh);
+        tenderBid.setTechnology(technology);
+        tenderBid.setTime(currentTime);
+        tenderBid.setStatus(status);
+        tenderBid.setRenewableSupportSchemeTender(scheme);
+        tenderBid.setCashNeededForPlantDownpayments(cashNeededForPlantDownpayments);
+        tenderBid.setInvestor(investor);
+        
+        tenderBids.add(tenderBid);
+        return tenderBid;
+       
+    }
+    
+    
     // TenderClearingPointRepository
     
     /**
@@ -1871,6 +1907,20 @@ public class Reps {
     			.filter(p -> p.getTime() == time)
     			.findFirst().get();
     	
+    }
+    
+    public TenderClearingPoint createTenderClearingPoint(RenewableSupportSchemeTender scheme , double price, double volume,
+            long time) {
+
+    	TenderClearingPoint  point = new TenderClearingPoint();
+        tenderClearingPoints.add(point);
+        
+        point.setPrice(price);
+        point.setVolume(volume);
+        point.setRenewableSupportSchemeTender(scheme);
+        point.setTime(time);
+        return point;
+
     }
 
 
@@ -1912,6 +1962,47 @@ public class Reps {
     	// TODO check
     }
     
+    /**
+     * Gremlin: g.idx('__types__')[[className:'emlab.gen.domain.policy.renewablesupport.BaseCostFip']].filter{it.startTime>=timeFrom && it.startTime<=timeTo}
+     * @param timeFrom
+     * @param timeTo
+     * @return
+     */
+    public Iterable<BaseCostFip> findAllTechnologyNeutralBaseCostForTimeRange(long timeFrom,
+            long timeTo){
+    	
+    	return baseCostFips.stream()
+    			.filter(p -> p.getStartTime() >= timeFrom)
+    			.filter(p -> p.getStartTime() <= timeTo)
+    			.collect(Collectors.toList());
+    	
+    }
+
+    
+    /**
+     * Gremlon query: "g.v(tech).in('BASECOST_FOR_TECHNOLOGY').as('x').out('BASECOST_FOR_LOCATION').filter{it.name==nodeName}.back('x').filter{it.startTime>=timeFrom && it.startTime<=timeTo}
+     * 
+     * @param nodeName
+     * @param technology
+     * @param timeFrom
+     * @param timeTo
+     * @return
+     */
+    public Iterable<BaseCostFip> findAllBaseCostFipsForTechnologyLocationAndTimeRange(String nodeName,
+            PowerGeneratingTechnology technology, long timeFrom,
+            long timeTo){
+    	
+    	return baseCostFips.stream()
+    			.filter(p -> p.getTechnology().equals(technology))
+    			.filter(p -> p.getNode().getName().equals(nodeName))
+    			.filter(p -> p.getStartTime() >= timeFrom)
+    			.filter(p -> p.getStartTime() <= timeTo)
+    			.collect(Collectors.toList());
+    			
+    	
+    }
+
+    
     // Support Price Contract Reps
     
     /**
@@ -1947,8 +2038,21 @@ public class Reps {
     			.findFirst().get();
     }
 
-    //@Query(value = "g.v(zone).in('RES_SCHEME_FOR_ZONE')", type = QueryType.Gremlin)
-    //public Set<RenewableSupportFipScheme> findSchemesGivenZone(@Param("zone") Zone zone);
+    /**
+     * Gremlin: "g.v(zone).in('RES_SCHEME_FOR_ZONE')"
+
+     * @param zone
+     * @return
+     */
+    
+    public Set<RenewableSupportFipScheme> findSchemesGivenZone(Zone zone){
+    	
+    	return renewableSupportFipSchemes.stream()
+    			.filter(p -> p.getZone().equals(zone))
+    			.collect(Collectors.toSet());
+    	
+    }
+    
 
 
     

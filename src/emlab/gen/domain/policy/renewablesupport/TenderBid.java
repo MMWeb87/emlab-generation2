@@ -15,7 +15,6 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
-import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.Bid;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
@@ -123,45 +122,9 @@ public class TenderBid extends Bid {
         this.technology = technology;
     }
 
-    public void specify(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
-            long startTime, long finishTime, double bidPricePerMWh, PowerGeneratingTechnology technology,
-            long currentTime, int status, RenewableSupportSchemeTender scheme, double cashNeededForPlantDownpayments,
-            String investor) {
-        this.setAmount(amount);
-        this.setPowerPlant(plant);
-        this.setBidder(agent);
-        this.setZone(zone);
-        this.setPowerGridNode(node);
-        this.setStart(startTime);
-        this.setFinish(finishTime);
-        this.setPrice(bidPricePerMWh);
-        this.setTechnology(technology);
-        this.setTime(currentTime);
-        this.setStatus(status);
-        this.setRenewableSupportSchemeTender(scheme);
-        this.setCashNeededForPlantDownpayments(cashNeededForPlantDownpayments);
-        this.setInvestor(investor);
-
-    }
-
-    /**
-     * @param plant
-     */
-
-    // All transactional methods below are signified by starting with update
-    public void specifyAndPersist(double amount, PowerPlant plant, EnergyProducer agent, Zone zone, PowerGridNode node,
-            long startTime, long finishTime, double bidPricePerMWh, PowerGeneratingTechnology technology,
-            long currentTime, int status, RenewableSupportSchemeTender scheme, double cashNeededForPlantDownpayments,
-            String investor) {
-        //this.persist();
-        this.specify(amount, plant, agent, zone, node, startTime, finishTime, bidPricePerMWh, technology,
-                currentTime, status, scheme, cashNeededForPlantDownpayments, investor);
-
-    }
-
     @Override
     public String toString() {
-        return "for " + getBidder() + " price: " + getPrice() + " amount: " + getAmount() + " cash needed downpayment "
-                + cashNeededForPlantDownpayments + " " + getRenewableSupportSchemeTender() + " tech " + getTechnology();
+        return "TenderBid for " + getBidder() + "; price: " + getPrice() + "; amount: " + getAmount() + "; cash needed for downpayment "
+                + cashNeededForPlantDownpayments + "; " + getRenewableSupportSchemeTender() + "; technology " + getTechnology();
     }
 }
