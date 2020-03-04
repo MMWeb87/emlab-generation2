@@ -731,6 +731,7 @@ public class Scenario_NL_intermittent_auction_toy implements Scenario {
         //<!-- Feed in Premium -->
         
         RenewableSupportFipScheme premiumNL = new RenewableSupportFipScheme();
+        premiumNL.setName("Renewable Support Scheme");
         premiumNL.setSupportSchemeDuration(10);
         premiumNL.setEmRevenuePaidExpost(true);
         premiumNL.setFutureSchemeStartTime(5);

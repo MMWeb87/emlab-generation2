@@ -18,7 +18,6 @@ package emlab.gen.role.tender;
 import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
-import emlab.gen.domain.contract.CashFlow;
 import emlab.gen.domain.contract.Loan;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
@@ -26,20 +25,26 @@ import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
-import emlab.gen.repository.Reps;
-import emlab.gen.role.AbstractRoleWithFunctionsRole;
+import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesRole;
 
 /**
  * @author rjjdejeu
  *
  */
 
-public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithFunctionsRole<RenewableSupportSchemeTender>
+public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {
     
     public CreatePowerPlantsOfAcceptedTenderBidsRole(Schedule schedule) {
         super(schedule);
     }
+    
+    class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesRole<EnergyProducer>{
+    	
+		public EvaluateInvestmentRole(Schedule schedule) {
+			super(schedule);
+		}
+	}
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
@@ -64,6 +69,8 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithF
             // currentTenderBid.getPowerPlant());
 
         	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
+        	EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);
+        	
             PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
             		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
             currentTenderBid.setPowerPlant(plant);                            
@@ -75,9 +82,9 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRoleWithF
                     * (1 - bidder.getDebtRatioOfInvestments());
             double investmentCostPayedByDebt = plant.getActualInvestedCapital() * bidder.getDebtRatioOfInvestments();
             double downPayment = investmentCostPayedByEquity;
-            createSpreadOutDownPayments(bidder, manufacturer, downPayment, plant);
+            evaluateInvestment.createSpreadOutDownPayments(bidder, manufacturer, downPayment, plant);
 
-            double amount = determineLoanAnnuities(investmentCostPayedByDebt,
+            double amount = evaluateInvestment.determineLoanAnnuities(investmentCostPayedByDebt,
                     plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
             // logger.warn("Loan amount is: " + amount);
             Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
