@@ -29,7 +29,7 @@ import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
 import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesRole;
-import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesWithPreferenceRole;
+import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesWithPreferencesRole;
 import emlab.gen.role.investment.TargetInvestmentRole;
 import emlab.gen.trend.GeometricTrend;
 import emlab.gen.trend.HourlyCSVTimeSeries;
@@ -214,7 +214,7 @@ public class Scenario_NL_intermittent_pref2 implements Scenario {
 
         
         InvestInPowerGenerationTechnologiesRole defaultInvestmentRole = new InvestInPowerGenerationTechnologiesRole(schedule);
-        InvestInPowerGenerationTechnologiesWithPreferenceRole preferenceInvestmentRole = new InvestInPowerGenerationTechnologiesWithPreferenceRole(schedule);
+        InvestInPowerGenerationTechnologiesWithPreferencesRole preferenceInvestmentRole = new InvestInPowerGenerationTechnologiesWithPreferencesRole(schedule);
         
         preferenceInvestmentRole.setRandomUtilityBound(0.05); // adding some randomness according to random utility theory
         
