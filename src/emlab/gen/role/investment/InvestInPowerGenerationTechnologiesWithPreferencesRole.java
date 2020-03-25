@@ -52,8 +52,8 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
     	setUseFundamentalCO2Forecast(true);
     	initEvaluationForEnergyProducer(agent, agent.getInvestorMarket());
 
-        double highestValue = Double.MIN_VALUE;
         PowerPlant bestPlant = null;
+        double highestValue = Double.MIN_VALUE;
 
         for (PowerGeneratingTechnology technology : getReps().powerGeneratingTechnologies) {
         	
@@ -71,14 +71,11 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 	                PowerPlant plant = createPowerPlant(technology, node);
 	                FutureCapacityExpectation futureCapacityExpectation = new FutureCapacityExpectation(technology, plant, node);
 	
-	                if(!futureCapacityExpectation.isViableInvestment()) {
-	
-	                	setFuelMixForPlant(technology, plant);
-	                	
+	                if(futureCapacityExpectation.isViableInvestment()) {
+		                	
 	                	FutureFinancialExpectation financialExpectation = new FutureFinancialExpectation(plant);                    
 	                    
 	                    if (financialExpectation.plantHasRequiredRunningHours()) {
-	                    	
 	                    	financialExpectation.calculateDiscountedValues();
 	                    	
 	                    	double projectValue = financialExpectation.calculateProjectValue();
@@ -91,7 +88,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 		                    if (projectValue > 0) {
 		                    	
 		                    	// TODO implement
-		                    	logger.log(Level.INFO, "Because the project value is positive (gain), " + agent + " considers investment options and evaluates other investment attributes.");
+		                    	logger.log(Level.WARNING, "Because the project value of " + projectValue + " is positive, " + agent + " considers investment options and evaluates other investment attributes.");
 		                    
 		                    	// TODO in auction module there is a revenue component
 			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 

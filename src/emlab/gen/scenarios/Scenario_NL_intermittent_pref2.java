@@ -882,33 +882,33 @@ public class Scenario_NL_intermittent_pref2 implements Scenario {
         windOffshore.setFuels(windOffshorePGTFuels);
         
         
-        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
-        windTarget.setPowerGeneratingTechnology(windOffshore);
-        StepTrend windTargetTrend = new StepTrend();
-        windTargetTrend.setStart(700);
-        windTargetTrend.setIncrement(700);
-        windTargetTrend.setDuration(1);
-        windTargetTrend.setMinValue(700);
-        windTarget.setTrend(windTargetTrend);
- 
-        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
-        pvTarget.setPowerGeneratingTechnology(pv);
-        StepTrend pvTargetTrend = new StepTrend();
-        pvTargetTrend.setStart(10000);
-        pvTargetTrend.setIncrement(0);
-        pvTargetTrend.setDuration(1);
-        pvTargetTrend.setMinValue(10000);
-        pvTarget.setTrend(pvTargetTrend);
-                       
-        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
-        targets.add(pvTarget);
-        targets.add(windTarget);
-        TargetInvestor investor = new TargetInvestor();
-        investor.setName("TargetInvestorNL");
-        investor.setPowerGenerationTechnologyTargets(targets);
-        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
-        reps.targetInvestors.add(investor);
+//        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
+//        windTarget.setPowerGeneratingTechnology(windOffshore);
+//        StepTrend windTargetTrend = new StepTrend();
+//        windTargetTrend.setStart(700);
+//        windTargetTrend.setIncrement(700);
+//        windTargetTrend.setDuration(1);
+//        windTargetTrend.setMinValue(700);
+//        windTarget.setTrend(windTargetTrend);
+// 
+//        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
+//        pvTarget.setPowerGeneratingTechnology(pv);
+//        StepTrend pvTargetTrend = new StepTrend();
+//        pvTargetTrend.setStart(10000);
+//        pvTargetTrend.setIncrement(0);
+//        pvTargetTrend.setDuration(1);
+//        pvTargetTrend.setMinValue(10000);
+//        pvTarget.setTrend(pvTargetTrend);
+//                       
+//        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
+//        targets.add(pvTarget);
+//        targets.add(windTarget);
+//        TargetInvestor investor = new TargetInvestor();
+//        investor.setName("TargetInvestorNL");
+//        investor.setPowerGenerationTechnologyTargets(targets);
+//        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
+//        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
+//        reps.targetInvestors.add(investor);
         
         
         
