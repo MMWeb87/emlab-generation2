@@ -87,13 +87,17 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 	                        // Assuming investor would not want to make a loss
 		                    if (projectValue > 0) {
 		                    	
-		                    	// TODO implement
-		                    	logger.log(Level.WARNING, "Because the project value of " + projectValue + " is positive, " + agent + " considers investment options and evaluates other investment attributes.");
+		                    	logger.log(Level.FINER, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
 		                    
 		                    	// TODO in auction module there is a revenue component
+		                    	
 			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 
 			                    		/ (-financialExpectation.getDiscountedCapitalCosts());
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds the ROI to be " + projectReturnOnInvestment);
+
 			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds the ROE to be " + projectReturnOnEquity);
+
 			
 			                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
 			                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
@@ -105,18 +109,11 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 			                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 			
-			                    logger.log(Level.INFO, 
-			                    		"Agent " + agent + " considers in market " + this.getMarket().getName() + " for technology " + technology + "\n "
-			                            		+ " the part-worth utility for technology " + technology + " to be " + partWorthUtilityTechnology + "\n"
-			                            		+ " the part-worth utility for return " + technology + " to be " + partWorthUtilityReturn + "\n"
-			                            		+ " the part-worth utility for market " + this.getMarket() + " to be " + partWorthUtilityCountry + "\n"
-			                            		+ " the part-worth utility for policy " + this.getMarket() + " to be " + partWorthUtilityPolicy + "\n"
-	
-			                            		+ " the ROI to be " + projectReturnOnInvestment + "\n" 
-			                            		+ " the ROE to be " + projectReturnOnEquity + "\n" 
-	
-			                            		+ " the total utility to be " + totalUtility + "\n"
-			                            		+ " the total random utility to be " + totalRandomUtility + "\n");
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectReturnOnEquity);
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalUtility + " as total utility");
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
 			                    	                    	                    
 			                    if(totalRandomUtility > highestValue) {
 			                    	highestValue = totalRandomUtility;
@@ -124,16 +121,16 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    } 
 		                    
 		                    } else {
-		                    	logger.log(Level.INFO, "Because the project value is negative (loss), " + agent + " does not consider this investment option.");
+		                    	logger.log(Level.FINER, "Because the project value is negative, " + agent + " does not consider this investment option.");
 		                    }
 		                    
-		                    
-	                        if (projectValue > 0 && projectValue / plant.getActualNominalCapacity() > highestValue) {
-	                        	
-	                            highestValue = projectValue / plant.getActualNominalCapacity();
-	                            bestPlant = plant;
-	
-	                        }
+//		                    // Old check
+//	                        if (projectValue > 0 && projectValue / plant.getActualNominalCapacity() > highestValue) {
+//	                        	
+//	                            highestValue = projectValue / plant.getActualNominalCapacity();
+//	                            bestPlant = plant;
+//	
+//	                        }
 	                    }
 	                }
                 }
