@@ -33,7 +33,7 @@ public class Startup {
         long runID = System.currentTimeMillis();
         
         /* Default parameters */
-        long numberOfIterations = 10;
+        long numberOfIterations = 3;
         long numberOfParallelJobs = 1;
         
         //String scenarioName = "Scenario_NL";
@@ -42,7 +42,9 @@ public class Startup {
         //String scenarioName = "Scenario_NL_hourly"; TODO should be deleted
         //String scenarioName = "Scenario_NL_DE_toy";
         //String scenarioName = "Scenario_NL_DE_pref";
-        String scenarioName = "Scenario_NL_intermittent_pref2";
+        //String scenarioName = "Scenario_NL_intermittent_pref2";
+        String scenarioName = "Scenario_NL_DE_intermittent_pref2";
+
 
         String modelRole = "EMlabModelRole";
         String reporterClassName = "DefaultReporter";
