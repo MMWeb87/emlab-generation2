@@ -588,6 +588,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
     	protected double runningHours  = 0d;
     	protected double expectedGeneration  = 0d;
     	protected double expectedGrossProfit = 0d;
+    	protected double operatingProfit = 0d; // for each tick
     	protected double expectedAnnualVariableCost = 0d;
     	protected double expectedAnnualVariableRevenue = 0d;
 
@@ -647,6 +648,8 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
                 
             }
             
+    		operatingProfit = expectedGrossProfit - fixedOMCost;
+            
             // TOD calculateProjectValue() should all be here... otherwise it is confusing to tell difference between  calculateProjectValue and getProjectValue
     		
     	}
@@ -662,10 +665,24 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
 	            expectedAnnualVariableRevenue += expectedElectricityPrice * generationInSegment;
 	            expectedGrossProfit += expectedAnnualVariableRevenue - expectedAnnualVariableCost;
 
+
     		
     		}	
     	
     	}
+    	
+    	// TODO: maybe move?
+    	
+    	protected double calculateReturnOnInvestment(int after_years, int debt, int equity) {
+    		
+    		double totalInvestment = plant.getActualInvestedCapital();
+    		
+    		double returnValue = (operatingProfit * after_years - totalInvestment) / (totalInvestment);
+
+    		return returnValue;
+    	}
+    	
+    	
 
     	
 
@@ -675,6 +692,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
             TreeMap<Integer, Double> cashflow = calculateSimplePowerPlantInvestmentCashFlow(
             		depriacationTime, (int) plant.getActualLeadtime(),
             		totalInvestment, operatingProfit);
+           
             
             return npv(cashflow, wacc);
     	}

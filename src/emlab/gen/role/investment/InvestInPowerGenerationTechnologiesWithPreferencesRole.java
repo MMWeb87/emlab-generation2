@@ -91,12 +91,15 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 		                    
 		                    	// TODO in auction module there is a revenue component
 		                    	
-			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 
-			                    		/ (-financialExpectation.getDiscountedCapitalCosts());
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds the ROI to be " + projectReturnOnInvestment);
+//			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 
+//			                    		/ (-financialExpectation.getDiscountedCapitalCosts());
+			                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
+			                    
+			                    
 
 			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds the ROE to be " + projectReturnOnEquity);
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROE for " + technology + " to ROE to be " + projectReturnOnEquity);
 
 			
 			                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
