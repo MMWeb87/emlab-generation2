@@ -137,8 +137,8 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         
         
         Interconnector interconnectorNetherlandsGermany = new Interconnector();
-        //interconnectorNetherlandsGermany.setCapacity(4450);
-        interconnectorNetherlandsGermany.setCapacity(16000);
+        interconnectorNetherlandsGermany.setCapacity(4450);
+        //interconnectorNetherlandsGermany.setCapacity(16000);
         Set<PowerGridNode> connections = new HashSet<>();
         connections.add(nlNode);
         connections.add(deNode);
@@ -227,6 +227,9 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         ElectricitySpotMarket netherlandsElectricitySpotMarket = reps.createElectricitySpotMarket("DutchMarket", 2000, 40, false, electricity, demandGrowthTrendNL, loadDurationCurveNL, nl);
         ElectricitySpotMarket germanyElectricitySpotMarket = reps.createElectricitySpotMarket("GermanMarket", 2000, 40, false, electricity, demandGrowthTrendDE, loadDurationCurveDE, de);
 
+        // Test with low VOLL
+//        ElectricitySpotMarket netherlandsElectricitySpotMarket = reps.createElectricitySpotMarket("DutchMarket", 55, 40, false, electricity, demandGrowthTrendNL, loadDurationCurveNL, nl);
+//        ElectricitySpotMarket germanyElectricitySpotMarket = reps.createElectricitySpotMarket("GermanMarket", 55, 40, false, electricity, demandGrowthTrendDE, loadDurationCurveDE, de);
         
         reps.createCO2Auction("CO2Auction", 0, true, co2);      
         
@@ -878,14 +881,51 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         nuclearPGTFuels.add(uranium);
         nuclearPGT.setFuels(nuclearPGTFuels);
         
-        GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
-        pvInvestmentCostTimeSeries.setStart(2048300);
+//        GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
+//        pvInvestmentCostTimeSeries.setStart(2048300);
+//        pvInvestmentCostTimeSeries.setStart(1048300);
+//        pvInvestmentCostTimeSeries.setStart(548300);
 
-        GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
-        pvFixedOperatingCostTimeSeries.setStart(20480);
 
-        GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
-        pvEfficiencyTimeSeries.setStart(1);
+
+//        GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
+//        pvFixedOperatingCostTimeSeries.setStart(20480);
+//
+//        GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
+//        pvEfficiencyTimeSeries.setStart(1);
+        
+        TimeSeriesCSVReader pvInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+        pvInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+        pvInvestmentCostTimeSeries.setDelimiter(",");       
+        pvInvestmentCostTimeSeries.readCSVVariable("PV_Inv");
+        pvInvestmentCostTimeSeries.setStartingYear(-50);
+        
+        TimeSeriesCSVReader pvFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+        pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+        pvFixedOperatingCostTimeSeries.setDelimiter(",");       
+        pvFixedOperatingCostTimeSeries.readCSVVariable("PV_OM");
+        pvFixedOperatingCostTimeSeries.setStartingYear(-50);
+        
+        TimeSeriesCSVReader pvEfficiencyTimeSeries = new TimeSeriesCSVReader();
+        pvEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+        pvEfficiencyTimeSeries.setDelimiter(",");       
+        pvEfficiencyTimeSeries.readCSVVariable("PV_Eff");
+        pvEfficiencyTimeSeries.setStartingYear(-50);
+        
+        
+        
+     
+//    	<bean id="pvInvestmentCostTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="PV_Inv" />
+//    		<bean id="pvFixedOperatingCostTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="PV_OM" />
+//    		<bean id="pvEfficiencyTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="PV_Eff" />
+    		
+    		
         
         PowerGeneratingTechnology pv = reps.createPowerGeneratingTechnology();
         pv.setName("Photovoltaic PGT");
@@ -939,14 +979,42 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         Set<Substance> hydroPGTFuels = new HashSet<>();
         hydro.setFuels(hydroPGTFuels);
         
-        GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
-        windOnshoreInvestmentCostTimeSeries.setStart(1214600);
+//        GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
+//        windOnshoreInvestmentCostTimeSeries.setStart(1214600);
+//
+//        GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
+//        windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
+//
+//        GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
+//        windOnshoreEfficiencyTimeSeries.setStart(1);
+        
+//    	<bean id="windInvestmentCostTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="Wind_Inv" />
+//    		<bean id="windFixedOperatingCostTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="Wind_OM" />
+//    		<bean id="windEfficiencyTimeSeries" class="emlab.gen.trend.TimeSeriesCSVReader"
+//    			p:filename="/data/learningCurves.csv" p:startingYear="-50"
+//    			p:delimiter="," p:variableName="Wind_Eff" />
+        
+        TimeSeriesCSVReader windOnshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+        windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+        windOnshoreInvestmentCostTimeSeries.setStartingYear(-50);
+        windOnshoreInvestmentCostTimeSeries.setDelimiter(",");
+        windOnshoreInvestmentCostTimeSeries.readCSVVariable("Wind_Inv");
+        
+        TimeSeriesCSVReader windOnshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+        windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+        windOnshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
+        windOnshoreFixedOperatingCostTimeSeries.setDelimiter(",");
+        windOnshoreFixedOperatingCostTimeSeries.readCSVVariable("Wind_OM");
 
-        GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-        windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
-
-        GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
-        windOnshoreEfficiencyTimeSeries.setStart(1);
+        TimeSeriesCSVReader windOnshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
+        windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+        windOnshoreEfficiencyTimeSeries.setStartingYear(-50);
+        windOnshoreEfficiencyTimeSeries.setDelimiter(",");
+        windOnshoreEfficiencyTimeSeries.readCSVVariable("Wind_Eff");
         
         PowerGeneratingTechnology windOnshore = reps.createPowerGeneratingTechnology();
         windOnshore.setName("Onshore wind PGT");
@@ -970,14 +1038,33 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         Set<Substance> windOnshorePGTFuels = new HashSet<>();
         windOnshore.setFuels(windOnshorePGTFuels);
         
-        GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
-        windOffshoreInvestmentCostTimeSeries.setStart(2450770);
+//        GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
+//        windOffshoreInvestmentCostTimeSeries.setStart(2450770);
 
-        GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-        windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
+//        GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
+//        windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
+//
+//        GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
+//        windOffshoreEfficiencyTimeSeries.setStart(1);
+        
+        TimeSeriesCSVReader windOffshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+        windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+        windOffshoreInvestmentCostTimeSeries.setStartingYear(-50);
+        windOffshoreInvestmentCostTimeSeries.setDelimiter(",");
+        windOffshoreInvestmentCostTimeSeries.readCSVVariable("WindOffshore_Inv");
+        
+        TimeSeriesCSVReader windOffshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+        windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+        windOffshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
+        windOffshoreFixedOperatingCostTimeSeries.setDelimiter(",");
+        windOffshoreFixedOperatingCostTimeSeries.readCSVVariable("WindOffshore_OM");
 
-        GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
-        windOffshoreEfficiencyTimeSeries.setStart(1);
+        TimeSeriesCSVReader windOffshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
+        windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+        windOffshoreEfficiencyTimeSeries.setStartingYear(-50);
+        windOffshoreEfficiencyTimeSeries.setDelimiter(",");
+        windOffshoreEfficiencyTimeSeries.readCSVVariable("WindOffshore_Eff");
+            		
         
         PowerGeneratingTechnology windOffshore = reps.createPowerGeneratingTechnology();
         windOffshore.setName("Offshore wind PGT");
@@ -1002,61 +1089,61 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         windOffshore.setFuels(windOffshorePGTFuels);
         
         
-        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
-        windTarget.setPowerGeneratingTechnology(windOffshore);
-        StepTrend windTargetTrend = new StepTrend();
-        windTargetTrend.setStart(700);
-        windTargetTrend.setIncrement(700);
-        windTargetTrend.setDuration(1);
-        windTargetTrend.setMinValue(700);
-        windTarget.setTrend(windTargetTrend);
- 
-        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
-        pvTarget.setPowerGeneratingTechnology(pv);
-        StepTrend pvTargetTrend = new StepTrend();
-        pvTargetTrend.setStart(10000);
-        pvTargetTrend.setIncrement(0);
-        pvTargetTrend.setDuration(1);
-        pvTargetTrend.setMinValue(10000);
-        pvTarget.setTrend(pvTargetTrend);
-                       
-        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
-        targets.add(pvTarget);
-        targets.add(windTarget);
-        TargetInvestor investor = new TargetInvestor();
-        investor.setName("TargetInvestorNL");
-        investor.setPowerGenerationTechnologyTargets(targets);
-        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
-        reps.targetInvestors.add(investor);
-        
-        PowerGeneratingTechnologyTarget windTargetDE = new PowerGeneratingTechnologyTarget();
-        windTargetDE.setPowerGeneratingTechnology(windOffshore);
-        StepTrend windTargetTrendDE = new StepTrend();
-        windTargetTrendDE.setStart(1700);
-        windTargetTrendDE.setIncrement(1700);
-        windTargetTrendDE.setDuration(1);
-        windTargetTrendDE.setMinValue(700);
-        windTargetDE.setTrend(windTargetTrend);
- 
-        PowerGeneratingTechnologyTarget pvTargetDE = new PowerGeneratingTechnologyTarget();
-        pvTargetDE.setPowerGeneratingTechnology(pv);
-        StepTrend pvTargetTrendDE = new StepTrend();
-        pvTargetTrendDE.setStart(20000);
-        pvTargetTrendDE.setIncrement(1000);
-        pvTargetTrendDE.setDuration(1);
-        pvTargetTrendDE.setMinValue(20000);
-        pvTargetDE.setTrend(pvTargetTrendDE);
-                       
-        Set<PowerGeneratingTechnologyTarget> targetsDE = new HashSet<>();
-        targetsDE.add(pvTargetDE);
-        targetsDE.add(windTargetDE);
-        TargetInvestor investorDE = new TargetInvestor();
-        investorDE.setName("TargetInvestorDE");
-        investorDE.setPowerGenerationTechnologyTargets(targetsDE);
-        investorDE.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investorDE.setInvestorMarket(germanyElectricitySpotMarket);//DEZE IS DUS VOOR NL!
-        reps.targetInvestors.add(investorDE);        
+//        PowerGeneratingTechnologyTarget windTarget = new PowerGeneratingTechnologyTarget();
+//        windTarget.setPowerGeneratingTechnology(windOffshore);
+//        StepTrend windTargetTrend = new StepTrend();
+//        windTargetTrend.setStart(700);
+//        windTargetTrend.setIncrement(700);
+//        windTargetTrend.setDuration(1);
+//        windTargetTrend.setMinValue(700);
+//        windTarget.setTrend(windTargetTrend);
+// 
+//        PowerGeneratingTechnologyTarget pvTarget = new PowerGeneratingTechnologyTarget();
+//        pvTarget.setPowerGeneratingTechnology(pv);
+//        StepTrend pvTargetTrend = new StepTrend();
+//        pvTargetTrend.setStart(10000);
+//        pvTargetTrend.setIncrement(0);
+//        pvTargetTrend.setDuration(1);
+//        pvTargetTrend.setMinValue(10000);
+//        pvTarget.setTrend(pvTargetTrend);
+//                       
+//        Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
+//        targets.add(pvTarget);
+//        targets.add(windTarget);
+//        TargetInvestor investor = new TargetInvestor();
+//        investor.setName("TargetInvestorNL");
+//        investor.setPowerGenerationTechnologyTargets(targets);
+//        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
+//        investor.setInvestorMarket(netherlandsElectricitySpotMarket);//DEZE IS DUS VOOR NL!
+//        reps.targetInvestors.add(investor);
+//        
+//        PowerGeneratingTechnologyTarget windTargetDE = new PowerGeneratingTechnologyTarget();
+//        windTargetDE.setPowerGeneratingTechnology(windOffshore);
+//        StepTrend windTargetTrendDE = new StepTrend();
+//        windTargetTrendDE.setStart(1700);
+//        windTargetTrendDE.setIncrement(1700);
+//        windTargetTrendDE.setDuration(1);
+//        windTargetTrendDE.setMinValue(700);
+//        windTargetDE.setTrend(windTargetTrend);
+// 
+//        PowerGeneratingTechnologyTarget pvTargetDE = new PowerGeneratingTechnologyTarget();
+//        pvTargetDE.setPowerGeneratingTechnology(pv);
+//        StepTrend pvTargetTrendDE = new StepTrend();
+//        pvTargetTrendDE.setStart(20000);
+//        pvTargetTrendDE.setIncrement(1000);
+//        pvTargetTrendDE.setDuration(1);
+//        pvTargetTrendDE.setMinValue(20000);
+//        pvTargetDE.setTrend(pvTargetTrendDE);
+//                       
+//        Set<PowerGeneratingTechnologyTarget> targetsDE = new HashSet<>();
+//        targetsDE.add(pvTargetDE);
+//        targetsDE.add(windTargetDE);
+//        TargetInvestor investorDE = new TargetInvestor();
+//        investorDE.setName("TargetInvestorDE");
+//        investorDE.setPowerGenerationTechnologyTargets(targetsDE);
+//        investorDE.setInvestmentRole(new TargetInvestmentRole(schedule));
+//        investorDE.setInvestorMarket(germanyElectricitySpotMarket);//DEZE IS DUS VOOR NL!
+//        reps.targetInvestors.add(investorDE);        
         
         
 
