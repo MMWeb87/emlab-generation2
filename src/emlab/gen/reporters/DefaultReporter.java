@@ -13,6 +13,7 @@ import emlab.gen.domain.market.electricity.FinancialPowerPlantReport;
 import emlab.gen.engine.AbstractReporter;
 import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
+import emlab.gen.role.investment.FinancialExpectationReport;
 import emlab.gen.role.investment.MarketInformationReport;
 
 import java.io.File;
@@ -182,6 +183,54 @@ public class DefaultReporter extends AbstractReporter {
         } finally {
             //release writing lock for file
             schedule.reporter.lockMarketInformationCSV.unlock();
+        	
+        }
+        
+        
+        
+        
+        // FinancialExpectation file               
+        String financialExpectationFileName = schedule.runID + "-" + "FinancialExpectation.csv";
+        File financialExpectationFile = new File(outputDirectoryName + financialExpectationFileName);
+
+        //Write header if needed
+        if (!financialExpectationFile.exists()) {
+            try {
+                schedule.reporter.lockFinancialExpectationCSV.lock();
+                FileWriter financialExpectationFileWriter = new FileWriter(financialExpectationFile, false);
+                CSVWriter<FinancialExpectationReport> financialExpectationCSVWriter = new CSVWriterBuilder<FinancialExpectationReport>(financialExpectationFileWriter)
+                        .entryConverter(new FinancialExpectationReportCSVConverterHeaders())
+                        .strategy(CSVStrategy.DEFAULT)
+                        .build();
+//                marketinfoCSVWriter.write(schedule.reps.marketInformationReports.get(1));
+                financialExpectationCSVWriter.write(null);
+                financialExpectationFileWriter.flush();
+                financialExpectationFileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                //release writing lock for file
+                schedule.reporter.lockFinancialExpectationCSV.unlock();
+            }
+        }
+
+        try {
+            schedule.reporter.lockFinancialExpectationCSV.lock();
+            FileWriter financialExpectationFileWriter = new FileWriter(financialExpectationFile, true);
+            CSVWriter<FinancialExpectationReport> financialExpectationCSVWriter = new CSVWriterBuilder<FinancialExpectationReport>(financialExpectationFileWriter)
+                    .entryConverter(new FinancialExpectationReportCSVConverter())
+                    .strategy(CSVStrategy.DEFAULT)
+                    .build();
+
+            //write report per power plant
+            financialExpectationCSVWriter.writeAll(schedule.reps.financialExpectationReports);
+            financialExpectationFileWriter.flush();
+            financialExpectationFileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //release writing lock for file
+            schedule.reporter.lockFinancialExpectationCSV.unlock();
         	
         }
 

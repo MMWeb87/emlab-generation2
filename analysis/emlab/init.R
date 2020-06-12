@@ -71,6 +71,10 @@ raw_main_results <- read_emlab_results(files_to_analyse$reporters, "main.csv")
 raw_marketinformation_results <- read_emlab_results(files_to_analyse$reporters, "MarketInformation.csv", 
   custom_col_types = cols(.default = "n", producer = "c", market = "c"))
 
+raw_financialexpectations_results <- read_emlab_results(
+  files_to_analyse$reporters, "FinancialExpectation.csv", 
+  custom_col_types = cols(.default = "n", producer = "c", market = "c", technology = "c", plant = "c", node = "c"))
+
 
 # Read log files -----------------------------------------------------------
 
@@ -156,6 +160,7 @@ show_filters <- list()
 # Load plots for different types of data
 source(file = "emlab/data_main.R")
 source(file = "emlab/data_marketinformation.R")
+source(file = "emlab/data_financialexpectations.R")
 
 
 # theme for all ggplots
