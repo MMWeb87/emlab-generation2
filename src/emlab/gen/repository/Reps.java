@@ -49,6 +49,7 @@ import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.AbstractAgent;
 import emlab.gen.engine.Schedule;
+import emlab.gen.role.investment.FinancialExpectationReport;
 import emlab.gen.role.investment.MarketInformationReport;
 import emlab.gen.trend.TimeSeriesImpl;
 import emlab.gen.util.Utils;
@@ -152,6 +153,9 @@ public class Reps {
     public ArrayList<CommodityMarket> commodityMarkets = new ArrayList<>();
     
     public ArrayList<MarketInformationReport> marketInformationReports = new ArrayList<>();
+    
+    public ArrayList<FinancialExpectationReport> financialExpectationReports = new ArrayList<>();
+
     
     public ArrayList<String> utilityLevelsTechnology = new ArrayList<>();    
 
@@ -1538,6 +1542,7 @@ public class Reps {
         
         
     }
+    
         
 
     public class PowerPlantDispatchPlanPriceComparator implements Comparator<PowerPlantDispatchPlan> {

@@ -96,10 +96,8 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
 			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
 			                    
-			                    
-
 			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROE for " + technology + " to ROE to be " + projectReturnOnEquity);
+			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
 
 			
 			                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
@@ -117,6 +115,44 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
 			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalUtility + " as total utility");
 			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
+			                    
+			                    
+			                    
+			                    // Reporter
+			                    FinancialExpectationReport report = new FinancialExpectationReport();
+			                    
+			                    report.schedule = schedule;
+			                    report.setMarket(agent.getInvestorMarket());
+			                    report.setTime(schedule.getCurrentTick()); 
+			                    report.setAgent(agent);
+			                    report.setTechnology(technology);
+			                    report.setPlant(plant);
+			                    report.setNode(node);
+			                    
+			                    report.setProjectReturnOnInvestment(projectReturnOnInvestment);
+			                    report.setProjectReturnOnEquity(projectReturnOnEquity);
+			                    
+			                    report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
+			                    report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
+			                    report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
+			                    report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
+			                    
+			                    report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
+			                    report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
+			                    report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
+			                    report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
+			                    report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
+			                    
+			                    report.setProjectCost(financialExpectation.getProjectCost());
+			                    report.setProjectValue(financialExpectation.getProjectValue());
+			                    
+			                    report.setRunningHours(financialExpectation.getRunningHours());
+			                    report.setWacc(financialExpectation.getWacc());
+			                    report.setTotalUtility(totalUtility);
+			                     
+			                    getReps().financialExpectationReports.add(report);
+			                    
+			                    // utilities
 			                    	                    	                    
 			                    if(totalRandomUtility > highestValue) {
 			                    	highestValue = totalRandomUtility;

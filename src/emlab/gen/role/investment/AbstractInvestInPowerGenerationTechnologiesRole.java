@@ -647,7 +647,8 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
                 calculateFinancialIndicatorsForOneSegment(expectedElectricityPrice, hours, capacity, generationInSegment);
                 
             }
-            
+
+            expectedGrossProfit = expectedAnnualVariableRevenue - expectedAnnualVariableCost;
     		operatingProfit = expectedGrossProfit - fixedOMCost;
             
             // TOD calculateProjectValue() should all be here... otherwise it is confusing to tell difference between  calculateProjectValue and getProjectValue
@@ -660,12 +661,8 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
 
 	        	runningHours += hours;
 	            expectedGeneration += generationInSegment;
-	            
 	            expectedAnnualVariableCost += expectedMarginalCost * generationInSegment;
 	            expectedAnnualVariableRevenue += expectedElectricityPrice * generationInSegment;
-	            expectedGrossProfit += expectedAnnualVariableRevenue - expectedAnnualVariableCost;
-
-
     		
     		}	
     	
