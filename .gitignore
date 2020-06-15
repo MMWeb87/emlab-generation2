@@ -53,3 +53,17 @@ results_meta/scenario_informations.csv
 results_meta/
 
 analysis/manual_analyses.Rmd
+
+analysis/config.R
+
+analysis/example_report.nb.html
+
+analysis/report_marc.nb.html
+
+analysis/report_marc.Rmd
+
+resources/sources/powerplants/output/conventional_nl_ft
+
+resources/sources/renewables capacity factors/config.R
+
+results_meta/scenario_informations.csv
