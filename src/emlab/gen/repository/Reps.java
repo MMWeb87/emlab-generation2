@@ -11,7 +11,6 @@ import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyConsumer;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
-import emlab.gen.domain.agent.InvestorWithPreference;
 import emlab.gen.domain.agent.NationalGovernment;
 import emlab.gen.domain.agent.PowerPlantMaintainer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
@@ -1556,18 +1555,7 @@ public class Reps {
         powerPlantsForAgent.put(producer, new ArrayList<>());
         return producer;
     }
-    
-    
-    // TODO MM not used yet
-    public InvestorWithPreference createInvestorWithPreference() {
-        InvestorWithPreference producer = new InvestorWithPreference();
-        
-        energyProducers.add(producer);
-        powerPlantsForAgent.put(producer, new ArrayList<>());
-        return producer;
-    }
-    
-    
+      
    
     public PowerGeneratingTechnology createPowerGeneratingTechnology() {
         PowerGeneratingTechnology tech = new PowerGeneratingTechnology();
