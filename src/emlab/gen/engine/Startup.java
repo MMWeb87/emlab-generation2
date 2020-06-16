@@ -43,9 +43,9 @@ public class Startup {
         //String scenarioName = "Scenario_NL_DE_toy";
         //String scenarioName = "Scenario_NL_DE_pref";
         //String scenarioName = "Scenario_NL_intermittent_pref2";
-        String scenarioName = "Scenario_NL_DE_intermittent_pref2";
+        //String scenarioName = "Scenario_NL_DE_intermittent_pref2";
         //String scenarioName = "DefaultScenario";
-        //String scenarioName = "Scenario_NL_intermittent_auction";
+        String scenarioName = "Scenario_NL_intermittent_auction";
         //String scenarioName = "Scenario_NL_intermittent_auction_toy";
 
 
@@ -57,7 +57,7 @@ public class Startup {
         boolean haveGUI = false;
         boolean logForApp = true;
 
-        Logger.getGlobal().setLevel(Level.WARNING);
+        Logger.getGlobal().setLevel(Level.FINE);
         
         try {
             FileHandler handler = new FileHandler(reporterDirectoryName + runID + "-log.txt");

@@ -697,12 +697,12 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         Set<PowerGeneratingTechnologyTarget> targets = new HashSet<>();
         targets.add(pvTarget);
         targets.add(windTarget);
-        TargetInvestor investor = new TargetInvestor();
-        investor.setName("TargetInvestorNL");
-        investor.setPowerGenerationTechnologyTargets(targets);
-        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
-        investor.setInvestorMarket(netherlandsElectricitySpotMarket);
-        reps.targetInvestors.add(investor);
+//        TargetInvestor investor = new TargetInvestor();
+//        investor.setName("TargetInvestorNL");
+//        investor.setPowerGenerationTechnologyTargets(targets);
+//        investor.setInvestmentRole(new TargetInvestmentRole(schedule));
+//        investor.setInvestorMarket(netherlandsElectricitySpotMarket);
+//        reps.targetInvestors.add(investor);
         
         
         
