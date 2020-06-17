@@ -96,7 +96,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
                     sumOfTenderBidQuantityAccepted = sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount();
 
-                    logger.log(Level.INFO, "sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
+                    logger.log(Level.FINE, "sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
 
                 }
 
@@ -106,7 +106,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
                 else if (tenderQuota
                         - (sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount()) < clearingEpsilon) {
 
-                    logger.log(Level.INFO, "Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
+                    logger.log(Level.FINE, "Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
                             + currentTenderBid.getTechnology() + "bidAmount; " + currentTenderBid.getAmount()
                             + "acceptedSubsidyPrice; " + acceptedSubsidyPrice);
 
@@ -132,8 +132,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
         
         // This creates a clearing point that contains general information about
         // the cleared tender
-        // volume, subsidy price, current tick, and stores it in the graph
-        // database
+        // volume, subsidy price, current tick, and stores it
         
         TenderClearingPoint tenderClearingPoint = getReps().createTenderClearingPoint(scheme, acceptedSubsidyPrice, sumOfTenderBidQuantityAccepted, getCurrentTick());
         // TODO MM what about forecast and AbstractMarket of object?

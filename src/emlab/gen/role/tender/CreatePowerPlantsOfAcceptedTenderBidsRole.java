@@ -49,9 +49,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
 
-        // logger.warn("Create Power Plants Of Accepted Tender Bids Role started
-        // for: " + scheme);
-        // for: " + regulator);
+         logger.fine("Create Power Plants Of Accepted Tender Bids Role started for: " + scheme);
 
         // Zone zone = regulator.getZone();
         // RenewableSupportSchemeTender scheme =
@@ -64,16 +62,17 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
 
         for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
 
-            // logger.warn(
-            // "current accepted bid: " + currentTenderBid + "for power plant" +
-            // currentTenderBid.getPowerPlant());
+             logger.fine(
+             "current accepted bid: " + currentTenderBid + "for power plant" +
+             currentTenderBid.getPowerPlant()); // TODO Powerplant == NULL ok?
 
         	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
         	EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);
         	
             PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
             		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
-            currentTenderBid.setPowerPlant(plant);                            
+            currentTenderBid.setPowerPlant(plant);  
+            
                     
             PowerPlantManufacturer manufacturer = getReps().powerPlantManufacturer;
             BigBank bigbank = getReps().bigBank;
@@ -86,7 +85,12 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
 
             double amount = evaluateInvestment.determineLoanAnnuities(investmentCostPayedByDebt,
                     plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
-            // logger.warn("Loan amount is: " + amount);
+
+            logger.fine("Loan amount is: " + amount);
+            logger.fine(
+            "current accepted bid: " + currentTenderBid + "for (new) power plant" +
+            currentTenderBid.getPowerPlant()); // TODO Powerplant == NULL ok?
+
             Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
                     plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
             // Create the loan

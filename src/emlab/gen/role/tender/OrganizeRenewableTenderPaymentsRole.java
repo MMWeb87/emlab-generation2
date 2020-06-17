@@ -69,17 +69,17 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
                         : tenderClearingPoint.getPrice();
                 annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
             }
+            
+            PowerPlant plant = currentTenderBid.getPowerPlant();
 
             getReps().createCashFlow(scheme.getRegulator(), currentTenderBid.getBidder(),
-                    annualTenderRevenue, CashFlow.TENDER_SUBSIDY, getCurrentTick(), currentTenderBid.getPowerPlant());
+                    annualTenderRevenue, CashFlow.TENDER_SUBSIDY, getCurrentTick(), plant);
 
-            // logger.warn("Producer's cash reserves after payment of tender
-            // subsidy"
-            // + currentTenderBid.getBidder().getCash());
+             logger.fine("Producer's cash reserves after payment of tender subsidy"
+             + currentTenderBid.getBidder().getCash());
 
         }
-        // logger.warn("____PAYMENT ROLE____ annualTenderRevenue" +
-        // annualTenderRevenue);
+        logger.fine("____PAYMENT ROLE____ annualTenderRevenue" + annualTenderRevenue);
 
     }
 

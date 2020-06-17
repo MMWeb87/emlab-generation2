@@ -87,17 +87,13 @@ public class VerificationTargetCalculationRole extends AbstractRole<RenewableSup
 
             // warn when we expect generation greater than actual generation
             if (generationRenewablesCurrentTick.get(0) <= generationRenewablesCurrentTick.get(1)) {
-                // logger.warn("Expected generation" +
-                // generationRenewablesCurrentTick.get(0) + " <= actual
-                // generation"
-                // + generationRenewablesCurrentTick.get(1) + " in tick" +
-                // getCurrentTick());
+                 logger.fine("Expected generation" + generationRenewablesCurrentTick.get(0) + " <= actual generation"
+                 + generationRenewablesCurrentTick.get(1) + " in tick" + getCurrentTick());
             } else {
-                // logger.warn("Expected generation" +
-                // generationRenewablesCurrentTick.get(0) + " is > actual
-                // generation"
-                // + generationRenewablesCurrentTick.get(1) + " in tick" +
-                // getCurrentTick());
+                 logger.fine("Expected generation" +
+                 generationRenewablesCurrentTick.get(0) + " is > actual generation"
+                 + generationRenewablesCurrentTick.get(1) + " in tick" +
+                 getCurrentTick());
             }
 
             // logger.warn("length of map : " + mapStorageGeneration.size());

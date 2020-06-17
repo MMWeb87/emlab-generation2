@@ -183,7 +183,7 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
                                         start, finish, bidPricePerMWh, technology, getCurrentTick(), Bid.SUBMITTED,
                                         scheme, cashNeededPerPlant, investor);
                                 
-                                 logger.log(Level.FINE, "SubmitBid to tender - Agent " +
+                                 logger.log(Level.FINER, "SubmitBid to tender - Agent " +
                                  agent + " ,generation "
                                  + evaluateInvestment.getTotalAnnualExpectedGenerationOfPlant() +
                                  " ,plant " + plant + " ,zone "

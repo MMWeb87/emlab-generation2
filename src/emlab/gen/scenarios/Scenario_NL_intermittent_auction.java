@@ -730,7 +730,7 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         // Renewable Tender Scheme
         
         RenewableSupportSchemeTender renewableSupportSchemeNL = new RenewableSupportSchemeTender();
-        renewableSupportSchemeNL.setName("Tender");
+        renewableSupportSchemeNL.setName("MyTestTender");
         renewableSupportSchemeNL.setFutureTenderOperationStartTime(2);
         renewableSupportSchemeNL.setSupportSchemeDuration(10);
         renewableSupportSchemeNL.setTechnologySpecificityEnabled(false);
@@ -833,7 +833,5 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         renewablePotentialLimitNLwindOnshore.setRegulator(regulatorNl);
         reps.renewablePotentialLimits.add(renewablePotentialLimitNLwindOnshore);
         
-        
-
     }
 }
