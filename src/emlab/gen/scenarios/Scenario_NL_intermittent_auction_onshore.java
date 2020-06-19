@@ -52,7 +52,7 @@ import java.util.logging.Logger;
  * @author ejlchappin
  * @author marcmel
  */
-public class Scenario_NL_intermittent_auction implements Scenario {
+public class Scenario_NL_intermittent_auction_onshore implements Scenario {
 
     private String name;
 
@@ -719,6 +719,10 @@ public class Scenario_NL_intermittent_auction implements Scenario {
 
         }
         
+        
+        
+        
+        
         // Policy
         
     	// Regulator NL
@@ -740,9 +744,9 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         premiumNL.setCostContainmentMechanismEnabled(false);
         premiumNL.setRegulator(regulatorNl);
         premiumNL.setZone(nl);
+        
         HashSet<PowerGeneratingTechnology> powerGeneratingTechnologiesEligible = new HashSet<>();
         powerGeneratingTechnologiesEligible.add(windOnshore);
-        powerGeneratingTechnologiesEligible.add(biomassCHP);
         premiumNL.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligible);
         reps.renewableSupportFipSchemes.add(premiumNL);
         
@@ -753,19 +757,11 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         biasFactorNL1Wind.setScheme(premiumNL);
         biasFactorNL1Wind.setTechnology(windOnshore);
         reps.biasFactors.add(biasFactorNL1Wind);
-        
-        BiasFactor biasFactorNL1biomass  = new BiasFactor();
-        biasFactorNL1biomass.setFeedInPremiumBiasFactor(1);
-        biasFactorNL1biomass.setDegressionFactor(0.06);
-        biasFactorNL1biomass.setNode(nlNode);
-        biasFactorNL1biomass.setScheme(premiumNL);
-        biasFactorNL1biomass.setTechnology(biomassCHP);
-        reps.biasFactors.add(biasFactorNL1biomass);
-        
+                
         // Renewable Tender Scheme
         
         RenewableSupportSchemeTender renewableSupportSchemeNL = new RenewableSupportSchemeTender();
-        renewableSupportSchemeNL.setName("MyTestTender");
+        renewableSupportSchemeNL.setName("MyTestOnshoreTender");
         renewableSupportSchemeNL.setFutureTenderOperationStartTime(2);
         renewableSupportSchemeNL.setSupportSchemeDuration(10);
         renewableSupportSchemeNL.setTechnologySpecificityEnabled(false);
@@ -773,7 +769,6 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         renewableSupportSchemeNL.setRegulator(regulatorNl);
         
         Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleNLTender = new HashSet<>();
-        //powerGeneratingTechnologiesEligibleNLTender.add(pv);
         powerGeneratingTechnologiesEligibleNLTender.add(windOnshore);
         
         renewableSupportSchemeNL.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleNLTender);
@@ -795,21 +790,6 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         renewableTenderTarget.setRegulator(regulatorNl);
         reps.renewableTargets.add(renewableTenderTarget);
         
-        TimeSeriesCSVReader nl_nreap_photovoltaicPGT = new TimeSeriesCSVReader();
-        nl_nreap_photovoltaicPGT.setFilename("/data/nodeAndTechSpecificPotentialsDummy.csv");
-        nl_nreap_photovoltaicPGT.setDelimiter(",");
-        nl_nreap_photovoltaicPGT.setStartingYear(0);
-        nl_nreap_photovoltaicPGT.setVariableName("nl_dummyTargetPV");
-        //nl_nreap.readCSVVariable("nl_dummyTargetPV"); //TODO? necessary?
-        
-        
-        RenewableTarget renewableTenderTargetNLphotovoltaicPGT = new RenewableTarget();
-        renewableTenderTargetNLphotovoltaicPGT.setYearlyRenewableTargetTimeSeries(nl_nreap_photovoltaicPGT);
-        renewableTenderTargetNLphotovoltaicPGT.setTargetTechnologySpecific(true);
-        renewableTenderTargetNLphotovoltaicPGT.setPowerGeneratingTechnology(pv);
-        renewableTenderTargetNLphotovoltaicPGT.setRegulator(regulatorNl);
-        reps.renewableTargets.add(renewableTenderTargetNLphotovoltaicPGT);
-        
         
         TimeSeriesCSVReader nl_nreap_windPGT = new TimeSeriesCSVReader();
         nl_nreap_windPGT.setFilename("/data/nodeAndTechSpecificPotentialsDummy.csv");
@@ -825,35 +805,6 @@ public class Scenario_NL_intermittent_auction implements Scenario {
         reps.renewableTargets.add(renewableTenderTargetNLwindPGT);
         
 //		<!-- Technology Specific POTENTIAL LIMITS for Intermittent Technologies -->
-//
-//
-        TimeSeriesCSVReader nl_photovoltaicPGT_limit = new TimeSeriesCSVReader();
-        nl_photovoltaicPGT_limit.setFilename("/data/potentialLimits.csv");
-        nl_photovoltaicPGT_limit.setDelimiter(",");
-        nl_photovoltaicPGT_limit.setStartingYear(-4);
-        nl_photovoltaicPGT_limit.setVariableName("limitPV");
-        
-        RenewablePotentialLimit renewablePotentialLimitNLphotovoltaic = new RenewablePotentialLimit();
-        renewablePotentialLimitNLphotovoltaic.setYearlyRenewableTargetTimeSeries(nl_photovoltaicPGT_limit);
-        renewablePotentialLimitNLphotovoltaic.setTargetTechnologySpecific(true);
-        renewablePotentialLimitNLphotovoltaic.setPowerGeneratingTechnology(pv);
-        renewablePotentialLimitNLphotovoltaic.setRegulator(regulatorNl);
-        reps.renewablePotentialLimits.add(renewablePotentialLimitNLphotovoltaic);
-      
-        
-        TimeSeriesCSVReader nl_windOffshore_limit = new TimeSeriesCSVReader();
-        nl_windOffshore_limit.setFilename("/data/potentialLimits.csv");
-        nl_windOffshore_limit.setDelimiter(",");
-        nl_windOffshore_limit.setStartingYear(-4);
-        nl_windOffshore_limit.setVariableName("limitWindOff");
-        
-        RenewablePotentialLimit renewablePotentialLimitNLwindOffshore = new RenewablePotentialLimit();
-        renewablePotentialLimitNLwindOffshore.setYearlyRenewableTargetTimeSeries(nl_windOffshore_limit);
-        renewablePotentialLimitNLwindOffshore.setTargetTechnologySpecific(true);
-        renewablePotentialLimitNLwindOffshore.setPowerGeneratingTechnology(windOffshore);
-        renewablePotentialLimitNLwindOffshore.setRegulator(regulatorNl);
-        reps.renewablePotentialLimits.add(renewablePotentialLimitNLwindOffshore);
-        
        
         TimeSeriesCSVReader nl_windOnshore_limit = new TimeSeriesCSVReader();
         nl_windOnshore_limit.setFilename("/data/potentialLimits.csv");
