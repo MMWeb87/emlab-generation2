@@ -72,7 +72,7 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
                 FutureCapacityExpectationWithScheme futureCapacityExpectation = new FutureCapacityExpectationWithScheme(technology, plant, node);
                 
                 // See check for custom rules
-                if(!futureCapacityExpectation.isViableInvestment()) {
+                if(futureCapacityExpectation.isViableInvestment()) {
                                     	
                 	FutureFinancialExpectationWithScheme financialExpectation = new FutureFinancialExpectationWithScheme(plant);
                 	
@@ -85,7 +85,8 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
 						//fReport = new ForecastingInformationReport();
 						//fReport.setExpectedOpRevenueElectricityMarketWithoutSubsidy(financialExpectation.getExpectedOperatingRevenue());
 						//fReport.setProjectValuePerMwWithoutSubsidy(projectValue / plant.getActualNominalCapacity());
-                        
+                    	
+                        // If  setEmRevenuePaidExpost os false -> ExAnte, the baseCost can be expected to be >0 
                         if (scheme != null && financialExpectation.getExpectedBaseCost() > 0
                                 && (scheme.getPowerGeneratingTechnologiesEligible().contains(technology))) {
                         	
@@ -93,6 +94,24 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
                         	projectValue  = financialExpectation.getProjectValueWithScheme();
 
                         }
+                        
+                         //*****FOR VERIFICATION
+                         logger.fine("Inv data with subsidy:discountedCapitalCosts " +
+                        		 financialExpectation.getDiscountedCapitalCosts() + "discountedOpCost" + financialExpectation.getDiscountedOperatingCost() +
+                         "discountedOpRevenue" + financialExpectation.getDiscountedOperatingRevenue());
+                         
+                         logger.fine("For plant:" + plant.getName() +
+                         "ProjectValue " + projectValue);
+
+                         logger.fine("for plant:" + plant + "disCapitalCost in Inv Role is" + -financialExpectation.getDiscountedCapitalCosts()
+                         + "total Generation is" + financialExpectation.getExpectedGeneration() + "flh is"
+                         + plant.getAnnualFullLoadHours());
+
+                         logger.fine("expectedBaseCost" + financialExpectation.getExpectedBaseCost() +
+                         "for plant" + plant + "in tick"
+                         + futureTimePoint);
+
+                         //*****END VERIFICATION
 
                         if (projectValue > 0 && projectValue / plant.getActualNominalCapacity() > highestValue) {
                             highestValue = projectValue / plant.getActualNominalCapacity();
@@ -195,8 +214,8 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
 		        pgtNodeLimit = technologyPotential / plant.getAnnualFullLoadHours();
 		        
 		        logger.log(Level.FINER, "For technology " + technology.getName() + "plant annual full load hours " + plant.getAnnualFullLoadHours());
-		        logger.log(Level.FINE, "technology potential in MW " + pgtNodeLimit);
-		        logger.log(Level.FINE, "technology potential " + technologyPotential);
+		        logger.log(Level.FINER, "technology potential in MW " + pgtNodeLimit);
+		        logger.log(Level.FINER, "technology potential " + technologyPotential);
 		
 		    }
 		    
@@ -235,7 +254,7 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
                     * technology.getMaximumInstalledCapacityFractionPerAgent()) {
                  
             	logger.log(Level.FINE, 
-                		 agent + " will not invest in {} technology because there's too much capacity planned by him", technology);
+                		 agent + " will not invest in " + technology.getName() + " because there's too much capacity planned by him");
 //            
 //            } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
 //            	logger.log(Level.FINE, "Not investing because more than 20% of demand in pipeline.");
@@ -252,6 +271,8 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
             } else {
             	
                 // Passes all hard limits in terms of capacity
+            	logger.log(Level.FINE, agent + " considers " + technology.getName()  + " to be viable.");
+            	
             	setViableInvestment(true);
             	
 	
@@ -435,9 +456,17 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
     	 */
 		
 		@Override
-		protected double calculateProjectValue() {         	
+		protected double calculateProjectValue() {
+			
+		
+			double calcVariant1 = discountedOperatingProfit +                             discountedCapitalCosts;
+			double calcVariant2 = discountedOperatingRevenue + discountedOperatingCost  + discountedCapitalCosts;
+			
+			if(Math.abs(calcVariant1 - calcVariant2) > 1e-4) {
+				logger.warning("PROBLEM, values are not equal. Var 1: " + calcVariant1 + " and Var 2: " + calcVariant2);
+			}
 
-			return discountedOperatingRevenue + discountedOperatingCost  + discountedCapitalCosts;          
+			return calcVariant2;          
 
     	}
 		
@@ -447,12 +476,14 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
     	@Override
 		public void calculateDiscountedValues() {
     		
-    		super.calculateDiscountedValues();	
     		discountedOperatingRevenue = calculateDiscountedOperatingRevenue();
     		
     		if(scheme != null) {
     			discountedGeneration = calculateDiscountedGeneration();
     		}
+    		
+    		super.calculateDiscountedValues();	
+
     			
     	}
 
