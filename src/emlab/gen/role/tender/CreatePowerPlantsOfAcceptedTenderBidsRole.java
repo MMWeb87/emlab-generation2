@@ -89,7 +89,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
             logger.fine("Loan amount is: " + amount);
             logger.fine(
             "current accepted bid: " + currentTenderBid + "for (new) power plant" +
-            currentTenderBid.getPowerPlant()); // TODO Powerplant == NULL ok?
+            currentTenderBid.getPowerPlant());
 
             Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
                     plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);

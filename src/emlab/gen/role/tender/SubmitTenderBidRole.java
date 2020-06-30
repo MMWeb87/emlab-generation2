@@ -156,7 +156,7 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
 
                         // Target should equal node potential.
                         long noOfPlants = (long) Math.ceil(noOfPlantsByTarget);
-                        logger.log(Level.FINE, "NUMBER OF PLANTS TO BE BID FOR" + noOfPlants);
+                        logger.log(Level.FINER, "NUMBER OF PLANTS TO BE BID FOR" + noOfPlants);
 
                         
                         evaluateInvestment.setFuelMixForPlant(technology, plant);

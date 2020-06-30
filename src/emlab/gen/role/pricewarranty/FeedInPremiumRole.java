@@ -94,6 +94,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
                     // query to find power plants by node and technology who
                     // have
                     // finished construction this tick
+                    // TODO MM (Comment): Can't find any plants here because no investing has happend. I guess here it's only paying.(Generatinig the cashflow)
                     for (PowerPlant plant : plantSet) {
 
                         long finishedConstruction = plant.getConstructionStartTime() + plant.calculateActualPermittime()
@@ -261,9 +262,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
     	getReps().createCashFlow(regulator, plant.getOwner(), supportPrice,
                 CashFlow.FEED_IN_PREMIUM, getCurrentTick(), plant);
 
-        // logger.warn(
-        // "Fip Premium of " + supportPrice + " from regulator" +
-        // regulator.getName() + "to " + plant.getOwner());
+         logger.fine("(DBG123) Fip Premium of " + supportPrice + " from regulator " + regulator.getName() + " to " + plant.getOwner());
 
     }
 

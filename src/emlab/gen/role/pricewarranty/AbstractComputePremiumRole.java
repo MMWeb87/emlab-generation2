@@ -156,12 +156,12 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
                     
                     // TODO MM: So does this assume that different producers will the same base costs for different projects?
                     // Namely does of the random Agent here?
-                    logger.log(Level.FINE, "Creating BaseCost object: technology " +
+                    logger.log(Level.FINER, "Creating BaseCost object: technology " +
                     		technology.getName() + "premium " + getCostPerMWh());
                     
                 } else {
 
-                    logger.log(Level.INFO, "Creating base cost map: technology " + technology.getName() + "premium " + getCostPerMWh());
+                    logger.log(Level.FINER, "Creating base cost map: technology " + technology.getName() + "premium " + getCostPerMWh());
                     baseCostMap.put(new Key2D(technology, node), getCostPerMWh());
                 }
 
@@ -181,7 +181,7 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
 
             double renewableTargetInMwh = computeRenewableGenerationTarget(scheme, null);
 
-            logger.log(Level.INFO, "Actual Target for tick " + futureTimePoint + "in MWh is " + renewableTargetInMwh);
+            logger.log(Level.FINER, "Actual Target for tick " + futureTimePoint + "in MWh is " + renewableTargetInMwh);
 
             for (Entry<Key2D, Double> technologyCost : meritOrderBaseCost.entrySet()) {
                 Key2D baseCostKey = technologyCost.getKey();

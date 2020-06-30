@@ -96,7 +96,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
                     sumOfTenderBidQuantityAccepted = sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount();
 
-                    logger.log(Level.FINE, "sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
+                    logger.log(Level.FINER, "sumOfTenderBidQuantityAccepted; " + sumOfTenderBidQuantityAccepted);
 
                 }
 
@@ -106,7 +106,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
                 else if (tenderQuota
                         - (sumOfTenderBidQuantityAccepted + currentTenderBid.getAmount()) < clearingEpsilon) {
 
-                    logger.log(Level.FINE, "Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
+                    logger.log(Level.FINER, "Partially Accepted: bidder; " + currentTenderBid.getBidder() + "Technology; "
                             + currentTenderBid.getTechnology() + "bidAmount; " + currentTenderBid.getAmount()
                             + "acceptedSubsidyPrice; " + acceptedSubsidyPrice);
 
@@ -127,7 +127,7 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
 
         } // FOR Loop ends here
 
-        logger.log(Level.FINE, "Total No of Bids accepted: " + noOfBidsAccepted + ". Accepted subsidy price: " + acceptedSubsidyPrice
+        logger.log(Level.FINER, "Total No of Bids accepted: " + noOfBidsAccepted + ". Accepted subsidy price: " + acceptedSubsidyPrice
                 + " and accepted subsidy quantity: " + sumOfTenderBidQuantityAccepted);
         
         // This creates a clearing point that contains general information about

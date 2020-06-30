@@ -45,9 +45,11 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
     public void act(RenewableSupportSchemeTender scheme) {
 
         double annualTenderRevenue = 0d;
-
-        for (TenderBid currentTenderBid : getReps().findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
-                getCurrentTick())) {
+        
+        Iterable<TenderBid> currentTenderBids = getReps().findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
+                getCurrentTick());
+      
+        for (TenderBid currentTenderBid : currentTenderBids) {
 
             TenderClearingPoint tenderClearingPoint = getReps().findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
 

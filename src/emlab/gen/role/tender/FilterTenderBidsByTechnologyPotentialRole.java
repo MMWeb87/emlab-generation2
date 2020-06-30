@@ -88,10 +88,10 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
             limit = technologyPotential
                     - (expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
             
-            logger.log(Level.FINE, "verification: expected generation is "
+            logger.log(Level.FINER, "verification: expected generation is "
                     + expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
 
-            logger.log(Level.FINE, "Limit for technology " + technology.getName() + "is " + limit);
+            logger.log(Level.FINER, "Limit for technology " + technology.getName() + "is " + limit);
 
             double sumAcceptedBid = 0d;
             for (TenderBid currentBid : sortedTenderBidsbyPriceTechnology) {

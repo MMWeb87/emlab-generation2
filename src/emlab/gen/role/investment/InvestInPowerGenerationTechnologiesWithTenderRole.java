@@ -81,6 +81,10 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
                         financialExpectation.calculateDiscountedValues(); // Without scheme
                         financialExpectation.calculateExpectedBaseCostWithScheme();
                     	double projectValue = financialExpectation.getProjectValue();
+                    	
+                        logger.fine("For plant before subsidy:" + plant.getName() +
+                        "ProjectValue " + projectValue);
+
 
 						//fReport = new ForecastingInformationReport();
 						//fReport.setExpectedOpRevenueElectricityMarketWithoutSubsidy(financialExpectation.getExpectedOperatingRevenue());
