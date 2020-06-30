@@ -87,20 +87,32 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 	                        // Assuming investor would not want to make a loss
 		                    if (projectValue > 0) {
 		                    	
-		                    	logger.log(Level.FINER, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
+		                    	logger.log(Level.FINE, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
 		                    
 		                    	// TODO in auction module there is a revenue component
 		                    	
+			                    
+			                    logger.log(Level.FINE, "Agent " + agent + " finds the disc. operating profit " + financialExpectation.discountedOperatingProfit);
+			                    logger.log(Level.FINE, "Agent " + agent + " finds the disc. capital cost" + financialExpectation.discountedCapitalCosts);
+		                    	
 //			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 
 //			                    		/ (-financialExpectation.getDiscountedCapitalCosts());
-			                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
+//			                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
+//			                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
+//			                    
+//			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+//			                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
 			                    
-			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
+			                    double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment();			                    
+			                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+
+			                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+			                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+
+			    
 
 			
-			                    double partWorthUtilityReturn = determineUtilityReturn(projectReturnOnEquity, agent);
+			                    double partWorthUtilityReturn = determineUtilityReturn(projectDiscountedReturnOnEquity, agent);
 			                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
 			                    double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
 			                    
@@ -110,11 +122,11 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 			                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 			
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectReturnOnEquity);
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalUtility + " as total utility");
-			                    logger.log(Level.WARNING, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
+			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
+			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectDiscountedReturnOnEquity);
+			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
+			                    logger.log(Level.FINE, "Agent " + agent + " finds " + totalUtility + " as total utility");
+			                    logger.log(Level.FINE, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
 			                    
 			                    
 			                    
@@ -129,8 +141,8 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    report.setPlant(plant);
 			                    report.setNode(node);
 			                    
-			                    report.setProjectReturnOnInvestment(projectReturnOnInvestment);
-			                    report.setProjectReturnOnEquity(projectReturnOnEquity);
+			                    report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
+			                    report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
 			                    
 			                    report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
 			                    report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
@@ -199,12 +211,20 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 
     	// TODO MM all based on 6% -> could be more generic hence.
     	// TODO MM andwhat if 5-6% is different from 6-7% (which it will be probably) ?
+    	
 
     	double investorReturnUtilitySensitivity = agent.getUtilityReturn().get("7%") - agent.getUtilityReturn().get("6%");  
+    	
+    	//  TODO: Probably need to adapt literature or make this somehow dynamic
+    	if(projectReturnOnEquity >= 0.15) {    		
+    		projectReturnOnEquity = 0.15;
+
+    	} else if(projectReturnOnEquity <= 0.01) {
+    		projectReturnOnEquity = 0.01;
+    	}
+    	
     	double utility = (projectReturnOnEquity - 0.06) * investorReturnUtilitySensitivity / 0.01;
-        
-        // TODO MM idea 2: weight 
-        
+
         
         return utility;
     }
