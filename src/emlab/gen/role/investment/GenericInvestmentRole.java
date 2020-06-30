@@ -28,6 +28,8 @@ import emlab.gen.role.AbstractEnergyProducerRole;
  */
 public class GenericInvestmentRole<T extends EnergyProducer> extends AbstractEnergyProducerRole<T> implements Role<T> {
 	
+	private int currentTnvestmentRound; // used for debuggin
+	
 	public GenericInvestmentRole(Schedule schedule) {
         super(schedule);
     }
@@ -38,6 +40,15 @@ public class GenericInvestmentRole<T extends EnergyProducer> extends AbstractEne
         logger.log(Level.FINER, agent.getName() + " does " +
                 agent.getInvestmentRole().getClass().toString());
             	
+        agent.getInvestmentRole().setCurrentTnvestmentRound(currentTnvestmentRound);
         agent.getInvestmentRole().act(agent);
-    }   
+    }
+
+	public int getCurrentTnvestmentRound() {
+		return currentTnvestmentRound;
+	}
+
+	public void setCurrentTnvestmentRound(int currentTnvestmentRound) {
+		this.currentTnvestmentRound = currentTnvestmentRound;
+	}   
 }

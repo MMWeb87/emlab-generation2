@@ -40,6 +40,7 @@ public class FinancialExpectationReportCSVConverterHeaders implements CSVEntryCo
         row.add("technology");
         row.add("plant");
         row.add("node");
+        row.add("investmentRound");
 
         
         row.add("ROI");

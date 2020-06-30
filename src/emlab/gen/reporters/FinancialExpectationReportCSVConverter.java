@@ -33,7 +33,8 @@ public class FinancialExpectationReportCSVConverter implements CSVEntryConverter
         row.add(String.valueOf(report.getTechnology().getName()));
 		row.add(String.valueOf(report.getPlant().getName()));
 		row.add(String.valueOf(report.getNode().getName()));
-        
+		row.add(String.valueOf(report.getInvestmentRound()));
+
       
 		row.add(String.valueOf(report.getProjectReturnOnInvestment()));
 		row.add(String.valueOf(report.getProjectReturnOnEquity()));

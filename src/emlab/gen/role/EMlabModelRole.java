@@ -275,12 +275,15 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
         logger.log(Level.INFO, "\t Private investment");
         if (getCurrentTick() > 1) {//TODO DISABLED
             boolean someOneStillWillingToInvest = true;
+            int iInInvestmentRound = 0;
             while (someOneStillWillingToInvest) {
                 someOneStillWillingToInvest = false;
                 for (EnergyProducer producer : getReps().findAllEnergyProducersExceptForRenewableTargetInvestorsAtRandom()) {
 
                     // invest in new plants
                     if (producer.isWillingToInvest()) {
+                    	genericInvestmentRole.setCurrentTnvestmentRound(++iInInvestmentRound);
+                    	logger.fine("Current investment round: " + iInInvestmentRound);
                         genericInvestmentRole.act(producer);
                         someOneStillWillingToInvest = true;
                     }

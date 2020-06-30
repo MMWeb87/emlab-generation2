@@ -43,8 +43,9 @@ public class FinancialExpectationReport {
     private double runningHours;
     private double wacc;
     private double totalUtility;
-    
 
+	private int investmentRound;
+   
 	
     public EnergyProducer getAgent() {
 		return agent;
@@ -224,6 +225,14 @@ public class FinancialExpectationReport {
 
 	public void setTotalUtility(double totalUtility) {
 		this.totalUtility = totalUtility;
+	}
+
+	public void setInvestmentRound(int investmentRound) {
+		this.investmentRound = investmentRound;	
+	}
+
+	public int getInvestmentRound() {
+		return investmentRound;
 	} 
 
 }

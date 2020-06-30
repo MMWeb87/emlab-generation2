@@ -15,6 +15,8 @@
  ***************************************************************************** */
 package emlab.gen.role.investment;
 
+import java.util.logging.Level;
+
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerPlant;
@@ -54,12 +56,65 @@ public class InvestInPowerGenerationTechnologiesRole<T extends EnergyProducer> e
 
                 if (financialExpectation.plantHasRequiredRunningHours()) {
                 	financialExpectation.calculateDiscountedValues();
-                    
+                	
+                    if (financialExpectation.getProjectValue() > 0) {
+                    	
+                    	logger.log(Level.FINE, "The project value " + financialExpectation.getProjectValue() + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
 
-                    // Divide by capacity, in order not to favour large power plants (which have the single largest NP)
-                    if (financialExpectation.getProjectValue() > 0 && financialExpectation.getProjectValue() / plant.getActualNominalCapacity() > highestValue) {
-                        highestValue = financialExpectation.getProjectValue() / plant.getActualNominalCapacity();
-                        bestPlant = plant;
+//	                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
+//	                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
+//	                    
+//	                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+//	                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
+	
+	                    double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment();			                    
+	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+
+	                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+
+	                    // Reporter
+	                    FinancialExpectationReport report = new FinancialExpectationReport();
+	                    
+	                    report.schedule = schedule;
+	                    report.setMarket(agent.getInvestorMarket());
+	                    report.setTime(schedule.getCurrentTick()); 
+	                    report.setAgent(agent);
+	                    report.setTechnology(technology);
+	                    report.setPlant(plant);
+	                    report.setNode(plant.getLocation());
+	                    report.setInvestmentRound(this.getCurrentTnvestmentRound());
+
+	                    
+	                    report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
+	                    report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
+	                    
+	                    report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
+	                    report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
+	                    report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
+	                    report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
+	                    
+	                    report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
+	                    report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
+	                    report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
+	                    report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
+	                    report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
+	                    
+	                    report.setProjectCost(financialExpectation.getProjectCost());
+	                    report.setProjectValue(financialExpectation.getProjectValue());
+	                    
+	                    report.setRunningHours(financialExpectation.getRunningHours());
+	                    report.setWacc(financialExpectation.getWacc());
+	                    report.setTotalUtility(0);
+	                    
+	                     
+	                    getReps().financialExpectationReports.add(report);
+	
+	                    // Divide by capacity, in order not to favour large power plants (which have the single largest NP)
+	                    if (financialExpectation.getProjectValue() > 0 && financialExpectation.getProjectValue() / plant.getActualNominalCapacity() > highestValue) {
+	                        highestValue = financialExpectation.getProjectValue() / plant.getActualNominalCapacity();
+	                        bestPlant = plant;
+	                    }
                     }
                 }
             }
