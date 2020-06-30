@@ -668,19 +668,15 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
     	
     	}
     	
-    	// TODO: maybe move?
-    	
-    	protected double calculateReturnOnInvestment(int after_years, int debt, int equity) {
-    		
-    		double totalInvestment = plant.getActualInvestedCapital();
-    		
-    		double returnValue = (operatingProfit * after_years - totalInvestment) / (totalInvestment);
-
+    	/**
+    	 * Calculates a yearly, discounted return on investment as
+    	 * an average per year over the expected lifetime of the power plant
+    	 * @return return, i.e. 0.1 = 10% return per year
+    	 */
+    	protected double calculateDiscountedReturnOnInvestment() {
+    		double returnValue = (discountedOperatingProfit + discountedCapitalCosts) / Math.abs(discountedCapitalCosts) / plant.getTechnology().getExpectedLifetime();
     		return returnValue;
     	}
-    	
-    	
-
     	
 
     	protected double calculateDiscountedCashFlowForPlant(int depriacationTime,
