@@ -247,7 +247,8 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
 
         if (model.isFeedInPremiumImplemented() && getCurrentTick() > 0) {
             logger.log(Level.INFO, " 6a. Run Feed In Premium Scheme");
-            for (RenewableSupportFipScheme scheme : getReps().renewableSupportFipSchemes) {
+            ArrayList<RenewableSupportFipScheme> renewableSupportFipSchemes = getReps().renewableSupportFipSchemes;
+            for (RenewableSupportFipScheme scheme : renewableSupportFipSchemes) {
 
                 if (scheme.isEmRevenuePaidExpost()) {
                     computePremiumRoleExPost.act(scheme);

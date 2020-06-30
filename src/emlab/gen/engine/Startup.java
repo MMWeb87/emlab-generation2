@@ -33,7 +33,7 @@ public class Startup {
         long runID = System.currentTimeMillis();
         
         /* Default parameters */
-        long numberOfIterations = 3;
+        long numberOfIterations = 1;
         long numberOfParallelJobs = 1;
         
         //String scenarioName = "Scenario_NL";
@@ -43,9 +43,12 @@ public class Startup {
         //String scenarioName = "Scenario_NL_DE_toy";
         //String scenarioName = "Scenario_NL_DE_pref";
         //String scenarioName = "Scenario_NL_intermittent_pref2";
-        //String scenarioName = "Scenario_NL_DE_intermittent_pref2";
         //String scenarioName = "DefaultScenario";
-        String scenarioName = "Scenario_NL_intermittent_auction";
+        //String scenarioName = "Scenario_NL_intermittent_auction";
+
+        //String scenarioName = "Scenario_NL_intermittent_auction_onshore";
+        String scenarioName = "Scenario_NL_DE_intermittent_pref2";
+
         //String scenarioName = "Scenario_NL_intermittent_auction_toy";
 
 

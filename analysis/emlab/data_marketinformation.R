@@ -81,6 +81,7 @@ get_marketinfo_prices <- function(data, input, average = TRUE){
     #geom_line(mapping = aes(x = segment, color = producer)) +
     geom_col(mapping = aes(x = segment, fill = producer), position = "dodge2") +
     scale_fill_custom("producer_colors") +
+    #scale_y_log10() +
     #scale_color_custom("producer_colors") +
     labs_default(
       y = "Price (Euro/MWh)",

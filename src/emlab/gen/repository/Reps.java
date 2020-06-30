@@ -64,6 +64,7 @@ import emlab.gen.role.investment.MarketInformationReport;
 import emlab.gen.trend.TimeSeriesImpl;
 import emlab.gen.util.Utils;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -1859,12 +1860,21 @@ public class Reps {
     public Iterable<TenderBid> findAllTenderBidsThatShouldBePaidInTimeStep(
             RenewableSupportSchemeTender scheme, long time){
     	
-    	return tenderBids.stream()
+    	Iterable<TenderBid> tenderBidTempList = tenderBids.stream()
     			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
-    			.filter(p -> p.getStart() <= time)
-    			.filter(p -> p.getFinish() > time)
+    			//.filter(p -> p.getStart() <= time) // eg.g start <= 19 < finish
+    			//.filter(p -> p.getFinish() > time)
     			.filter(p -> p.getStatus() >= 2)
     			.collect(Collectors.toList());
+    	
+    	double size = ((Collection<?>) tenderBidTempList).size();
+    	
+    	if(size > 0) {
+    		logger.fine(tenderBidTempList.toString());
+    	}
+    	
+    	return tenderBidTempList;
+    	
     }
     
     
@@ -2021,7 +2031,15 @@ public class Reps {
     
     public SupportPriceContract findOneContractByPowerPlant(PowerPlant plant) {
     	
-    	return supportPriceContracts.stream().filter(p -> p.getPlant().equals(plant)).findFirst().get();
+        Optional<SupportPriceContract> optional = supportPriceContracts.stream().filter(p -> p.getPlant().equals(plant)).findFirst();
+        if(optional.isPresent()){
+            return optional.get();
+        } else {
+        	return null;
+        
+        }
+    	
+    	
     	
     }
 
