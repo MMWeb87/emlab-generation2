@@ -19,6 +19,7 @@ import emlab.gen.domain.factory.PowerPlantCSVFactory;
 import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.SegmentLoad;
+import emlab.gen.domain.policy.EmpiricalMappingFunctionParameter;
 import emlab.gen.domain.policy.PowerGeneratingTechnologyTarget;
 import emlab.gen.domain.technology.Interconnector;
 import emlab.gen.domain.technology.IntermittentResourceProfile;
@@ -69,7 +70,7 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
         //Main simulation
         reps.emlabModel = new EMLabModel();
         reps.emlabModel.setExitSimulationAfterSimulationLength(true);
-        reps.emlabModel.setSimulationLength(20); // input number of ticks to run
+        reps.emlabModel.setSimulationLength(40); // input number of ticks to run
         //reps.emlabModel.setDeletionAge(5);
         reps.emlabModel.setDeletionOldPPDPBidsAndCashFlowsEnabled(true);//speed up simulation by deleting old objects
         reps.emlabModel.setCapDeviationCriterion(0.03);
@@ -351,9 +352,11 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
 		prefInvestorsMediumDE.setUtilityTechnology(preferenceMap);
 
 		potentialInvestorMarkets = new HashSet<>();
-		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
-//		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
-		prefInvestorsMediumDE.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+//		potentialInvestorMarkets.add(netherlandsElectricitySpotMarket);
+		potentialInvestorMarkets.add(germanyElectricitySpotMarket);
+//		prefInvestorsMediumDE.setInvestorMarket(netherlandsElectricitySpotMarket); // Like a home market?
+		prefInvestorsMediumDE.setInvestorMarket(germanyElectricitySpotMarket);
+
 		prefInvestorsMediumDE.setPotentialInvestorMarkets(potentialInvestorMarkets);
 
 
@@ -1143,7 +1146,111 @@ public class Scenario_NL_DE_intermittent_pref2 implements Scenario {
 //        investorDE.setPowerGenerationTechnologyTargets(targetsDE);
 //        investorDE.setInvestmentRole(new TargetInvestmentRole(schedule));
 //        investorDE.setInvestorMarket(germanyElectricitySpotMarket);//DEZE IS DUS VOOR NL!
-//        reps.targetInvestors.add(investorDE);        
+//        reps.targetInvestors.add(investorDE);      
+           
+
+//EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction1.setModelledRoeMin(0.0366003332612113);
+//        empiricalMappingFunction1.setModelledRoeMax(0.243207472778635);
+//        empiricalMappingFunction1.setIntercept(0.0353574135602306);
+//        empiricalMappingFunction1.setSlope(0.19360415178986);
+//        empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
+//        empiricalMappingFunction1.setTechnology(windOnshore); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
+//EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction2.setModelledRoeMin(0.0628682284163219);
+//        empiricalMappingFunction2.setModelledRoeMax(0.136434853528878);
+//        empiricalMappingFunction2.setIntercept(0.0312940677289842);
+//        empiricalMappingFunction2.setSlope(0.543724820036268);
+//        empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
+//        empiricalMappingFunction2.setTechnology(windOffshore); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
+//EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction3.setModelledRoeMin(0.043292043802706);
+//        empiricalMappingFunction3.setModelledRoeMax(0.18992889644881);
+//        empiricalMappingFunction3.setIntercept(0.0240971498182509);
+//        empiricalMappingFunction3.setSlope(0.272782723293556);
+//        empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
+//        empiricalMappingFunction3.setTechnology(pv); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
+//EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction4.setModelledRoeMin(0.201267459986563);
+//        empiricalMappingFunction4.setModelledRoeMax(0.804908113427479);
+//        empiricalMappingFunction4.setIntercept(0.0353337181043314);
+//        empiricalMappingFunction4.setSlope(0.0662645893247732);
+//        empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
+//        empiricalMappingFunction4.setTechnology(windOnshore); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
+//EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction5.setModelledRoeMin(0.273192898927705);
+//        empiricalMappingFunction5.setModelledRoeMax(1.13226086701795);
+//        empiricalMappingFunction5.setIntercept(0.0748931675721803);
+//        empiricalMappingFunction5.setSlope(0.0465620899460636);
+//        empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
+//        empiricalMappingFunction5.setTechnology(windOffshore); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
+//EmpiricalMappingFunctionParameter empiricalMappingFunction6 = new EmpiricalMappingFunctionParameter();
+//        empiricalMappingFunction6.setModelledRoeMin(0.179552428214725);
+//        empiricalMappingFunction6.setModelledRoeMax(0.529774223923413);
+//        empiricalMappingFunction6.setIntercept(0.0264927939336786);
+//        empiricalMappingFunction6.setSlope(0.114213337062756);
+//        empiricalMappingFunction6.setMarket(netherlandsElectricitySpotMarket);
+//        empiricalMappingFunction6.setTechnology(pv); 
+//        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction6);
+        
+        
+EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction1.setModelledRoeMin(0.031637260930554);
+        empiricalMappingFunction1.setModelledRoeMax(0.164426598133);
+        empiricalMappingFunction1.setIntercept(0.0341383017115938);
+        empiricalMappingFunction1.setSlope(0.301229005601688);
+        empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
+        empiricalMappingFunction1.setTechnology(windOnshore); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
+EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction2.setModelledRoeMin(0.059355150735816);
+        empiricalMappingFunction2.setModelledRoeMax(0.139732763887793);
+        empiricalMappingFunction2.setIntercept(0.0364755919146877);
+        empiricalMappingFunction2.setSlope(0.497651005440641);
+        empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
+        empiricalMappingFunction2.setTechnology(windOffshore); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
+EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction3.setModelledRoeMin(0.037722246510876);
+        empiricalMappingFunction3.setModelledRoeMax(0.18624471763106);
+        empiricalMappingFunction3.setIntercept(0.0237867387910234);
+        empiricalMappingFunction3.setSlope(0.269319515749452);
+        empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
+        empiricalMappingFunction3.setTechnology(pv); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
+EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction4.setModelledRoeMin(0.164701890381637);
+        empiricalMappingFunction4.setModelledRoeMax(0.771845121635383);
+        empiricalMappingFunction4.setIntercept(0.0381449798932422);
+        empiricalMappingFunction4.setSlope(0.0658823123456393);
+        empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
+        empiricalMappingFunction4.setTechnology(windOnshore); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
+EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction5.setModelledRoeMin(0.214904377298186);
+        empiricalMappingFunction5.setModelledRoeMax(1.09297468149244);
+        empiricalMappingFunction5.setIntercept(0.078804523862103);
+        empiricalMappingFunction5.setSlope(0.0455544388745789);
+        empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
+        empiricalMappingFunction5.setTechnology(windOffshore); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
+EmpiricalMappingFunctionParameter empiricalMappingFunction6 = new EmpiricalMappingFunctionParameter();
+        empiricalMappingFunction6.setModelledRoeMin(0.198107680727457);
+        empiricalMappingFunction6.setModelledRoeMax(0.48098966403077);
+        empiricalMappingFunction6.setIntercept(0.0210666861720205);
+        empiricalMappingFunction6.setSlope(0.14140172354883);
+        empiricalMappingFunction6.setMarket(netherlandsElectricitySpotMarket);
+        empiricalMappingFunction6.setTechnology(pv); 
+        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction6);
+
+        
+        
+
         
         
 

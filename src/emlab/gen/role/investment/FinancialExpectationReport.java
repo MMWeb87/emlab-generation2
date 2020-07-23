@@ -29,6 +29,8 @@ public class FinancialExpectationReport {
         
     private double projectReturnOnInvestment;
     private double projectReturnOnEquity;
+    private double mappedProjectReturnOnEquity;
+    
     private double debtRatioOfInvestments;
     private double discountedCapitalCosts;
     private double discountedOperatingCost;
@@ -105,6 +107,14 @@ public class FinancialExpectationReport {
 
 	public void setProjectReturnOnEquity(double projectReturnOnEquity) {
 		this.projectReturnOnEquity = projectReturnOnEquity;
+	}
+
+	public double getMappedProjectReturnOnEquity() {
+		return mappedProjectReturnOnEquity;
+	}
+
+	public void setMappedProjectReturnOnEquity(double mappedProjectDiscountedReturnOnEquity) {
+		this.mappedProjectReturnOnEquity = mappedProjectDiscountedReturnOnEquity;
 	}
 
 	public double getDebtRatioOfInvestments() {

@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
+import emlab.gen.domain.policy.EmpiricalMappingFunctionParameter;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
@@ -109,10 +110,9 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
 			                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
 
-			    
-
-			
-			                    double partWorthUtilityReturn = determineUtilityReturn(projectDiscountedReturnOnEquity, agent);
+			                    double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket(), "rescalled");
+			                    
+			                    double partWorthUtilityReturn = determineUtilityReturn(mappedProjectDiscountedReturnOnEquity, agent);
 			                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
 			                    double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
 			                    
@@ -140,9 +140,12 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
 			                    report.setTechnology(technology);
 			                    report.setPlant(plant);
 			                    report.setNode(node);
+			                    report.setInvestmentRound(this.getCurrentTnvestmentRound());
 			                    
 			                    report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
 			                    report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
+			                    report.setMappedProjectReturnOnEquity(mappedProjectDiscountedReturnOnEquity);
+
 			                    
 			                    report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
 			                    report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
@@ -209,24 +212,72 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
      */
     private double determineUtilityReturn(double projectReturnOnEquity, EnergyProducer agent) {
 
-    	// TODO MM all based on 6% -> could be more generic hence.
-    	// TODO MM andwhat if 5-6% is different from 6-7% (which it will be probably) ?
-    	
 
-    	double investorReturnUtilitySensitivity = agent.getUtilityReturn().get("7%") - agent.getUtilityReturn().get("6%");  
-    	
-    	//  TODO: Probably need to adapt literature or make this somehow dynamic
-    	if(projectReturnOnEquity >= 0.15) {    		
-    		projectReturnOnEquity = 0.15;
+    	// Here, I extrapolate linearly based on the slope between 6 and 7% return -> specific for data of Melliger, Lilliestam (2020)
+    	// TODO MM andwhat if 5-6% is different from 6-7% (which it will be probably) ? ->  Maybe mean of slopes
+    	double utilityReturnExtrapolationSlope = (agent.getUtilityReturn().get("7%") - agent.getUtilityReturn().get("6%")) / 0.01;
+    	double utilityReturnExtrapolationIntercept = agent.getUtilityReturn().get("6%") - utilityReturnExtrapolationSlope * 0.06;
 
-    	} else if(projectReturnOnEquity <= 0.01) {
-    		projectReturnOnEquity = 0.01;
-    	}
-    	
-    	double utility = (projectReturnOnEquity - 0.06) * investorReturnUtilitySensitivity / 0.01;
-
-        
+    	double utility = utilityReturnExtrapolationIntercept + utilityReturnExtrapolationSlope *  projectReturnOnEquity;        	
+    
         return utility;
+    }
+    
+    /**
+     * This function transforms a return value for a specific country or technology to
+     * a value that is more realistic (based on empirical paper by Melliger et al.).
+     * See R script for actual function.
+     * 
+     * To get the EmpiricalMappingFunctionParameter, the model should first be run with the linear method.
+     *
+     * @param projectReturnOnEquity 	ROE of the project
+     * @param agent						EnergyProducer
+     * @return double utility value
+     *
+     */
+    private double mapReturnToEmpiricalRange(double projectReturnOnEquity, PowerGeneratingTechnology technology, ElectricitySpotMarket market, String method) {
+
+    	double finalReturnForCalculation = 0;
+  	
+    	if(method == "none") {		
+    		finalReturnForCalculation = projectReturnOnEquity;       	
+    	}
+    	else if(method == "linear_capped") {
+    		
+        	//  TODO: Probably need to adapt literature or make this somehow dynamic
+        	if(projectReturnOnEquity >= 0.08) {    		
+        		projectReturnOnEquity = 0.08;
+
+        	} else if(projectReturnOnEquity <= 0.04) {
+        		projectReturnOnEquity = 0.04;
+        	}
+        	
+        	finalReturnForCalculation = projectReturnOnEquity;
+        	
+    	} else if(method == "rescalled"){
+    		
+    		
+    		EmpiricalMappingFunctionParameter empiricalMappingParameter = getReps().findEmpiricalMappingParameters(market, technology);
+    		
+    		double intercept = empiricalMappingParameter.getIntercept();
+    		double slope = empiricalMappingParameter.getSlope();
+    		double upper_quartile = empiricalMappingParameter.getModelledRoeMax();
+    		double lower_quartile = empiricalMappingParameter.getModelledRoeMin();
+    		
+    		double capped_return = projectReturnOnEquity; 
+        	if(projectReturnOnEquity >= upper_quartile) {    		
+        		capped_return = upper_quartile;
+        	} else if(projectReturnOnEquity <= lower_quartile) {
+        		capped_return = lower_quartile;
+        	}
+        	
+        	finalReturnForCalculation = intercept + slope * capped_return;
+        	
+    	}
+
+
+    	return finalReturnForCalculation;        	
+    
     }
      
     /**
@@ -262,7 +313,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
     		utility = agent.getUtilityCountry().get("Known country");
     		
     	}
-    	// TODO unkonwn country? Not implemetable at all?
+    	// TODO unkonwn country? Not implementable at all?
     	
     	
         return utility;

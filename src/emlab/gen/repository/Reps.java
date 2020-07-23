@@ -39,6 +39,7 @@ import emlab.gen.domain.market.electricity.PowerPlantDispatchPlan;
 import emlab.gen.domain.market.electricity.Segment;
 import emlab.gen.domain.market.electricity.SegmentClearingPoint;
 import emlab.gen.domain.market.electricity.SegmentLoad;
+import emlab.gen.domain.policy.EmpiricalMappingFunctionParameter;
 import emlab.gen.domain.policy.PowerGeneratingTechnologyTarget;
 import emlab.gen.domain.policy.renewablesupport.BaseCostFip;
 import emlab.gen.domain.policy.renewablesupport.BiasFactor;
@@ -186,14 +187,18 @@ public class Reps {
     
     public ArrayList<TenderClearingPoint> tenderClearingPoints = new ArrayList<>();
     
-    public ArrayList<BaseCostFip> baseCostFips = new ArrayList<>(); // TODO empty?
+    public ArrayList<BaseCostFip> baseCostFips = new ArrayList<>();
     
-    public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>(); // TODO empty?
+    public ArrayList<SupportPriceContract> supportPriceContracts = new ArrayList<>();
     
-    public ArrayList<BiasFactor> biasFactors = new ArrayList<>(); // TODO empty?
+    public ArrayList<BiasFactor> biasFactors = new ArrayList<>();
 
-    public ArrayList<Regulator> regulators = new ArrayList<>(); // TODO empty?
-
+    public ArrayList<Regulator> regulators = new ArrayList<>();
+    
+    
+    
+    // Empirical mapping
+    public ArrayList<EmpiricalMappingFunctionParameter> empiricalMappingFunctionParameters = new ArrayList<>();
     
 
     //private maps 
@@ -2127,6 +2132,24 @@ public class Reps {
             Double d = (o1.getPrice() - o2.getPrice()) * 100;
             return d.intValue();
         }
+    }
+    
+    /**
+     * Usef for empirical data
+     * 
+     * @param node
+     * @param technologyName
+     * @param tick
+     * @return
+     */
+    public EmpiricalMappingFunctionParameter findEmpiricalMappingParameters(
+    		ElectricitySpotMarket market, PowerGeneratingTechnology technology){
+    	
+    	return empiricalMappingFunctionParameters.stream()
+    			.filter(p -> p.getTechnology().equals(technology))
+    			.filter(p -> p.getMarket().equals(market))
+    	        .findFirst().get();
+
     }
     
    

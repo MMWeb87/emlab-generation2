@@ -44,7 +44,9 @@ public class FinancialExpectationReportCSVConverterHeaders implements CSVEntryCo
 
         
         row.add("ROI");
-        row.add("ROE");
+        row.add("ROE.modelled");
+        row.add("ROE.mapped");
+
         row.add("debtratio");
         row.add("discounted.capital_cost");
         row.add("discounted.operating_cost");
