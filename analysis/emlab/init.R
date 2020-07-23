@@ -121,6 +121,9 @@ iteration_max <- max(raw_main_results$iteration)
 tick_expected_min <- min(raw_marketinformation_results$tick)
 tick_expected_max <- max(raw_marketinformation_results$tick)
 
+tick_min <- min(raw_financialexpectations_results$tick)
+tick_max <- max(raw_financialexpectations_results$tick)
+
 
 
 # Units

@@ -86,23 +86,43 @@ ui <- dashboardPage(
                    sliderInput(
                      "selected_single_plot_height",
                      label = "Plot height",
-                     min = 200, max = 2000, step = 100,
+                     min = 200, max = 5000, step = 100,
                      value = 500),
                    
                    hr(),
                    tags$label(tags = "control-label", "Filters"),
                    tags$br(),
+                   
+                   # Filters
                          
-                    box(title = "Iterations", width = 12, solidHeader = TRUE, collapsible = TRUE,collapsed = TRUE,
-                        checkboxInput("iteration_average", "Show average", TRUE),
-                        sliderInput(
-                          "iterations",
-                          label = "Range",
-                          min = iteration_min, max = iteration_max,
-                          value = c(iteration_min, iteration_max))
+                   conditionalPanel(
+                     condition = "output.hide_filter_iteration_range == false",
+                     
+                     box(title = "Iterations", width = 12, solidHeader = TRUE, 
+                         collapsible = TRUE, collapsed = TRUE,
+                          checkboxInput("iteration_average", "Show average", TRUE),
+                          sliderInput(
+                            "iterations",
+                            label = "Range",
+                            min = iteration_min, max = iteration_max,
+                            value = c(iteration_min, iteration_max))
+                     )
                     ),
-                    
-                    # Filters
+                   
+                   conditionalPanel(
+                     condition = "output.show_filter_single_iteration == true",
+                     
+                     box(title = "Single Iteration", width = 12, solidHeader = TRUE, 
+                         collapsible = TRUE, collapsed = TRUE,
+                         sliderInput(
+                           "single_iteration", # TODO need to adjust iterations processing if sinlge value back.
+                           label = "Iteration",
+                           min = iteration_min, max = iteration_max,
+                           value = c(iteration_min))
+                     )
+                   ),
+                   
+                      
                     
                     conditionalPanel(
                       condition = "output.show_filter_technology == true",
@@ -152,8 +172,22 @@ ui <- dashboardPage(
                             "tick_expected",
                             label = "Tick",
                             min = tick_expected_min, max = tick_expected_max,
-                            value = c(tick_expected_min, tick_expected_max))))
-                    )
+                            value = c(tick_expected_min, tick_expected_max))
+                    )),
+                   
+                   conditionalPanel(
+                     #condition = "output.show_filter_tick == true",
+                     box(title = "Tick", width = 12, collapsible = TRUE, collapsed = TRUE, solidHeader = FALSE,
+                         sliderInput(
+                           "tick_checked",
+                           label = "Tick",
+                           min = tick_min, max = tick_max,
+                           value = tick_min)))
+                   
+                   
+                
+
+              )
 
             )
               

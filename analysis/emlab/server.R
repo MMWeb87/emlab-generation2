@@ -87,6 +87,7 @@ server <- function(input, output) {
     }
   }
   
+  ## Custom filters
   
   output$show_filter_technology <- reactive({
     toggle_filters("technology",input$single_plot_selected)
@@ -112,6 +113,24 @@ server <- function(input, output) {
     toggle_filters("tick_expected",input$single_plot_selected)
   })
   outputOptions(output, "show_filter_tick_expected", suspendWhenHidden = FALSE)  
+  
+  output$show_filter_tick <- reactive({
+    toggle_filters("tick_filter",input$single_plot_selected)
+  })
+  outputOptions(output, "show_filter_tick", suspendWhenHidden = FALSE)  
+  
+  output$show_filter_single_iteration <- reactive({
+    toggle_filters("iterations",input$single_plot_selected)
+  })
+  outputOptions(output, "show_filter_single_iteration", suspendWhenHidden = FALSE)  
+  
+  output$hide_filter_iteration_range <- reactive({
+    toggle_filters("hide_iterations_range",input$single_plot_selected)
+  })
+  
+  outputOptions(output, "hide_filter_iteration_range", suspendWhenHidden = FALSE)  
+  
+  
   
   # Logic for saving data
   
