@@ -47,7 +47,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
         super.act(scheme);
     }
 	
-	
+    // Marginal costs
 	@Override
 	protected void calculateCostPerMWh(double biasFactorValue, double generation, PowerPlant plant) {
 		
@@ -56,7 +56,14 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
         double discountedCapitalCosts = evaluateInvestment.financialExpectation.getDiscountedCapitalCosts();
         double discountedOpCost = evaluateInvestment.financialExpectation.getDiscountedOperatingCost();
         
+        // This is the cost that investors calculate with. It does not yet consider the revenue from the electricty market.
+
         lcoe = (discountedCapitalCosts + discountedOpCost) * biasFactorValue / generation;
+        
+        // Base cost marginal costs and need to be of the same sign as those calculated for E-Xante
+        if (lcoe < 0) {
+        	lcoe = -lcoe;
+        }
         
          logger.log(Level.FINE, "expectedBaseCost in PremiumRoleExPost for plant" + plant + 
         		 "in tick" + evaluateInvestment.getFutureTimePoint() + "is " + lcoe);

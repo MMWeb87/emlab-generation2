@@ -14,6 +14,7 @@ import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
+import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.util.GeometricTrendRegression;
 
 /**
@@ -53,8 +54,21 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         if (scheme.isTechnologySpecificityEnabled()) {
 
             PowerGeneratingTechnology technology = scheme.getPowerGeneratingTechnologiesEligible().iterator().next();
-            targetFactor = getReps().findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(scheme, technology.getName())
-                    .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
+            
+            
+            TimeSeriesCSVReader timeseries = getReps().findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(scheme, technology.getName());
+            
+            targetFactor = 0;
+            if(timeseries != null) {
+            	targetFactor = timeseries.getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
+            } else {
+            	logger.severe("Tender eligible technology without targets defined");
+            }
+            
+          
+            
+//            //            
+            
             // TODO MM: debug!
             // targetFactorAchievementForecast =
             // getForecastedRenewableGeneration(scheme, technology);

@@ -137,6 +137,9 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
                             // technology " + plant.getTechnology().getName()
                             // + "for node " + node.getNodeId() + " is , " +
                             // contract.getPricePerUnit());
+                            
+                            getReps().supportPriceContracts.add(contract);
+                            
                         }
 
                     }

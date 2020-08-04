@@ -47,7 +47,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
         super.act(scheme);
     }
     
-	
+	// Marginal costs
 	@Override
 	protected void calculateCostPerMWh(double biasFactorValue, double generation, PowerPlant plant) {
 		

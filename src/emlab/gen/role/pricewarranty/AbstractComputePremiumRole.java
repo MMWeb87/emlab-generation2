@@ -159,6 +159,8 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
                     logger.log(Level.FINER, "Creating BaseCost object: technology " +
                     		technology.getName() + "premium " + getCostPerMWh());
                     
+                    getReps().baseCostFips.add(baseCostFip);
+                    
                 } else {
 
                     logger.log(Level.FINER, "Creating base cost map: technology " + technology.getName() + "premium " + getCostPerMWh());
