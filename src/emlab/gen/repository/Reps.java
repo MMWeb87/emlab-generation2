@@ -1662,10 +1662,17 @@ public class Reps {
      */
     public TimeSeriesCSVReader findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(RenewableSupportSchemeTender scheme,  String technologyName) {
     	        	
-    	return renewableTargets.stream()
+    	Optional<RenewableTarget> optional = renewableTargets.stream()
+    			.filter(p -> p.isTargetTechnologySpecific() == true)
     			.filter(p -> p.getRegulator().equals(scheme.getRegulator())) // Only consider target of the regulator of this scheme
     			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
-    			.findFirst().get().getYearlyRenewableTargetTimeSeries();
+    			.findFirst();
+    	
+        if (optional.isPresent()) {
+            return optional.get().getYearlyRenewableTargetTimeSeries();
+        } else {
+            return null;
+        }
     	
     	// TODO MM transformed technologyName to technology -> may be a problem for definition? Is it?
     	// TODO MM maybe implement isPresent()
@@ -1964,7 +1971,7 @@ public class Reps {
     	
     	return baseCostFips.stream()
     			.filter(p -> p.getTechnology().equals(technology))
-    			.filter(p -> p.getNode().equals(nodeName))
+    			.filter(p -> p.getNode().getName().equals(nodeName))
     			.filter(p -> p.getStartTime() == tick)
     			.findFirst().get();
     			
@@ -2065,7 +2072,7 @@ public class Reps {
     	return biasFactors.stream()
     			.filter(p -> p.getScheme().equals(scheme))
     			.filter(p -> p.getTechnology().getName().equals(technologyName))
-    			.filter(p -> p.getNode().getName(). equals(nodeName))
+    			.filter(p -> p.getNode().getName().equals(nodeName))
     			.findFirst().get();
     }
 
