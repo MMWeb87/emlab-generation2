@@ -89,6 +89,8 @@ public class DefaultCSVConverterHeaders extends AbstractCSVConverter {
         row.add("cashflow.CO2AUCTION");
         row.add("cashflow.CO2TAX");
         row.add("cashflow.NATIONALMINCO2");
+        row.add("cashflow.FEED_IN_PREMIUM");
+
 
         return row.toArray(new String[row.size()]);
     }

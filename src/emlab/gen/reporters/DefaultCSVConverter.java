@@ -108,6 +108,7 @@ public class DefaultCSVConverter extends AbstractCSVConverter {
         row.add(String.valueOf(reps.cashFlows.stream().filter(p -> p.getType() == CashFlow.CO2AUCTION).collect(Collectors.summarizingDouble(CashFlow::getMoney)).getSum()));
         row.add(String.valueOf(reps.cashFlows.stream().filter(p -> p.getType() == CashFlow.CO2TAX).collect(Collectors.summarizingDouble(CashFlow::getMoney)).getSum()));
         row.add(String.valueOf(reps.cashFlows.stream().filter(p -> p.getType() == CashFlow.NATIONALMINCO2).collect(Collectors.summarizingDouble(CashFlow::getMoney)).getSum()));
+        row.add(String.valueOf(reps.cashFlows.stream().filter(p -> p.getType() == CashFlow.FEED_IN_PREMIUM).collect(Collectors.summarizingDouble(CashFlow::getMoney)).getSum()));
 
         return row.toArray(new String[row.size()]);
     }
