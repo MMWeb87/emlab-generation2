@@ -54,6 +54,10 @@ results_meta/
 
 analysis/manual_analyses.Rmd
 
+results_meta/
+
+analysis/manual_analyses.Rmd
+
 analysis/config.R
 
 analysis/example_report.nb.html
