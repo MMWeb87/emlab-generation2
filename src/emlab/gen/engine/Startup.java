@@ -23,7 +23,7 @@ import java.util.logging.SimpleFormatter;
 
 /**
  *
- * @author ejlchappin
+ * @author ejlchappin 
  */
 public class Startup {
 
@@ -44,12 +44,12 @@ public class Startup {
         //String scenarioName = "Scenario_NL_DE_pref";
         //String scenarioName = "Scenario_NL_intermittent_pref2";
         //String scenarioName = "DefaultScenario";
+
         //String scenarioName = "Scenario_NL_intermittent_auction";
+        String scenarioName = "Scenario_NL_DE_intermittent_auction2";
 
-        //String scenarioName = "Scenario_NL_intermittent_auction_onshore";
-        String scenarioName = "Scenario_NL_DE_intermittent_pref2";
+        //String scenarioName = "Scenario_NL_DE_intermittent_pref2";
 
-        //String scenarioName = "Scenario_NL_intermittent_auction_toy";
 
 
         String modelRole = "EMlabModelRole";
@@ -60,7 +60,7 @@ public class Startup {
         boolean haveGUI = false;
         boolean logForApp = true;
 
-        Logger.getGlobal().setLevel(Level.FINE);
+        Logger.getGlobal().setLevel(Level.INFO);
         
         try {
             FileHandler handler = new FileHandler(reporterDirectoryName + runID + "-log.txt");
