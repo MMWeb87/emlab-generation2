@@ -15,6 +15,7 @@
  ******************************************************************************/
 package emlab.gen.domain.policy.renewablesupport;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import emlab.gen.domain.agent.EMLabAgent;
@@ -49,6 +50,9 @@ public class RenewableSupportFipScheme extends EMLabAgent {
     private boolean emRevenuePaidExpost;
 
     private long futureSchemeStartTime;
+    
+    private HashMap<PowerGeneratingTechnology, Integer> futureSchemePhaseoutTime;
+
 
     //@SimulationParameter(label = "Support Scheme Duration", from = 0, to = 50)
     private long supportSchemeDuration;
@@ -143,5 +147,14 @@ public class RenewableSupportFipScheme extends EMLabAgent {
     public void setZone(Zone zone) {
         this.zone = zone;
     }
+
+	public void setFutureSchemePhaseoutTime(HashMap<PowerGeneratingTechnology, Integer> schemePhaseOutTime) {
+		this.futureSchemePhaseoutTime = schemePhaseOutTime;
+		
+	}
+
+	public HashMap<PowerGeneratingTechnology, Integer> getFutureSchemePhaseoutTime() {
+		return futureSchemePhaseoutTime;
+	}
 
 }

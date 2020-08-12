@@ -96,53 +96,67 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
                     // finished construction this tick
                     // TODO MM (Comment): Can't find any plants here because no investing has happend. I guess here it's only paying.(Generatinig the cashflow)
                     for (PowerPlant plant : plantSet) {
-
-                        long finishedConstruction = plant.getConstructionStartTime() + plant.calculateActualPermittime()
-                                + plant.calculateActualLeadtime();
-
-                        long contractFinishTime = finishedConstruction
-                                + renewableSupportScheme.getSupportSchemeDuration();
-
-                        // logger.warn("Printing finished construction" +
-                        // finishedConstruction
-                        // + "and construction start time" +
-                        // plant.getConstructionStartTime());
-
-                        // logger.warn("Inside contract creation loop");
-                        BaseCostFip baseCost = null;
-                        // create a query to get base cost.
-                        if (renewableSupportScheme.isTechnologySpecificityEnabled()) {
-                            baseCost = getReps().findOneBaseCostForTechnologyAndNodeAndTime(
-                                    node.getName(), technology, plant.getConstructionStartTime()
-                                            + renewableSupportScheme.getFutureSchemeStartTime());
-                            // logger.warn("expected base cost query test FIP is
-                            // " + baseCost);
-                        } else {
-                            baseCost = getReps()
-                                    .findOneTechnologyNeutralBaseCostForTime(plant.getConstructionStartTime()
-                                            + renewableSupportScheme.getFutureSchemeStartTime());
-                            // logger.warn("expected base cost query test FIP is
-                            // " + baseCost);
-                        }
-
-                        if (baseCost != null) {
-
-                            contract = new SupportPriceContract();
-                            contract.setStart(getCurrentTick());
-                            contract.setPricePerUnit(baseCost.getCostPerMWh());
-                            contract.setFinish(contractFinishTime);
-                            contract.setPlant(plant);
-
-                            // logger.warn("Contract price for plant of
-                            // technology " + plant.getTechnology().getName()
-                            // + "for node " + node.getNodeId() + " is , " +
-                            // contract.getPricePerUnit());
-                            
-                            getReps().supportPriceContracts.add(contract);
-                            
-                        }
-
-                    }
+                    	
+		            	if(renewableSupportScheme.getFutureSchemePhaseoutTime().containsKey(technology)) {	
+		            		// Only make a contract for this... Relly??
+		        			logger.info(technology + "");
+		            		
+		        			// Make no new contracts if support schemes are phased out.
+		            		if(renewableSupportScheme.getFutureSchemePhaseoutTime().get(technology) < getCurrentTick()) {
+		            		} else {
+ 		                    	
+		                    	long finishedConstruction = plant.getConstructionStartTime() + plant.calculateActualPermittime()
+		                                + plant.calculateActualLeadtime();
+		
+		                        long contractFinishTime = finishedConstruction
+		                                + renewableSupportScheme.getSupportSchemeDuration();
+		
+		                        // logger.warn("Printing finished construction" +
+		                        // finishedConstruction
+		                        // + "and construction start time" +
+		                        // plant.getConstructionStartTime());
+		
+		                        // logger.warn("Inside contract creation loop");
+		                        BaseCostFip baseCost = null;
+		                        // create a query to get base cost.
+		                        if (renewableSupportScheme.isTechnologySpecificityEnabled()) {
+		                            baseCost = getReps().findOneBaseCostForTechnologyAndNodeAndTime(
+		                                    node.getName(), technology, plant.getConstructionStartTime()
+		                                            + renewableSupportScheme.getFutureSchemeStartTime());
+		                            // logger.warn("expected base cost query test FIP is
+		                            // " + baseCost);
+		                        } else {
+		                            baseCost = getReps()
+		                                    .findOneTechnologyNeutralBaseCostForTime(plant.getConstructionStartTime()
+		                                            + renewableSupportScheme.getFutureSchemeStartTime());
+		                            // logger.warn("expected base cost query test FIP is
+		                            // " + baseCost);
+		                        }
+		
+		                        if (baseCost != null) {
+		
+		                            contract = new SupportPriceContract();
+		                            contract.setStart(getCurrentTick());
+		                            contract.setPricePerUnit(baseCost.getCostPerMWh());
+		                            contract.setFinish(contractFinishTime);
+		                            contract.setPlant(plant);
+		
+		                            // logger.warn("Contract price for plant of
+		                            // technology " + plant.getTechnology().getName()
+		                            // + "for node " + node.getNodeId() + " is , " +
+		                            // contract.getPricePerUnit());
+		                            
+		                            
+		                            getReps().supportPriceContracts.add(contract);
+		                            
+		                        }
+		                        
+		            		}
+			            	
+		            	}
+                	
+                    }	
+              	
                 }
 
                 for (PowerPlant plant : getReps()

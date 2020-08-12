@@ -90,13 +90,41 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
 						//fReport.setExpectedOpRevenueElectricityMarketWithoutSubsidy(financialExpectation.getExpectedOperatingRevenue());
 						//fReport.setProjectValuePerMwWithoutSubsidy(projectValue / plant.getActualNominalCapacity());
                     	
-                        // If  setEmRevenuePaidExpost os false -> ExAnte, the baseCost can be expected to be >0 
-                        if (scheme != null && financialExpectation.getExpectedBaseCost() > 0
-                                && (scheme.getPowerGeneratingTechnologiesEligible().contains(technology))) {
-                        	
-                        	financialExpectation.calculateProjectValueWithScheme();
-                        	projectValue  = financialExpectation.getProjectValueWithScheme();
+                        // TODO, SCHEME PHASE OUT
+                        // At what tick is here?
+                        
+                        // Phase out:
+                        
+                        
+                        // e.g. current tick is 7, and it takes 1 + 1 year (permit + lead) -> start in year 9. get support if 9 < phaseoutyear
+                        // this would then mean, 
+                        // there would be an options to phase out support in 2035. So from then on, there would not be a higher project value.
+                        
+                        
+                        
+                        double phaseOutTick = 15;
+                        // Should be technology specific!
+                        // Phasing out support at phaseOutTick
 
+		                        if (scheme != null && financialExpectation.getExpectedBaseCost() > 0
+		                                && (scheme.getPowerGeneratingTechnologiesEligible().contains(technology))) {
+		                        	
+		                            if(scheme.getFutureSchemePhaseoutTime().containsKey(technology)) {
+		                            	
+		    	                        if(schedule.getCurrentTick() + plant.getActualPermittime() + plant.getActualLeadtime() < scheme.getFutureSchemePhaseoutTime().get(technology)) {
+		    	                        
+		                        
+		                        	financialExpectation.calculateProjectValueWithScheme();
+		                        	double oldValue = projectValue;
+		                        	projectValue  = financialExpectation.getProjectValueWithScheme();
+		                        	logger.finer("projectValue old: "+ oldValue + " and projectValue new: "+ projectValue);
+		
+		                        
+		                        
+	                        } else {
+	                        	logger.finer("No support, since phased out");
+	                        }
+		                            }
                         }
                         
                          //*****FOR VERIFICATION
@@ -239,7 +267,7 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
          * @see emlab.gen.role.investment.GenericInvestmentRole.FutureCapacityExpectation#check()
          */
         @Override
-        public void check() {
+        public void check() {        	
         	
 //            if ((expectedInstalledCapacityOfTechnology + plant.getActualNominalCapacity())
 //                    / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
@@ -248,8 +276,7 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
 //                logger.log(Level.FINE, 
 //                		agent + " will not invest in {} technology because there's too much of this type in the market", technology);
 //            
-//            } else 
-            	
+//            } else     	
         	if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
             		
             		logger.log(Level.FINE, "Not investing in " + technology.getName() + "because of node limit: " + pgtNodeLimit);	 
@@ -271,8 +298,12 @@ public class InvestInPowerGenerationTechnologiesWithTenderRole<T extends EnergyP
 //            } else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
 //                    .getDownpaymentFractionOfCash() * agent.getCash()) {
 //            	logger.log(Level.FINE, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
+//            	
+//            	// TODO: consider support?
 //            
-            } else {
+            } 
+            
+            else {
             	
                 // Passes all hard limits in terms of capacity
             	logger.log(Level.FINE, agent + " considers " + technology.getName()  + " to be viable.");
