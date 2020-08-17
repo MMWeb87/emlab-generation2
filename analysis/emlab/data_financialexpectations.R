@@ -98,11 +98,12 @@ plots[["expected_ROEs_mapped_vs_modelled"]] <- function(data, input, average = F
     ggplot(mapping = aes(y = ROE, x = tick)) +
       geom_point(mapping = aes(colour = technology)) +
       facet_grid(market ~ type, labeller = label_both) +
-      
-      scale_y_log10(
-        labels = scales::percent,
-        limits = c(0.1/100,1e3/100)
-        ) +
+      scale_y_continuous(labels = scales::percent) +
+      # 
+      # scale_y_log10(
+      #   labels = scales::percent,
+      #   #limits = c(0.1/100,1e3/100)
+      #   ) +
       labs_default(
         y = glue("Expected ROE"),
         x = "Tick (Year)",
