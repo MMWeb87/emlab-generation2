@@ -97,13 +97,13 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
                     // TODO MM (Comment): Can't find any plants here because no investing has happend. I guess here it's only paying.(Generatinig the cashflow)
                     for (PowerPlant plant : plantSet) {
                     	
-		            	if(renewableSupportScheme.getFutureSchemePhaseoutTime().containsKey(technology)) {	
-		            		// Only make a contract for this... Relly??
-		        			logger.info(technology + "");
-		            		
-		        			// Make no new contracts if support schemes are phased out.
-		            		if(renewableSupportScheme.getFutureSchemePhaseoutTime().get(technology) < getCurrentTick()) {
-		            		} else {
+//		            	if(renewableSupportScheme.getFutureSchemePhaseoutTime().containsKey(technology)) {	
+//		            		// Only make a contract for this... Relly??
+//		        			logger.info(technology + "");
+//		            		
+//		        			// Make no new contracts if support schemes are phased out.
+//		        			// e.g. CASHFLOW if phase-out at year 15 > current tick 2 -> TRUE -> cashflow 
+//		            		if(renewableSupportScheme.getFutureSchemePhaseoutTime().get(technology) > getCurrentTick()) {
  		                    	
 		                    	long finishedConstruction = plant.getConstructionStartTime() + plant.calculateActualPermittime()
 		                                + plant.calculateActualLeadtime();
@@ -149,9 +149,9 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
 		                            
 		                            getReps().supportPriceContracts.add(contract);
 		                            
-		                        }
-		                        
-		            		}
+//		                        }
+//		                        
+//		            		}
 			            	
 		            	}
                 	

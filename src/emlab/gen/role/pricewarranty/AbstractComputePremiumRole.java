@@ -271,19 +271,13 @@ public abstract class AbstractComputePremiumRole extends AbstractEnergyProducerR
             generationFromRenewables = totalExpectedGenerationFromRenewables(scheme, technology);
         }
 
+        // if expected generation exceeds target, degress by a certain percentage.
         if (generationFromRenewables > renewableTargetInMwh) {
             newBiasFactor = biasFactor.getFeedInPremiumBiasFactor() * (1 - degressionFactor);
             biasFactor.setFeedInPremiumBiasFactor(newBiasFactor);
             // logger.warn("DEGRESSING!!!");
-        } else if (generationFromRenewables < renewableTargetInMwh) {
-            newBiasFactor = biasFactor.getFeedInPremiumBiasFactor() * (1 - degressionFactor);
-            biasFactor.setFeedInPremiumBiasFactor(newBiasFactor);
         }
-        // if expected generation exceeds target, degress by a certain
-        // percentage.
-        // else if expected generation is lower than a certain margin, increase
-        // bias factor. - will have to create targetLowerMargin and
-        // targetUpperMargin for it, best created in target object.
+
 
     }
 

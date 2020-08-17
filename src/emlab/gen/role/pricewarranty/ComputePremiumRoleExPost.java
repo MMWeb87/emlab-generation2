@@ -60,9 +60,8 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
 
         lcoe = (discountedCapitalCosts + discountedOpCost) * biasFactorValue / generation;
         
-        // Base cost marginal costs and need to be of the same sign as those calculated for E-Xante
         if (lcoe < 0) {
-        	lcoe = -lcoe;
+        	lcoe = -lcoe; // (Need to be of the same sign as those calculated for Ex-ante)
         }
         
          logger.log(Level.FINE, "expectedBaseCost in PremiumRoleExPost for plant" + plant + 
