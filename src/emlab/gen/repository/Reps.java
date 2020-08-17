@@ -1756,9 +1756,9 @@ public class Reps {
             Regulator regulator, String technologyName) {
     	
     	return renewableTargets.stream()
+    			.filter(p -> p.isTargetTechnologySpecific() == true)
     			.filter(p -> p.getRegulator().equals(regulator))
     			.filter(p -> p.getPowerGeneratingTechnology().getName().equals(technologyName))
-    			.filter(p -> p.isTargetTechnologySpecific() == true)
     			.findFirst().get();
     	
     }
