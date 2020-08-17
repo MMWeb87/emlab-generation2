@@ -6,6 +6,9 @@ filename_potentials <- "NECP01techSpecificPotentials.csv"
 filename_limits <- "NECP01PotentialLimits.csv"
 
 do_write_csvs <- TRUE
+prefix_for_result <- "sensitivity_run_02_"
+
+adjustment_factor_for_limits <- 1.1 # To reduce the limits
 
 # Function ----------------------------------------------------------------
 
@@ -27,7 +30,7 @@ extrapolate_values <- function(df, var, year_begin = 2016, year_end = 2070, year
     y_max <- max(df[[var]], na.rm = TRUE)
     df[[var]] <- df[[var]] / y_max 
     
-    model <- glm(as.formula(paste(var, "~ year")), family ="binomial", df)
+    model <- glm(as.formula(paste(var, "~ year")), family ="quasibinomial", df)
     
     new_y <- predict.glm(
       object = model,
@@ -139,10 +142,12 @@ necp_targets_predicted_formated <- rbind(
   necp_targets_predicted_formated
 ) 
   
+final_filename <- paste0(prefix_for_result, filename_potentials)
 if(do_write_csvs){
-  write_csv(necp_targets_predicted_formated, path =  file.path(emlab_data_folder, filename_potentials))
+  write_csv(necp_targets_predicted_formated, path =  file.path(emlab_data_folder, final_filename))
 } else {
   necp_targets_predicted_formated
+  warning(paste("Not saved as", final_filename))
 }
 
 
@@ -212,12 +217,14 @@ necp_targets_predicted_for_consumption <- necp_targets_original %>%
 
 
 # 4. Multiply the predicted NECP shares with the extrapolated total consumption to estimate the realistic deployment of RES
+# 5. And spply manual limit reduction
 
 renewables_limits <- total_elec_consumption_prediction %>% 
   left_join(necp_targets_predicted_for_consumption) %>% 
-  mutate(predicted_production = total_consumption * predicted_share)
+  mutate(predicted_production = total_consumption * predicted_share * adjustment_factor_for_limits) %>% 
+  select(-predicted_share)
 
-# 5. CHECK: Visual check
+# 6. CHECK: Visual check
 
 renewables_limits %>% 
   ggplot(mapping = aes(x = year, y = predicted_production)) +
@@ -226,7 +233,7 @@ renewables_limits %>%
     facet_grid(country ~ technology) +
     labs(title = "Potential limits for renewables")
 
-# 6. CHECK: Comparing with previous data
+# 7. CHECK: Comparing with previous data
 
 original_potential_limits <-  read_csv(file = "data/old_potentialLimits.csv")
 original_potential_limits_long <- original_potential_limits %>% 
@@ -265,10 +272,12 @@ renewables_limits_formated <- renewables_limits %>%
   rename(timestep = variable)
   
 
+final_filename <- paste0(prefix_for_result,filename_limits)
 if(do_write_csvs){
-  write_csv(renewables_limits_formated, path =  file.path(emlab_data_folder, filename_limits))
+  write_csv(renewables_limits_formated, path =  file.path(emlab_data_folder, final_filename))
 } else {
   renewables_limits_formated
+  warning(paste("Not saved as", final_filename), call. = FALSE)
 }
 
 
