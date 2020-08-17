@@ -57,6 +57,7 @@ import emlab.gen.role.pricewarranty.FeedInPremiumRole;
 import emlab.gen.role.tender.FilterTenderBidsByTechnologyPotentialRole;
 import emlab.gen.role.tender.TenderMainRole;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
@@ -133,12 +134,9 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
             getReps().removeAllPowerPlantDispatchPlansUpToTime(getCurrentTick() - 1);
             getReps().removeAllPowerPlantDispatchPlansWithForecast(true);
             getReps().removeFinancialPowerPlantReportsUpToTime(getCurrentTick() - 6);
-            getReps().marketInformationReports = new ArrayList<>();
-            //logger.warning("Plans: " + getReps().powerPlantDispatchPlans.size());
         }
           
-        logger.log(Level.INFO, "  0. Empty Role at the Beginning");
-        emptyRoleBeginning.act(model);
+
         
         /*
          * Load duration curve (if renewable data is implemented)

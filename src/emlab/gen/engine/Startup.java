@@ -46,11 +46,7 @@ public class Startup {
         //String scenarioName = "DefaultScenario";
 
         //String scenarioName = "Scenario_NL_intermittent_auction";
-        String scenarioName = "Scenario_NL_DE_intermittent_auction2";
-
-        //String scenarioName = "Scenario_NL_DE_intermittent_pref2";
-
-
+        String scenarioName = "Scenario_NL_DE_intermittent_auction_pref";
 
         String modelRole = "EMlabModelRole";
         String reporterClassName = "DefaultReporter";
