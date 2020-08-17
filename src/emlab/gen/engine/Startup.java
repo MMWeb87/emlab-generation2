@@ -32,30 +32,16 @@ public class Startup {
     public static void main(String[] args) {
         long runID = System.currentTimeMillis();
         
-        /* Default parameters */
+        /* Default parameters (Use arguments to set) */
         long numberOfIterations = 1;
         long numberOfParallelJobs = 1;
         
-        //String scenarioName = "Scenario_NL";
-        //String scenarioName = "Scenario_NL_intermittent";
-        //String scenarioName = "Scenario_NL_DE";
-        //String scenarioName = "Scenario_NL_hourly"; TODO should be deleted
-        //String scenarioName = "Scenario_NL_DE_toy";
-        //String scenarioName = "Scenario_NL_DE_pref";
-        //String scenarioName = "Scenario_NL_intermittent_pref2";
-        //String scenarioName = "DefaultScenario";
-
-        //String scenarioName = "Scenario_NL_intermittent_auction";
-        String scenarioName = "Scenario_NL_DE_intermittent_auction_pref";
-
+        String scenarioName = "DefaultScenario"; 
         String modelRole = "EMlabModelRole";
         String reporterClassName = "DefaultReporter";
-        
         String reporterDirectoryName = "results/";
         
-        boolean haveGUI = false;
         boolean logForApp = true;
-
         Logger.getGlobal().setLevel(Level.INFO);
         
         try {
@@ -94,8 +80,9 @@ public class Startup {
                     case "reporter":
                         reporterClassName = theArg[1];
                         break;
-                    case "gui":
-                        haveGUI = Boolean.parseBoolean(theArg[1]);
+                    case "debuglevel":
+                        Level level = Level.parse(theArg[1]);
+                        Logger.getGlobal().setLevel(level);
                     default:
                         Logger.getGlobal().warning("Argument not known: " + theArg);
                 }
@@ -103,6 +90,7 @@ public class Startup {
                 Logger.getGlobal().warning("Argument not correct:" + args[i]);
             }
         }
+        
         
         // Make a copy of the scenario file for reproducibility
         try {
