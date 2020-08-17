@@ -210,7 +210,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
      * @return double utility value
      *
      */
-    private double determineUtilityReturn(double projectReturnOnEquity, EnergyProducer agent) {
+    protected double determineUtilityReturn(double projectReturnOnEquity, EnergyProducer agent) {
 
 
     	// Here, I extrapolate linearly based on the slope between 6 and 7% return -> specific for data of Melliger, Lilliestam (2020)
@@ -235,7 +235,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
      * @return double utility value
      *
      */
-    private double mapReturnToEmpiricalRange(double projectReturnOnEquity, PowerGeneratingTechnology technology, ElectricitySpotMarket market, String method) {
+    protected double mapReturnToEmpiricalRange(double projectReturnOnEquity, PowerGeneratingTechnology technology, ElectricitySpotMarket market, String method) {
 
     	double finalReturnForCalculation = 0;
   	
@@ -287,7 +287,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
      * @param projectReturnOnEquity
      * @return double utility value
      */
-    private double determineUtilityTechnology(PowerGeneratingTechnology technology, EnergyProducer agent) {
+    protected double determineUtilityTechnology(PowerGeneratingTechnology technology, EnergyProducer agent) {
         
         double utility = agent.getUtilityTechnology().get(technology.getName());
     	
@@ -301,7 +301,7 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
      * @param projectReturnOnEquity
      * @return double utility value
      */
-    private double determineUtilityCountry(ElectricitySpotMarket market, EnergyProducer agent) {
+    protected double determineUtilityCountry(ElectricitySpotMarket market, EnergyProducer agent) {
         
     	double utility;
     	
@@ -320,155 +320,12 @@ public class InvestInPowerGenerationTechnologiesWithPreferencesRole<T extends En
     }
 
 
-	public double getRandomUtilityBound() {
+    protected double getRandomUtilityBound() {
 		return randomUtilityBound;
 	}
 
-	public void setRandomUtilityBound(double randomUtilityBound) {
+    public void setRandomUtilityBound(double randomUtilityBound) {
 		this.randomUtilityBound = randomUtilityBound;
-	}
-    
-    
-// TODO This is also different. Especially the for (TargetInvestor targetInvestor) part..
-// check if this also works wihout technolgy target. getReps().findAllPowerGeneratingTechnologyTargetsByMarket(market)?
-
-//private class MarketInformation {
-//
-//      Map<Segment, Double> expectedElectricityPricesPerSegment;
-//      double maxExpectedLoad = 0d;
-//      Map<PowerPlant, Double> meritOrder;
-//      double capacitySum;
-//
-//      MarketInformation(ElectricitySpotMarket market, Map<ElectricitySpotMarket, Double> expectedDemand, Map<Substance, Double> fuelPrices, double co2price, long time) {
-//          // determine expected power prices
-//          expectedElectricityPricesPerSegment = new HashMap<Segment, Double>();
-//          Map<PowerPlant, Double> marginalCostMap = new HashMap<PowerPlant, Double>();
-//          capacitySum = 0d;
-//
-//          // get merit order for this market
-//          for (PowerPlant plant : getReps().findExpectedOperationalPowerPlantsInMarket(market, time)) {
-//
-//              double plantMarginalCost = determineExpectedMarginalCost(plant, fuelPrices, co2price);
-//              marginalCostMap.put(plant, plantMarginalCost);
-//              capacitySum += plant.getActualNominalCapacity();
-//          }
-//
-//          //get difference between technology target and expected operational capacity
-//          // TODO NOT IMPLEMENTED??
-//          for (TargetInvestor targetInvestor : getReps().findAllTargetInvestorsByMarket(market)) {
-//              if (!(targetInvestor instanceof StochasticTargetInvestor)) {
-//                  for (PowerGeneratingTechnologyTarget pggt : targetInvestor.getPowerGenerationTechnologyTargets()) {
-//                      double expectedTechnologyCapacity = getReps()
-//                              .calculateCapacityOfExpectedOperationalPowerPlantsInMarketAndTechnology(market,
-//                                      pggt.getPowerGeneratingTechnology(), time);
-//                      double targetDifference = pggt.getTrend().getValue(time) - expectedTechnologyCapacity;
-//                      if (targetDifference > 0) {
-//                          PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), new EnergyProducer(),
-//                                  getReps().findFirstPowerGridNodeByElectricitySpotMarket(market),
-//                                  pggt.getPowerGeneratingTechnology());
-//                          plant.setActualNominalCapacity(targetDifference);
-//                          double plantMarginalCost = determineExpectedMarginalCost(plant, fuelPrices, co2price);
-//                          marginalCostMap.put(plant, plantMarginalCost);
-//                          capacitySum += targetDifference;
-//                      }
-//                  }
-//              } else {
-//                  for (PowerGeneratingTechnologyTarget pggt : targetInvestor.getPowerGenerationTechnologyTargets()) {
-//                      double expectedTechnologyCapacity = getReps()
-//                              .calculateCapacityOfExpectedOperationalPowerPlantsInMarketAndTechnology(market,
-//                                      pggt.getPowerGeneratingTechnology(), time);
-//                      double expectedTechnologyAddition = 0;
-//                      long contructionTime = getCurrentTick()
-//                              + pggt.getPowerGeneratingTechnology().getExpectedLeadtime()
-//                              + pggt.getPowerGeneratingTechnology().getExpectedPermittime();
-//                      for (long investmentTimeStep = contructionTime + 1; investmentTimeStep <= time; investmentTimeStep = investmentTimeStep + 1) {
-//                          expectedTechnologyAddition += (pggt.getTrend().getValue(investmentTimeStep) - pggt
-//                                  .getTrend().getValue(investmentTimeStep - 1));
-//                      }
-//                      if (expectedTechnologyAddition > 0) {
-//                          PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(getCurrentTick(), new EnergyProducer(),
-//                                  getReps().findFirstPowerGridNodeByElectricitySpotMarket(market),
-//                                  pggt.getPowerGeneratingTechnology());
-//                          plant.setActualNominalCapacity(expectedTechnologyAddition);
-//                          double plantMarginalCost = determineExpectedMarginalCost(plant, fuelPrices, co2price);
-//                          marginalCostMap.put(plant, plantMarginalCost);
-//                          capacitySum += expectedTechnologyAddition;
-//                      }
-//                  }
-//              }
-//
-//          }
-//
-//          MapValueComparator comp = new MapValueComparator(marginalCostMap);
-//          meritOrder = new TreeMap<PowerPlant, Double>(comp);
-//          meritOrder.putAll(marginalCostMap);
-//
-//          long numberOfSegments = getReps().segments.size();
-//
-//          double demandFactor = expectedDemand.get(market).doubleValue();
-//
-//          // find expected prices per segment given merit order
-//          for (SegmentLoad segmentLoad : market.getLoadDurationCurve()) {
-//
-//              double expectedSegmentLoad = segmentLoad.getBaseLoad() * demandFactor;
-//
-//              if (expectedSegmentLoad > maxExpectedLoad) {
-//                  maxExpectedLoad = expectedSegmentLoad;
-//              }
-//
-//              double segmentSupply = 0d;
-//              double segmentPrice = 0d;
-//              double totalCapacityAvailable = 0d;
-//
-//              for (Entry<PowerPlant, Double> plantCost : meritOrder.entrySet()) {
-//                  PowerPlant plant = plantCost.getKey();
-//                  double plantCapacity = 0d;
-//                  // Determine available capacity in the future in this
-//                  // segment
-//                  plantCapacity = plant.getExpectedAvailableCapacity(time, segmentLoad.getSegment(), numberOfSegments);
-//                  totalCapacityAvailable += plantCapacity;
-//                  // logger.warn("Capacity of plant " + plant.toString() +
-//                  // " is " +
-//                  // plantCapacity/plant.getActualNominalCapacity());
-//                  if (segmentSupply < expectedSegmentLoad) {
-//                      segmentSupply += plantCapacity;
-//                      segmentPrice = plantCost.getValue();
-//                  }
-//
-//              }
-//
-//              // logger.warn("Segment " +
-//              // segmentLoad.getSegment().getSegmentID() + " supply equals " +
-//              // segmentSupply + " and segment demand equals " +
-//              // expectedSegmentLoad);
-//              // Find strategic reserve operator for the market.
-//              double reservePrice = 0;
-//              double reserveVolume = 0;
-//              for (StrategicReserveOperator operator : getReps().strategicReserveOperators) {
-//                  ElectricitySpotMarket market1 = getReps().findElectricitySpotMarketForZone(operator
-//                          .getZone());
-//                  if (market.equals(market1)) {
-//                      reservePrice = operator.getReservePriceSR();
-//                      reserveVolume = operator.getReserveVolume();
-//                  }
-//              }
-//
-//              if (segmentSupply >= expectedSegmentLoad
-//                      && ((totalCapacityAvailable - expectedSegmentLoad) <= (reserveVolume))) {
-//                  expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), reservePrice);
-//                  // logger.warn("Price: "+
-//                  // expectedElectricityPricesPerSegment);
-//              } else if (segmentSupply >= expectedSegmentLoad
-//                      && ((totalCapacityAvailable - expectedSegmentLoad) > (reserveVolume))) {
-//                  expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), segmentPrice);
-//                  // logger.warn("Price: "+
-//                  // expectedElectricityPricesPerSegment);
-//              } else {
-//                  expectedElectricityPricesPerSegment.put(segmentLoad.getSegment(), market.getValueOfLostLoad());
-//              }
-//
-//          }
-//      }
-//  }    
+	}   
 
 }
