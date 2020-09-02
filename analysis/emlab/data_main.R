@@ -42,6 +42,7 @@ plots[["operational_capacities_by_technology"]] <- function(data, input, average
   plot +
     geom_area_shaded(mapping = aes(x = tick, fill = technology)) +
     scale_fill_technologies() + 
+    #scale_y_continuous(limits = c(NA, 5e5)) +
     labs_default(
       y = glue("Capacity ({input$unit_prefix}W)"),
       subtitle = default_subtitle(average),
@@ -173,19 +174,21 @@ plots[["cash_by_producers"]] <- function(data, input, average = TRUE){
     plot <- data %>% 
       group_by(tick, producer) %>%
       summarise(avg_cash = mean(cash)) %>%
-      ggplot(mapping = aes(x = tick, y = avg_cash / 1e6, color = producer))
+      ggplot(mapping = aes(x = tick, y = avg_cash / 1e9, color = producer))
+    
   } else {
     # By Iterations
     plot <- data %>%
-      ggplot(mapping = aes(x = tick, y = cash / 1e6, color = producer)) +
+      ggplot(mapping = aes(x = tick, y = cash / 1e9, color = producer)) +
       facet_wrap( ~ iteration)
   }
   
   plot +
     geom_line(size = 2) +
-    scale_color_custom("producer_colors") +
+    geom_hline(yintercept = 0, lwd = 1) +
+    #scale_color_custom("producer_colors") +
     labs_default(
-        y = "Cash (Million EUR)",
+        y = "Cash (Billion EUR)",
         subtitle = default_subtitle(average),
         color = "Producer")
 }

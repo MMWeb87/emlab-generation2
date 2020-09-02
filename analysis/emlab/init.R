@@ -1,6 +1,6 @@
 
 
-rm(list=setdiff(ls(), "id_to_load"))
+#rm(list=setdiff(ls(), "id_to_load"))
 
 # Config ------------------------------------------------------------------
 
