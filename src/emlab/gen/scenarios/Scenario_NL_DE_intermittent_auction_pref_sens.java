@@ -55,9 +55,8 @@ import java.util.logging.Logger;
  *
  * @author ejlchappin
  * @author marcmel
- * Last RUN: 1597914377374
  */
-public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
+public class Scenario_NL_DE_intermittent_auction_pref_sens implements Scenario {
 
 	private String name;
 
@@ -223,7 +222,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 
 
-		// Load duration curve
+		//Load duration curve
 		LDCFactory ldcFactory = new LDCFactory(reps);
 		TimeSeriesCSVReader ldcReader = new TimeSeriesCSVReader();
 		ldcReader.setFilename("/data/ldcNLDE-20segments.csv");
@@ -787,7 +786,8 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
 		minCo2PriceTrend.setIncrement(1.5);
-
+//		minCo2PriceTrend.setIncrement(1.35); // sensitivity analysis: 10% lower
+//		minCo2PriceTrend.setIncrement(1.65); // sensitivity analysis: 10% higher
 		
 		reps.government = new Government();
 		reps.government.setName("EuropeanGov");
@@ -810,7 +810,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		minCo2PriceTrendDE.setIncrement(0);
 
 		NationalGovernment governmentNL = reps.createNationalGovernment("DutchGov", nl, minCo2PriceTrendNL);  
-		NationalGovernment governmentDE = reps.createNationalGovernment("GermanGov", de, minCo2PriceTrendDE);    
+		NationalGovernment governmentDE = reps.createNationalGovernment("GermanGov", de, minCo2PriceTrendDE);       
 
 		// ——————————————————————————————————————————————————
 		// Technologies
@@ -1133,7 +1133,8 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		windOnshore.setFuels(windOnshorePGTFuels);
 
 		GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
-		windOffshoreInvestmentCostTimeSeries.setStart(2450770);
+		//windOffshoreInvestmentCostTimeSeries.setStart(2450770);
+		windOffshoreInvestmentCostTimeSeries.setStart(5450770);
 
 		GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
 		windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
@@ -1163,9 +1164,67 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		Set<Substance> windOffshorePGTFuels = new HashSet<>();
 		windOffshore.setFuels(windOffshorePGTFuels);
 
+
+
+
 		// ——————————————————————————————————————————————————
-		// Power Plant Factory
+		// Empirical mapping parameters
 		// ——————————————————————————————————————————————————
+
+
+
+		EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction1.setModelledRoeMin(-0.0500500387527493);
+		empiricalMappingFunction1.setModelledRoeMax(0.0148690341572164);
+		empiricalMappingFunction1.setIntercept(0.0698868633228992);
+		empiricalMappingFunction1.setSlope(0.616151744118016);
+		empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
+		empiricalMappingFunction1.setTechnology(windOnshore); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
+		EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction2.setModelledRoeMin(0.0281109744345013);
+		empiricalMappingFunction2.setModelledRoeMax(0.122850940232094);
+		empiricalMappingFunction2.setIntercept(0.0505200029474137);
+		empiricalMappingFunction2.setSlope(0.422208301040112);
+		empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
+		empiricalMappingFunction2.setTechnology(windOffshore); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
+		EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction3.setModelledRoeMin(-0.0893187967840645);
+		empiricalMappingFunction3.setModelledRoeMax(-0.0254431717005035);
+		empiricalMappingFunction3.setIntercept(0.08664617624551);
+		empiricalMappingFunction3.setSlope(0.626216963789751);
+		empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
+		empiricalMappingFunction3.setTechnology(pv); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
+		EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction4.setModelledRoeMin(-0.0498058781375745);
+		empiricalMappingFunction4.setModelledRoeMax(0.00277499961580226);
+		empiricalMappingFunction4.setIntercept(0.0909102505736297);
+		empiricalMappingFunction4.setSlope(0.760732831194154);
+		empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
+		empiricalMappingFunction4.setTechnology(windOnshore); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
+		EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction5.setModelledRoeMin(-0.0188021688823704);
+		empiricalMappingFunction5.setModelledRoeMax(0.0571322854980841);
+		empiricalMappingFunction5.setIntercept(0.100387397600018);
+		empiricalMappingFunction5.setSlope(0.526770098321744);
+		empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
+		empiricalMappingFunction5.setTechnology(windOffshore); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
+		EmpiricalMappingFunctionParameter empiricalMappingFunction6 = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction6.setModelledRoeMin(-0.102810491704352);
+		empiricalMappingFunction6.setModelledRoeMax(-0.087355132182217);
+		empiricalMappingFunction6.setIntercept(0.316899286685447);
+		empiricalMappingFunction6.setSlope(2.58809896610379);
+		empiricalMappingFunction6.setMarket(netherlandsElectricitySpotMarket);
+		empiricalMappingFunction6.setTechnology(pv); 
+		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction6);
+
+
+
+
 
 		windProfileOnShoreNL.setIntermittentTechnology(windOnshore);
 		windProfileOffShoreNL.setIntermittentTechnology(windOffshore);
@@ -1181,62 +1240,9 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		for (PowerPlant plant : powerPlantCSVFactory.read()) {
 			reps.createPowerPlantFromPlant(plant);
 
-		}	
+		}
+		
 
-		// ——————————————————————————————————————————————————
-		// Empirical mapping parameters
-		// ——————————————————————————————————————————————————
-
-		// Based on: 1598437148250-Scenario_NL_DE_intermittent_auction_pref-EMlabModelRole-DefaultReporter
-
-		EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction1.setModelledRoeMin(0.000760488946978429);
-		empiricalMappingFunction1.setModelledRoeMax(0.0430803891776251);
-		empiricalMappingFunction1.setIntercept(0.037136655664699);
-		empiricalMappingFunction1.setSlope(0.945181812386063);
-		empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction1.setTechnology(windOnshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction2.setModelledRoeMin(0.000138081126685592);
-		empiricalMappingFunction2.setModelledRoeMax(0.0383461183452311);
-		empiricalMappingFunction2.setIntercept(0.0661408632244188);
-		empiricalMappingFunction2.setSlope(1.04690015274024);
-		empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction2.setTechnology(windOffshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction3.setModelledRoeMin(0.000323307931090386);
-		empiricalMappingFunction3.setModelledRoeMax(0.0130897153524349);
-		empiricalMappingFunction3.setIntercept(0.0317982179369931);
-		empiricalMappingFunction3.setSlope(3.13322289347611);
-		empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction3.setTechnology(pv); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction4.setModelledRoeMin(0.000327027643665566);
-		empiricalMappingFunction4.setModelledRoeMax(0.0176105224382806);
-		empiricalMappingFunction4.setIntercept(0.0525722335651492);
-		empiricalMappingFunction4.setSlope(2.31434674962049);
-		empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
-		empiricalMappingFunction4.setTechnology(windOnshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction5.setModelledRoeMin(1.49805965180911e-06);
-		empiricalMappingFunction5.setModelledRoeMax(0.011395894168865);
-		empiricalMappingFunction5.setIntercept(0.0925446113267664);
-		empiricalMappingFunction5.setSlope(3.51049758290018);
-		empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
-		empiricalMappingFunction5.setTechnology(windOffshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction6 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction6.setModelledRoeMin(0.00049285033968858);
-		empiricalMappingFunction6.setModelledRoeMax(0.0183891030478593);
-		empiricalMappingFunction6.setIntercept(0.0551670304070817);
-		empiricalMappingFunction6.setSlope(2.23510478155785);
-		empiricalMappingFunction6.setMarket(netherlandsElectricitySpotMarket);
-		empiricalMappingFunction6.setTechnology(pv); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction6);
 
 		// ——————————————————————————————————————————————————
 		// Policy Module
@@ -1248,12 +1254,12 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		HashMap<PowerGeneratingTechnology, Integer> schemePhaseOutTimeNL = new HashMap<>();
 		schemePhaseOutTimeNL.put(windOnshore, 100);
 		schemePhaseOutTimeNL.put(pv, 100);
-		schemePhaseOutTimeNL.put(windOffshore, 10);
+		schemePhaseOutTimeNL.put(windOffshore, 100);
 
 		HashMap<PowerGeneratingTechnology, Integer> schemePhaseOutTimeDE = new HashMap<>();
 		schemePhaseOutTimeDE.put(windOnshore, 100);
 		schemePhaseOutTimeDE.put(pv, 100);
-		schemePhaseOutTimeDE.put(windOffshore, 10);
+		schemePhaseOutTimeDE.put(windOffshore, 100);
 
 		// setups
 
@@ -1351,7 +1357,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		// ——————————————————————————————————————————————————
 
 		TimeSeriesCSVReader nl_nreap = new TimeSeriesCSVReader();
-		nl_nreap.setFilename("/data/NECPPotentials2015.csv");
+		nl_nreap.setFilename("/data/NECP01techSpecificPotentials.csv");
 		nl_nreap.setDelimiter(",");
 		nl_nreap.setStartingYear(0);
 		nl_nreap.setVariableName("NL_target_Total");
@@ -1368,7 +1374,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// windonshore target
 		TimeSeriesCSVReader nl_nreap_windPGT = new TimeSeriesCSVReader();
-		nl_nreap_windPGT.setFilename("/data/NECPPotentials2015.csv");
+		nl_nreap_windPGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		nl_nreap_windPGT.setDelimiter(",");
 		nl_nreap_windPGT.setStartingYear(0);
 		nl_nreap_windPGT.setVariableName("NL_target_Onshore");        
@@ -1381,7 +1387,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// PV target
 		TimeSeriesCSVReader nl_nreap_photovoltaicPGT = new TimeSeriesCSVReader();
-		nl_nreap_photovoltaicPGT.setFilename("/data/NECPPotentials2015.csv");
+		nl_nreap_photovoltaicPGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		nl_nreap_photovoltaicPGT.setDelimiter(",");
 		nl_nreap_photovoltaicPGT.setStartingYear(0);
 		nl_nreap_photovoltaicPGT.setVariableName("NL_target_PV");	  
@@ -1394,7 +1400,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// wind offshore target
 		TimeSeriesCSVReader nl_nreap_windoffshorePGT = new TimeSeriesCSVReader();
-		nl_nreap_windoffshorePGT.setFilename("/data/NECPPotentials2015.csv");
+		nl_nreap_windoffshorePGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		nl_nreap_windoffshorePGT.setDelimiter(",");
 		nl_nreap_windoffshorePGT.setStartingYear(0);
 		nl_nreap_windoffshorePGT.setVariableName("NL_target_Offshore");	  
@@ -1410,9 +1416,11 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Wind onshore potential
 		TimeSeriesCSVReader nl_windOnshore_limit = new TimeSeriesCSVReader();
-		nl_windOnshore_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+//		nl_windOnshore_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		nl_windOnshore_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv");
+		
 		nl_windOnshore_limit.setDelimiter(",");
-		nl_windOnshore_limit.setStartingYear(0);
+		nl_windOnshore_limit.setStartingYear(-4);
 		nl_windOnshore_limit.setVariableName("limit_NL_Onshore");
 
 		RenewablePotentialLimit renewablePotentialLimitNLwindOnshore = new RenewablePotentialLimit();
@@ -1424,9 +1432,11 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// PV potential       
 		TimeSeriesCSVReader nl_photovoltaicPGT_limit = new TimeSeriesCSVReader();
-		nl_photovoltaicPGT_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+//		nl_photovoltaicPGT_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		nl_photovoltaicPGT_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv");
+
 		nl_photovoltaicPGT_limit.setDelimiter(",");
-		nl_photovoltaicPGT_limit.setStartingYear(0);
+		nl_photovoltaicPGT_limit.setStartingYear(-4);
 		nl_photovoltaicPGT_limit.setVariableName("limit_NL_PV");
 
 		RenewablePotentialLimit renewablePotentialLimitNLphotovoltaic = new RenewablePotentialLimit();
@@ -1438,9 +1448,11 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Wind offshore potential	  
 		TimeSeriesCSVReader nl_windOffshore_limit = new TimeSeriesCSVReader();
-		nl_windOffshore_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+//		nl_windOffshore_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		nl_windOffshore_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv");
+
 		nl_windOffshore_limit.setDelimiter(",");
-		nl_windOffshore_limit.setStartingYear(0);
+		nl_windOffshore_limit.setStartingYear(-4);
 		nl_windOffshore_limit.setVariableName("limit_NL_Offshore");
 
 		RenewablePotentialLimit renewablePotentialLimitNLwindOffshore = new RenewablePotentialLimit();
@@ -1537,7 +1549,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		// ——————————————————————————————————————————————————
 
 		TimeSeriesCSVReader de_nreap = new TimeSeriesCSVReader();
-		nl_nreap.setFilename("/data/NECPPotentials2015.csv");
+		nl_nreap.setFilename("/data/NECP01techSpecificPotentials.csv");
 		nl_nreap.setDelimiter(",");
 		nl_nreap.setStartingYear(0);
 		nl_nreap.setVariableName("DE_target_Total");
@@ -1554,7 +1566,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// windonshore target
 		TimeSeriesCSVReader de_necp_windPGT = new TimeSeriesCSVReader();
-		de_necp_windPGT.setFilename("/data/NECPPotentials2015.csv");
+		de_necp_windPGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		de_necp_windPGT.setDelimiter(",");
 		de_necp_windPGT.setStartingYear(0);
 		de_necp_windPGT.setVariableName("DE_target_Onshore");        
@@ -1567,7 +1579,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// PV target
 		TimeSeriesCSVReader de_necp_photovoltaicPGT = new TimeSeriesCSVReader();
-		de_necp_photovoltaicPGT.setFilename("/data/NECPPotentials2015.csv");
+		de_necp_photovoltaicPGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		de_necp_photovoltaicPGT.setDelimiter(",");
 		de_necp_photovoltaicPGT.setStartingYear(0);
 		de_necp_photovoltaicPGT.setVariableName("DE_target_PV");	  
@@ -1580,7 +1592,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// wind offshore target
 		TimeSeriesCSVReader de_necp_windoffshorePGT = new TimeSeriesCSVReader();
-		de_necp_windoffshorePGT.setFilename("/data/NECPPotentials2015.csv");
+		de_necp_windoffshorePGT.setFilename("/data/NECP01techSpecificPotentials.csv");
 		de_necp_windoffshorePGT.setDelimiter(",");
 		de_necp_windoffshorePGT.setStartingYear(0);
 		de_necp_windoffshorePGT.setVariableName("DE_target_Offshore");	  
@@ -1596,9 +1608,10 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Wind onshore potential
 		TimeSeriesCSVReader de_windOnshore_limit = new TimeSeriesCSVReader();
-		de_windOnshore_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+//		de_windOnshore_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		de_windOnshore_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv");
 		de_windOnshore_limit.setDelimiter(",");
-		de_windOnshore_limit.setStartingYear(0);
+		de_windOnshore_limit.setStartingYear(-4);
 		de_windOnshore_limit.setVariableName("limit_DE_Onshore");
 
 		RenewablePotentialLimit renewablePotentialLimitDEwindOnshore = new RenewablePotentialLimit();
@@ -1610,9 +1623,10 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// PV potential       
 		TimeSeriesCSVReader de_photovoltaicPGT_limit = new TimeSeriesCSVReader();
-		de_photovoltaicPGT_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+		//de_photovoltaicPGT_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		de_photovoltaicPGT_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv"); // sensitivity
 		de_photovoltaicPGT_limit.setDelimiter(",");
-		de_photovoltaicPGT_limit.setStartingYear(0);
+		de_photovoltaicPGT_limit.setStartingYear(-4);
 		de_photovoltaicPGT_limit.setVariableName("limit_DE_PV");
 
 		RenewablePotentialLimit renewablePotentialLimitDEphotovoltaic = new RenewablePotentialLimit();
@@ -1624,9 +1638,10 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Wind offshore potential	  
 		TimeSeriesCSVReader de_windOffshore_limit = new TimeSeriesCSVReader();
-		de_windOffshore_limit.setFilename("/data/NECPPotentialLimits2015.csv");
+		//de_windOffshore_limit.setFilename("/data/NECP01PotentialLimits.csv");
+		de_windOffshore_limit.setFilename("/data/sensitivity_run_01_NECP01PotentialLimits_lower.csv"); // sensitivity
 		de_windOffshore_limit.setDelimiter(",");
-		de_windOffshore_limit.setStartingYear(0);
+		de_windOffshore_limit.setStartingYear(-4);
 		de_windOffshore_limit.setVariableName("limit_DE_Offshore");
 
 		RenewablePotentialLimit renewablePotentialLimitDEwindOffshore = new RenewablePotentialLimit();

@@ -1,59 +1,34 @@
----
-title: "Example Report"
-output:
-  html_document:
-    df_print: paged
-  html_notebook: default
-  pdf_document: default
-editor_options: 
-  chunk_output_type: console
----
-
-This report show that the results can exported in an [R Markdown](http://rmarkdown.rstudio.com) Notebook.
+## This script generates the "mapping-code" to transform ROEs from the original runs to values for which we have part-worth utilities.
 
 
-```{r setup, include=FALSE}
+prefix <- "1598437148250-Scenario_NL_DE_intermittent_auction_pref-EMlabModelRole-DefaultReporter" # This run should be from a "pre-run", i.e. linear mapping applied in this mappingfunction. Several iterations needed
 
-knitr::opts_chunk$set(
-  echo = FALSE, 
-  message = FALSE, 
-  warning = FALSE,
-  fig.width= 10,
-  fig.asp=0.5
-  #out.width= 10
-  )
+upper_percentile <- 0.9 # not implemented yet
+lower_percentile <- 0.1
 
-source(file = "emlab/init.R")
-
-# theme for ggplot
-theme_set(
-  theme_bw(base_size = 13) + 
-    theme(
-      legend.title=element_blank(),
-      legend.spacing.x = unit(0.1, 'cm')
-    )
-)
+output <- "output/"
 
 
-# global vars
-filters <- list(
-  iterations = c(iteration_min,iteration_max),
-  unit_prefix = "M")
-# needed for report
-assign("global_unit",filters$unit, envir = .GlobalEnv)
-```
+# Script ------------------------------------------------------------------
 
+library(tidyverse)
+library(readxl)
+library(glue)
 
-# Descriptive statistics
+source(file = "../../../analysis/config.R")
 
-I use this to figure out average, modelled return levels.
+raw_financialexpectations_results <- read_delim(
+  file = file.path(emlab_results_directory, paste0(prefix, "-FinancialExpectation.csv")),
+  delim = ";",
+  col_types = cols(.default = "n", producer = "c", market = "c", technology = "c", plant = "c", node = "c"),
+  locale = locale(decimal_mark = ".", grouping_mark =  "'")) %>% 
+  arrange(iteration, tick)
 
-```{r}
+# Determine modelled return levels.
 
 return_analysis_data <- raw_financialexpectations_results %>% 
-  select(iteration, tick, market, producer, technology, investmentRound, ROE = ROE.modelled, ROI) #%>% 
-  #filter(iteration == 1)
-  
+  select(iteration, tick, market, producer, technology, investmentRound, ROE = ROE.modelled, ROI)
+
 # I want to see per tick what the maximum ROE is
 
 return_analysis_per_tick <- return_analysis_data %>%   
@@ -63,7 +38,7 @@ return_analysis_per_tick <- return_analysis_data %>%
     min_ROE = min(ROE),
     ROE_average = mean(ROE),
     ROE_sd = sd(ROE))
-  
+
 
 return_analysis_data_2 <- return_analysis_data %>%
   left_join(return_analysis_per_tick, by = c("market", "technology", "tick")) %>% 
@@ -71,7 +46,6 @@ return_analysis_data_2 <- return_analysis_data %>%
 
 # return_analysis_data_2%>% 
 #   arrange(market,technology,tick)
-
 
 return_analysis_data_2%>% 
   group_by(market, technology, investmentRound) %>% 
@@ -90,8 +64,6 @@ return_analysis_data_2%>%
 # ROE relative are relative to the highest ROE (of a technology and market, estimated by all producers) per tick. 
 ## needs to be percent of max
 
-
-
 return_analysis_data %>% 
   group_by(market, technology, tick) %>% 
   filter(technology %in% c("Photovoltaic PGT", "Onshore wind PGT", "Offshore wind PGT")) %>% 
@@ -107,9 +79,6 @@ return_analysis_data %>%
 
 
 
-
-
-
 return_analysis_data %>% 
   filter(technology %in% c("Photovoltaic PGT", "Onshore wind PGT", "Offshore wind PGT")) %>% 
   ggplot(mapping = aes(x = tick, y = ROE, color = technology)) +
@@ -118,31 +87,21 @@ return_analysis_data %>%
   scale_y_continuous(labels = scales::percent) +
   facet_grid( ~ market, scales = "free")
 
-# Mues jetzt das chöne bruuch zum anders analysiere!
-# goal is to have an average ROI per tick. (Rounds will be differ, but tiks probably be comparable)
 
 # taking as average the median as there, most expectations took place. 
 # for the scalling, take quartiles, as between them, most cases are. 
 
-```
 
+# Problem analysis --------------------------------------------------------
 
-## Analysis of problem and treatment
+# These figures show the expected ROEs of all iterations in investments
 
-These figures show that the expected ROEs in the investment roles are often very high (compared to reality probably too high and hence it is necessary to treat the data).
-
-```{r}
 return_analysis_data %>%
   ungroup() %>% 
   ggplot(mapping = aes(x = tick, y = ROE, color = technology)) +
   geom_boxplot() +
-  scale_y_log10(labels = scales::percent) +
+  #scale_y_log10(labels = scales::percent) +
   facet_grid( ~ market, scales = "free")
-
-return_analysis_data %>%
-  ungroup() %>% 
-  group_by(technology) %>% 
-  summarise(mean = mean(ROE))
 
 
 return_analysis_data %>%
@@ -151,24 +110,9 @@ return_analysis_data %>%
   summarise(
     mean = mean(ROE))
 
-```
 
 
-
-To treat: 
-
-IMPORTANT: need several iterations for a reasonable result
-
-1. Let this run with a scenario with "linear" mapping
-
-2. Import into eclipse
-
-```{r functions}
-
-
-```
-
-```{r calculate boundaries of function}
+#  calculate boundaries of function
 
 quibble <- function(x, q = c(0.25, 0.5, 0.75)) {
   tibble(x = quantile(x, q), q = q)
@@ -196,33 +140,35 @@ quantile_summary <- function(df, var, market, technology){
       technology == !!technology,
       market == !!market) %>% 
     ungroup()
-
+  
   
   quantile_tibble <- df_specific %>%  
     group_by(iteration) %>% 
     nest() %>% 
     mutate(quantiles = map(data, function(data){
-     
+      
       data %>% 
         summarise(
-          quibble(ROE, c(0.25, 0.75))) %>% 
+          #quibble(ROE, c(0.25, 0.75))) %>% 
+          quibble(ROE, c(0.1, 0.9))) %>% 
+        
         spread(key = q, value = x)
       
     } ))
-
+  
   
   average_roes_in_50_quantiles <- quantile_tibble %>% 
     mutate(
       summary = map2(quantiles, data, function(quantiles, data) {
-
-      data %>%
-        filter(
-          between(!!var, quantiles$`0.25`, quantiles$`0.75`)) %>% 
-        summarise(
-          modelled_roe_mean = mean(ROE),
-          modelled_roe_max = max(ROE),
-          modelled_roe_min = min(ROE)
-        )
+        
+        data %>%
+          filter(
+            between(!!var, quantiles$`0.1`, quantiles$`0.9`)) %>% 
+          summarise(
+            modelled_roe_mean = mean(ROE),
+            modelled_roe_max = max(ROE),
+            modelled_roe_min = min(ROE)
+          )
       })) %>% 
     add_column(
       market = !!market,
@@ -232,7 +178,7 @@ quantile_summary <- function(df, var, market, technology){
     select(-data) %>% 
     ungroup()
   
-
+  
   average_roes_in_50_quantiles
   
 }
@@ -257,18 +203,11 @@ final_boundaries <- boundaries %>%
     modelled_roe_max = mean(modelled_roe_max),
     modelled_roe_min = mean(modelled_roe_min)
   )
- 
-```
 
 
-Because things may change: idea: 1st run decide using linear algorithms and construct the mapping function, 2nd run decide using simple linear extrapolation of expected returns.  SO HARD TO BRING TO PAPER! AFTERWARS! MABE PLOT AND IMG HELPS!
-
-In the next step, I construct the formula used to rescale returns from the model to returns one would observe in reality.
-
-For onshore wind, most ROEs in 2017, in Germany were between 6% ±2% (EGLI). We expect that there are also outliers which are higher or lower.
-
-
-```{r}
+# In the next step, I construct the formula used to rescale returns from the model to returns one would observe in our context
+# For onshore wind, most ROEs in 2017, in Germany were between 6% ±2% (EGLI). We expect that there are also outliers which are higher or lower.
+# 
 
 
 calculate_mapping_function <- function(roe_data){
@@ -282,7 +221,8 @@ calculate_mapping_function <- function(roe_data){
   # the range of utils from the model
   # to get the slope of the linear function, I divide the range between max and min of the 
   # actual returns by the number of actual_utils
-
+  
+  
   final_boundaries_function <- roe_data %>%
     select(mean = modelled_roe_mean, max = modelled_roe_max, min = modelled_roe_min) %>% 
     mutate(
@@ -290,7 +230,7 @@ calculate_mapping_function <- function(roe_data){
       delta_y = 0.01,
       delta_x = range / (length(actual_utils) - 1),
       slope = delta_y / delta_x
-      )
+    )
   
   # construct formula:
   # y = a + b*x; b => slope
@@ -300,7 +240,7 @@ calculate_mapping_function <- function(roe_data){
   
   final_boundaries_function_final <- final_boundaries_function %>% 
     mutate(
-        intercept = median(actual_utils) - slope * mean 
+      intercept = median(actual_utils) - slope * mean 
     )
   
   
@@ -310,8 +250,7 @@ calculate_mapping_function <- function(roe_data){
   )
 }
 
-library(readxl)
-actual_utils_df <- read_xlsx("../resources/sources/return_mapping/country_roes.xlsx")
+actual_utils_df <- read_xlsx("country_roes.xlsx")
 
 final_function_parameters <- actual_utils_df %>% 
   left_join(final_boundaries, by = c("technology", "market")) %>% 
@@ -323,32 +262,31 @@ final_function_parameters <- actual_utils_df %>%
   unnest(cols = c(mapping, data))
 
 final_function_parameters
-write_csv(x = final_function_parameters, path =  "../resources/sources/return_mapping/final_functions.csv")
 
-```
 
-Quick and dirty construction of Java code
+# Java code generation ----------------------------------------------------
 
-```{r}
- 
+filename_mappingfunction <- paste0(output,"/", prefix, "_mappingfunction_javacode.txt")
+filename_Rdata <- paste0(output,"/", prefix, "_final_function_parameters.Rdata")
+
 write_lines(
-  x = "", 
-  path = "../resources/sources/return_mapping/mappingfunction_javacode.txt", 
+  x = glue("		// Based on: {prefix}\n\n"), 
+  path = filename_mappingfunction, 
   append = FALSE)
 
 name_to_var <- tribble(
- ~"var", ~"name",
- "pv", "Photovoltaic PGT",
- "windOnshore", "Onshore wind PGT",
- "windOffshore", "Offshore wind PGT",
- "netherlandsElectricitySpotMarket", "DutchMarket",
- "germanyElectricitySpotMarket", "GermanMarket"         
+  ~"var", ~"name",
+  "pv", "Photovoltaic PGT",
+  "windOnshore", "Onshore wind PGT",
+  "windOffshore", "Offshore wind PGT",
+  "netherlandsElectricitySpotMarket", "DutchMarket",
+  "germanyElectricitySpotMarket", "GermanMarket"         
 )
 
 name_to_var_trans <- name_to_var$var
 names(name_to_var_trans) <- name_to_var$name
 
-save(final_function_parameters, file = "../resources/sources/return_mapping/final_function_parameters.Rdata")
+save(final_function_parameters, file = filename_Rdata)
 
 for(line in 1:nrow(final_function_parameters)){
   
@@ -358,26 +296,22 @@ for(line in 1:nrow(final_function_parameters)){
   slope = final_function_parameters[[line,"slope"]]
   market = name_to_var_trans[[final_function_parameters[[line,"market"]]]]
   technology = name_to_var_trans[[final_function_parameters[[line,"technology"]]]]
-
+  
   my_output <- glue(        
-    "EmpiricalMappingFunctionParameter empiricalMappingFunction{line} = new EmpiricalMappingFunctionParameter();
-        empiricalMappingFunction{line}.setModelledRoeMin({modelledRoeMin});
-        empiricalMappingFunction{line}.setModelledRoeMax({modelledRoeMax});
-        empiricalMappingFunction{line}.setIntercept({intercept});
-        empiricalMappingFunction{line}.setSlope({slope});
-        empiricalMappingFunction{line}.setMarket({market});
-        empiricalMappingFunction{line}.setTechnology({technology}); 
-        reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction{line});\n"
-    )
+    "
+    EmpiricalMappingFunctionParameter empiricalMappingFunction{line} = new EmpiricalMappingFunctionParameter();
+		empiricalMappingFunction{line}.setModelledRoeMin({modelledRoeMin});
+    empiricalMappingFunction{line}.setModelledRoeMax({modelledRoeMax});
+    empiricalMappingFunction{line}.setIntercept({intercept});
+    empiricalMappingFunction{line}.setSlope({slope});
+    empiricalMappingFunction{line}.setMarket({market});
+    empiricalMappingFunction{line}.setTechnology({technology}); 
+    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction{line});\n"
+  )
   
   write_lines(
     x = my_output, 
-    path = "../resources/sources/return_mapping/mappingfunction_javacode.txt", 
+    path = filename_mappingfunction, 
     append = TRUE)
-
+  
 }
-
-
-
-```
-

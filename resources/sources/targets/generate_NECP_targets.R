@@ -2,18 +2,23 @@ library(tidyverse)
 
 emlab_data_folder <- "../../data" 
 
-filename_potentials <- "NECP01techSpecificPotentials.csv"
-filename_limits <- "NECP01PotentialLimits.csv"
+filename_potentials <- "NecpPotentials.csv"
+filename_limits <- "NecpPotentialLimits.csv"
 
 do_write_csvs <- TRUE
-prefix_for_result <- "sensitivity_run_02_"
+prefix_for_result <- "From2015"
 
-adjustment_factor_for_limits <- 1.1 # To reduce the limits
+adjustment_factor_for_limits <- 1 # To reduce the limits for sensitivity analyses
+
+# year definition
+limits_year_begin <- 2015
+limits_year_end <- 2070 # Need to be higher than runtime in EMLab
+limits_year_timestep <- 0 # to calibrate which year is year 0
 
 # Function ----------------------------------------------------------------
 
 
-extrapolate_values <- function(df, var, year_begin = 2016, year_end = 2070, year_timestep = -4, method = "linear"){
+extrapolate_values <- function(df, var, year_begin, year_end, year_timestep, method = "linear"){
   
   new_years <- seq(year_begin, year_end, 1)
   
@@ -86,7 +91,6 @@ original_potentials_df %>%
 
 # Potential as shares for techs and neutral ------------------------------------------
 
-simulation_length <- 42
 
 # New targets are shares on electricity consumption in year
 necp_targets <- read_csv(
@@ -102,9 +106,9 @@ necp_targets_predicted <-  necp_targets_original %>%
   nest() %>%
   mutate(prediction = map(data, extrapolate_values, 
                           var = "goal", 
-                          year_begin = 2020, 
-                          year_end = 2020 + simulation_length, 
-                          year_timestep = 0,
+                          year_begin = limits_year_begin, 
+                          year_end = limits_year_end, 
+                          year_timestep = limits_year_timestep,
                           method ="capped_glm")) %>% 
   select(-data) %>% 
   unnest(cols = c("prediction")) %>% 
@@ -155,17 +159,8 @@ if(do_write_csvs){
 
 # Potential Limits (needed in check function) ------------------------------------------------------------------
 
-## Goal: 
-# good limits for my simulations
-# reproducible
 
-limits_year_begin <- 2016
-limits_year_end <- 2070
-limits_year_timestep <- -4
-
-
-# Potential Limits in the EMLab Generation Auction model set an upper limit to investments and hence is an influencial variable
-# TODO: make a sensitivity analysis.
+# Potential Limits in the EMLab Generation Auction model set an upper limit to investments (see check())
 
 # 1. Total electricity consumption is based on Eurostat and NECP goals and set in NECPs_sourcses.xlsx (exported to consumption.csv)
 
@@ -176,7 +171,6 @@ total_elec_consumption <- read_csv(
     year %in% c(2020, 2030, 2060)
   ) %>% 
   gather(key = "technology", value = "consumption", -country, -year)
-
 
 # 2. we assume that future electricity consumption increases linearly
 

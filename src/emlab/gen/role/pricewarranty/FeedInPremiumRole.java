@@ -41,7 +41,7 @@ import emlab.gen.repository.Reps;
  *         supportPrice = baseCost*TotalGeneration - ElectricityMarketRevenue
  * 
  *         Assumption: when the policy is implemented for a certain country, all
- *         operational, eligible plants - plants that have in that zone receive
+ *         operational, eligible plants -x plants that have in that zone receive
  *         the premium by default. there is no need for an energy producer agent
  *         to voluntarily apply for the scheme.
  * 
@@ -97,6 +97,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
                     // TODO MM (Comment): Can't find any plants here because no investing has happend. I guess here it's only paying.(Generatinig the cashflow)
                     for (PowerPlant plant : plantSet) {
                     	
+                    	// TODO Figure out needed
 //		            	if(renewableSupportScheme.getFutureSchemePhaseoutTime().containsKey(technology)) {	
 //		            		// Only make a contract for this... Relly??
 //		        			logger.info(technology + "");
@@ -229,8 +230,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
 
                             if (renewableSupportScheme.isAvgElectricityPriceBasedPremiumEnabled() == true) {
                                 if (renewableSupportScheme.isEmRevenuePaidExpost() == true) {
-                                    supportPrice = (contract.getPricePerUnit() - emAvgPrice)
-                                            * totalGenerationOfPlantInMwh;
+                                    supportPrice = (contract.getPricePerUnit() - emAvgPrice) * totalGenerationOfPlantInMwh;
                                     double supportPriceExact = contract.getPricePerUnit() * totalGenerationOfPlantInMwh
                                             - sumEMR;
                                     // logger.warn("supportPrice considering avg
@@ -279,7 +279,7 @@ public class FeedInPremiumRole extends AbstractRole<RenewableSupportFipScheme>
     	getReps().createCashFlow(regulator, plant.getOwner(), supportPrice,
                 CashFlow.FEED_IN_PREMIUM, getCurrentTick(), plant);
 
-         logger.fine("(DBG123) Fip Premium of " + supportPrice + " from regulator " + regulator.getName() + " to " + plant.getOwner());
+         logger.finer("FIP Premium of " + supportPrice + " from regulator " + regulator.getName() + " to " + plant.getOwner());
 
     }
 
