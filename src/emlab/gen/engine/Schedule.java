@@ -24,15 +24,18 @@ public class Schedule {
     public Scenario scenario;
     public Timer timer;
     public AbstractReporter reporter;
+    
+    public boolean preRunForMapping;
 
     public EngineState getState() {
         return this.state;
     }
 
-    public void build(long iteration, String scenarioName, String modelRole, AbstractReporter reporter) {
+    public void build(long iteration, String scenarioName, String modelRole, AbstractReporter reporter, boolean preRunForMapping) {
         this.iteration = iteration;
         this.reps = new Reps();
         this.reporter = reporter;
+        this.preRunForMapping = preRunForMapping;
         
         Class<?> scenarioClass = null;
         try {

@@ -41,6 +41,7 @@ public class Startup {
         String reporterClassName = "DefaultReporter";
         String reporterDirectoryName = "results/";
         
+        boolean preRunForMapping = false;
         boolean logForApp = true;
         Logger.getGlobal().setLevel(Level.INFO);
         
@@ -83,6 +84,10 @@ public class Startup {
                     case "debuglevel":
                         Level level = Level.parse(theArg[1]);
                         Logger.getGlobal().setLevel(level);
+                        break;
+                    case "prerun": // specialty argument for empirical inputs:
+                    	preRunForMapping = Boolean.parseBoolean(theArg[1]);
+                    	break;
                     default:
                         Logger.getGlobal().warning("Argument not known: " + theArg);
                 }
@@ -130,7 +135,7 @@ public class Startup {
             if ((activeWorkers.size() < numberOfParallelJobs && iteration < numberOfIterations)) {
                 iteration++;
                 Logger.getGlobal().info("Starting worker for iteration " + iteration);
-                ScheduleWorker worker = new ScheduleWorker(runID, iteration, scenarioName, modelRole, reporter);
+                ScheduleWorker worker = new ScheduleWorker(runID, iteration, scenarioName, modelRole, reporter, preRunForMapping);
                 activeWorkers.add(worker);
                     worker.execute();
             }

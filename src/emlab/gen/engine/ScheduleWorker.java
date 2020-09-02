@@ -21,20 +21,23 @@ public class ScheduleWorker extends SwingWorker<Void, Integer> {
     public String modelRole;
     public AbstractReporter reporter;
     public Schedule schedule;
+    public boolean preRunForMapping;
             
-    public ScheduleWorker(long runID, long iteration, String scenarioName, String modelRole, AbstractReporter reporter) {
+    public ScheduleWorker(long runID, long iteration, String scenarioName, String modelRole, AbstractReporter reporter, boolean preRunForMapping) {
         this.runID = runID;
         this.iteration = iteration;
         this.scenarioName = scenarioName;
         this.modelRole = modelRole;
         this.reporter = reporter;
+        
+        this.preRunForMapping = preRunForMapping; // Hack: for empirical data
     }
 
     @Override
     protected Void doInBackground() {
         schedule = new Schedule();
         schedule.runID = runID + "-" + scenarioName + "-" + modelRole + "-" + reporter.getClass().getSimpleName();
-        schedule.build(iteration, scenarioName, modelRole, reporter);
+        schedule.build(iteration, scenarioName, modelRole, reporter, preRunForMapping);
         schedule.start();
         Logger.getGlobal().info("Worker for iteration " + iteration + " is now completed.");
         return null;
