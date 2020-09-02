@@ -77,8 +77,8 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
     private final SubmitOffersToCommodityMarketRole submitOffersToCommodityMarketRole = new SubmitOffersToCommodityMarketRole(schedule);
     private final SubmitLongTermElectricityContractsRole submitLongTermElectricityContractsRole = new SubmitLongTermElectricityContractsRole(schedule);
     private final SelectLongTermElectricityContractsRole selectLongTermElectricityContractsRole = new SelectLongTermElectricityContractsRole(schedule);
-    //private final DismantlePowerPlantPastTechnicalLifetimeRole dismantlePowerPlantRole = new DismantlePowerPlantPastTechnicalLifetimeRole(schedule);
-    private final DismantlePowerPlantOperationalLossRole dismantlePowerPlantRole = new DismantlePowerPlantOperationalLossRole(schedule);
+    private final DismantlePowerPlantPastTechnicalLifetimeRole dismantlePowerPlantRoleLifetime = new DismantlePowerPlantPastTechnicalLifetimeRole(schedule);
+    private final DismantlePowerPlantOperationalLossRole dismantlePowerPlantRoleLoss = new DismantlePowerPlantOperationalLossRole(schedule);
     private final ReassignPowerPlantsToLongTermElectricityContractsRole reassignPowerPlantsToLongTermElectricityContractsRole = new ReassignPowerPlantsToLongTermElectricityContractsRole(schedule);
     private final ClearIterativeCO2AndElectricitySpotMarketTwoCountryRole clearIterativeCO2AndElectricitySpotMarketTwoCountryRole = new ClearIterativeCO2AndElectricitySpotMarketTwoCountryRole(schedule);
     private final DetermineFuelMixRole determineFuelMixRole = new DetermineFuelMixRole(schedule);
@@ -150,7 +150,12 @@ public class EMlabModelRole extends AbstractRole<EMLabModel> implements Role<EML
          * Dismantling & paying loans
          */
         logger.log(Level.INFO, "  0. Dismantling & paying loans");
-        dismantlePowerPlantRole.act(getReps().findEnergyProducersAtRandom());
+        
+        if(model.getDismantleBehaviour() == "Loss") {
+        	dismantlePowerPlantRoleLoss.act(getReps().findEnergyProducersAtRandom());
+        } else {
+        	dismantlePowerPlantRoleLifetime.act(getReps().findEnergyProducersAtRandom());	
+        }
         payForLoansRole.act(getReps().findEnergyProducersAtRandom());
 
 

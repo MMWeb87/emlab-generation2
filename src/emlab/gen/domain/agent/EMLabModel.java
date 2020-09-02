@@ -79,6 +79,10 @@ public class EMLabModel extends AbstractAgent implements Agent {
     private boolean renewableTenderSchemeImplemented;
     
     private boolean feedInPremiumImplemented;
+    
+    private String dismantleBehaviour;
+	
+    private boolean empiricalPreferenceActive;
 
     
 
@@ -308,6 +312,23 @@ public class EMLabModel extends AbstractAgent implements Agent {
 
 	public void setFeedInPremiumImplemented(boolean feedInPremiumImplemented) {
 		this.feedInPremiumImplemented = feedInPremiumImplemented;
+	}
+
+	public String getDismantleBehaviour() {
+		return dismantleBehaviour;
+	}
+	
+
+	public void setDismantleBehaviour(String dismantleBehaviour) {
+		this.dismantleBehaviour = dismantleBehaviour;
+	}
+
+	public boolean isEmpiricalPreferenceActive() {
+		return empiricalPreferenceActive;
+	}
+
+	public void setEmpiricalPreferenceActive(boolean empiricalPreferenceActive) {
+		this.empiricalPreferenceActive = empiricalPreferenceActive;
 	}
 
 
