@@ -60,16 +60,10 @@ public class InvestInPowerGenerationTechnologiesRole<T extends EnergyProducer> e
                     if (financialExpectation.getProjectValue() > 0) {
                     	
                     	logger.log(Level.FINE, "The project value " + financialExpectation.getProjectValue() + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
-
-//	                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
-//	                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
-//	                    
-//	                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-//	                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
 	
-	                    double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment();			                    
+	                    // Only for reporting
+                    	double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(financialExpectation.getProjectValue());			                    
 	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
-
 	                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
 	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
 

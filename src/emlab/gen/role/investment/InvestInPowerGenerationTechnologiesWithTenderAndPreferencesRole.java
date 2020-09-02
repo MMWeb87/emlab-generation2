@@ -24,6 +24,8 @@ import org.apache.commons.math.stat.regression.SimpleRegression;
 import emlab.gen.domain.agent.EMLabModel;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.gis.Zone;
+import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
+import emlab.gen.domain.policy.EmpiricalMappingFunctionParameter;
 import emlab.gen.domain.policy.renewablesupport.BaseCostFip;
 import emlab.gen.domain.policy.renewablesupport.ForecastingInformationReport;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportFipScheme;
@@ -43,7 +45,7 @@ import emlab.gen.trend.TimeSeriesCSVReader;
  * @author JCRichstein
  */
 
-public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T extends EnergyProducer> extends InvestInPowerGenerationTechnologiesWithPreferencesRole<T> implements Role<T> {
+public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T extends EnergyProducer> extends AbstractInvestInPowerGenerationTechnologiesWithTenderRole<T> implements Role<T> {
 
     //Map<ElectricitySpotMarket, MarketInformation> marketInfoMap = new HashMap<ElectricitySpotMarket, MarketInformation>();
 
@@ -95,24 +97,23 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        financialExpectation.calculateExpectedBaseCostWithScheme();
 	                    	double projectValue = financialExpectation.getProjectValue();
 	                    	
-	                        logger.fine("For plant before subsidy:" + plant.getName() +
-	                        "ProjectValue " + projectValue);                   
+	                        logger.fine("For plant before subsidy:" + plant.getName() + "ProjectValue " + projectValue);                   
 	                        
 	                        // Phasing out support as indicated in scenario
-	
+	                        Boolean supportSchemeAvailable = false;
 	                        if (scheme != null && financialExpectation.getExpectedBaseCost() > 0
 	                                && (scheme.getPowerGeneratingTechnologiesEligible().contains(technology))) {
 	                        	
 	                            if(scheme.getFutureSchemePhaseoutTime().containsKey(technology)) {
 	    	                        if(schedule.getCurrentTick() + plant.getActualPermittime() + plant.getActualLeadtime() < scheme.getFutureSchemePhaseoutTime().get(technology)) {
-	    	                        
-	                        
+	    	                        	
+	    	                        	supportSchemeAvailable = true;
+	    	                        	
 			                        	financialExpectation.calculateProjectValueWithScheme();
 			                        	double oldValue = projectValue;
 			                        	projectValue  = financialExpectation.getProjectValueWithScheme();
 			                        	logger.finer("projectValue old: "+ oldValue + " and projectValue new: "+ projectValue);
 			
-			                        
 				                        
 			                        } else {
 			                        	logger.finer("No support, since phased out");
@@ -120,130 +121,88 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                            }
 	                        }
 	                        
-		                    if (projectValue > 0) {
-		                    	
-		                    	logger.log(Level.FINE, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
-		                    
-		                    	// TODO in auction module there is a revenue component
-		                    	
-			                    
-			                    logger.log(Level.FINE, "Agent " + agent + " finds the disc. operating profit " + financialExpectation.discountedOperatingProfit);
-			                    logger.log(Level.FINE, "Agent " + agent + " finds the disc. capital cost" + financialExpectation.discountedCapitalCosts);
-		                    	
-//			                    double projectReturnOnInvestment = (financialExpectation.getDiscountedOperatingProfit() + financialExpectation.getDiscountedCapitalCosts()) 
-//			                    		/ (-financialExpectation.getDiscountedCapitalCosts());
-//			                    double projectReturnOnInvestment = financialExpectation.calculateReturnOnInvestment(1, 0, 1);			                    
-//			                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROI for " + technology + " to be " + projectReturnOnInvestment);
-//			                    
-//			                    double projectReturnOnEquity = projectReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-//			                    logger.log(Level.FINE, "Agent " + agent + " finds the yearly ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectReturnOnEquity);
-			                    
-			                    double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment();			                    
-			                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+	                        if (projectValue > 0) {
 
-			                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-			                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+	                        	if(model.isEmpiricalPreferenceActive()) {
 
-			                    double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket(), "rescalled");
-			                    
-			                    double partWorthUtilityReturn = determineUtilityReturn(mappedProjectDiscountedReturnOnEquity, agent);
-			                    double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
-			                    double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
-			                    
-			                    // TODO MM
-			                    double partWorthUtilityPolicy = 0; 
-			                    
-			                    double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
-			                    double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
-			
-			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
-			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectDiscountedReturnOnEquity);
-			                    logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
-			                    logger.log(Level.FINE, "Agent " + agent + " finds " + totalUtility + " as total utility");
-			                    logger.log(Level.FINE, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
-			                    
-			                    
-			                    
-			                    // Reporter
-			                    FinancialExpectationReport report = new FinancialExpectationReport();
-			                    
-			                    report.schedule = schedule;
-			                    report.setMarket(agent.getInvestorMarket());
-			                    report.setTime(schedule.getCurrentTick()); 
-			                    report.setAgent(agent);
-			                    report.setTechnology(technology);
-			                    report.setPlant(plant);
-			                    report.setNode(node);
-			                    report.setInvestmentRound(this.getCurrentTnvestmentRound());
-			                    
-			                    report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
-			                    report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
-			                    report.setMappedProjectReturnOnEquity(mappedProjectDiscountedReturnOnEquity);
+	                        		logger.log(Level.FINE, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
 
-			                    
-			                    report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
-			                    report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
-			                    report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
-			                    report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
-			                    
-			                    report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
-			                    report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
-			                    report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
-			                    report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
-			                    report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
-			                    
-			                    report.setProjectCost(financialExpectation.getProjectCost());
-			                    report.setProjectValue(financialExpectation.getProjectValue());
-			                    
-			                    report.setRunningHours(financialExpectation.getRunningHours());
-			                    report.setWacc(financialExpectation.getWacc());
-			                    report.setTotalUtility(totalUtility);
-			                     
-			                    getReps().financialExpectationReports.add(report);
-			                    
-			                    // utilities
-			                    	                    	                    
-			                    if(totalRandomUtility > highestValue) {
-			                    	highestValue = totalRandomUtility;
-			                    	bestPlant = plant;
-			                    } 
-		                    
-		                    } else {
-		                    	logger.log(Level.FINER, "Because the project value is negative, " + agent + " does not consider this investment option.");
-		                    }
-		                    
-	                        
-	                         //*****FOR VERIFICATION
-//	                         logger.fine("Inv data with subsidy:discountedCapitalCosts " +
-//	                        		 financialExpectation.getDiscountedCapitalCosts() + "discountedOpCost" + financialExpectation.getDiscountedOperatingCost() +
-//	                         "discountedOpRevenue" + financialExpectation.getDiscountedOperatingRevenue());
-//	                         
-//	                         logger.fine("For plant:" + plant.getName() +
-//	                         "ProjectValue " + projectValue);
-//	
-//	                         logger.fine("for plant:" + plant + "disCapitalCost in Inv Role is" + -financialExpectation.getDiscountedCapitalCosts()
-//	                         + "total Generation is" + financialExpectation.getExpectedGeneration() + "flh is"
-//	                         + plant.getAnnualFullLoadHours());
-//	
-//	                         logger.fine("expectedBaseCost" + financialExpectation.getExpectedBaseCost() +
-//	                         "for plant" + plant + "in tick"
-//	                         + futureTimePoint);
-	
-	                         //*****END VERIFICATION
-	
-//	                        if (projectValue > 0 && projectValue / plant.getActualNominalCapacity() > highestValue) {
-//	                            highestValue = projectValue / plant.getActualNominalCapacity();
-//	                            bestPlant = plant;
-	
-								//fReport.setAgent(agent.getName());
-								//fReport.setTick(getCurrentTick());
-								//fReport.setForecastingForTick(getFutureTimePoint());
-								////fReport.setExpectedOpRevenueElectricityMarketWithSubsidy(operatingRevenue);
-								//fReport.setProjectValuePerMwWithSubsidy(projectValue / plant.getActualNominalCapacity());
-								//fReport.setNodeName(node.getName());
-								//fReport.setTechnologyName(technology.getName());
-	
-	                        //}
+	                        		double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(projectValue);			                    
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+	                        		double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+
+	                        		double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket());
+
+	                        		double partWorthUtilityReturn = determineUtilityReturn(mappedProjectDiscountedReturnOnEquity, agent);
+	                        		double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
+	                        		double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
+	                        		double partWorthUtilityPolicy = determineUtilityPolicy(supportSchemeAvailable); 
+
+	                        		double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
+	                        		double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
+
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectDiscountedReturnOnEquity);
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalUtility + " as total utility");
+	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
+
+
+	                        		// Reporter
+	                        		FinancialExpectationReport report = new FinancialExpectationReport();
+
+	                        		report.schedule = schedule;
+	                        		report.setMarket(agent.getInvestorMarket());
+	                        		report.setTime(schedule.getCurrentTick()); 
+	                        		report.setAgent(agent);
+	                        		report.setTechnology(technology);
+	                        		report.setPlant(plant);
+	                        		report.setNode(node);
+	                        		report.setInvestmentRound(this.getCurrentTnvestmentRound());
+
+	                        		report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
+	                        		report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
+	                        		report.setMappedProjectReturnOnEquity(mappedProjectDiscountedReturnOnEquity);
+
+	                        		report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
+	                        		report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
+	                        		report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
+	                        		report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
+
+	                        		report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
+	                        		report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
+	                        		report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
+	                        		report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
+	                        		report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
+
+	                        		report.setProjectCost(financialExpectation.getProjectCost());
+	                        		report.setProjectValue(financialExpectation.getProjectValue());
+
+	                        		report.setRunningHours(financialExpectation.getRunningHours());
+	                        		report.setWacc(financialExpectation.getWacc());
+	                        		report.setTotalUtility(totalUtility);
+
+	                        		getReps().financialExpectationReports.add(report);
+
+	                        		// utilities
+	                        		if(totalRandomUtility > highestValue) {
+	                        			highestValue = totalRandomUtility;
+	                        			bestPlant = plant;
+	                        		} 
+	                        	
+	                        	} else {
+
+	                        		// empirical preference is deactivated -> evaluate like normal 
+	                        		if (projectValue / plant.getActualNominalCapacity() > highestValue) {
+	                        			highestValue = projectValue / plant.getActualNominalCapacity();
+	                        			bestPlant = plant;
+	                        		}
+	                        	}
+
+	                        } else {
+	                        	logger.log(Level.FINER, "Because the project value is negative, " + agent + " does not consider this investment option.");
+	                        }
 	
 	                    }
 	
@@ -260,441 +219,146 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
     }
     
 
-   
-    
-
+ 
     
     /**
-     * Checks if a technology specific FipScheme exists, and returns it 
-     * @param market
-     * @param technology
-     * @
-     * @return technology specific FipScheme  
+     * Determines part-worth utility from return on equity number and EnergyProducers return sensitivity. 
+     * A linear extrapolation is used based on the difference between two return values. This
+     * difference is assumed to show the sensitivity of investors to changes in returns.
+     * 
+     * Example:
+     * 	assume return 6% has part-worth utility of 0 and 7% of 40, i.e. 40u per 1%
+     *  then with 0.1 ROE -> (0.1-0.06) * 40/0.01 = 160
+     *
+     * @param projectReturnOnEquity 	ROE of the project
+     * @param agent						EnergyProducer
+     * @return double utility value
+     *
      */
-    private RenewableSupportFipScheme getRenewableSupportFipScheme(PowerGeneratingTechnology technology) {
-    	    	
-        Set<RenewableSupportFipScheme> schemeSet = getReps().findSchemesGivenZone(getMarket().getZone()); //TODO correct?
-        logger.log(Level.FINER, "scheme Set is " + schemeSet);
+    protected double determineUtilityReturn(double projectReturnOnEquity, EnergyProducer agent) {
 
-        if ((schemeSet.size() >= 1) && (!schemeSet.isEmpty())) {
 
-            for (RenewableSupportFipScheme i : schemeSet) {
-            	                
-            	// TODO MM ADJUST IF LOOP FOR LOCATION SPECIFICITY WHEN
-                // ENABLED - simply add a logical AND toi the iff
-                // statemnt below to filter for location
+    	// Here, I extrapolate linearly based on the slope between 6 and 7% return -> specific for data of Melliger, Lilliestam (2020)
+    	// TODO MM andwhat if 5-6% is different from 6-7% (which it will be probably) ? ->  Maybe mean of slopes
+    	double utilityReturnExtrapolationSlope = (agent.getUtilityReturn().get("7%") - agent.getUtilityReturn().get("6%")) / 0.01;
+    	double utilityReturnExtrapolationIntercept = agent.getUtilityReturn().get("6%") - utilityReturnExtrapolationSlope * 0.06;
 
-            	Zone zoneScheme = i.getRegulator().getZone();
-            	
-                if (i.getPowerGeneratingTechnologiesEligible().contains(technology)
-                        && getMarket().getZone().getName() == zoneScheme.getName()) {
-                    scheme = i;
-                    logger.log(Level.FINER, "scheme is " + i.getName());
-                    break;
-                } else {
-                    scheme = null;
-                }
-            }
-
-        }
-        return scheme;
+    	double utility = utilityReturnExtrapolationIntercept + utilityReturnExtrapolationSlope *  projectReturnOnEquity;        	
+    
+        return utility;
     }
     
-    
-    
-    class FutureCapacityExpectationWithScheme extends FutureCapacityExpectation {
-	   
-		
-		public FutureCapacityExpectationWithScheme(PowerGeneratingTechnology technology, PowerPlant plant, PowerGridNode node){
-		    
-			super(technology, plant, node);
-		
-		}
-			
-		      
-		@Override
-		public void calculateNodeLimit() {
-				
-			super.calculateNodeLimit();
-		
-		    if (scheme != null) {
-		        double technologyPotential;
-		        
-                TimeSeriesCSVReader technologyPotentialTS = getReps()
-                        .findTechnologySpecificRenewablePotentialLimitTimeSeriesByRegulator(scheme.getRegulator(),
-                                technology.getName());
-                 
-                if(technologyPotentialTS != null) {
-                	technologyPotential = technologyPotentialTS.getValue(futureTimePoint);
-                } else {
-                	technologyPotential = Double.MAX_VALUE;
-                	logger.log(Level.WARNING, "No technologyPotentialLimit set for " + technology);
-                }
-		
-		        pgtNodeLimit = technologyPotential / plant.getAnnualFullLoadHours();
-		        
-		        logger.log(Level.FINER, "For technology " + technology.getName() + "plant annual full load hours " + plant.getAnnualFullLoadHours());
-		        logger.log(Level.FINER, "technology potential in MW " + pgtNodeLimit);
-		        logger.log(Level.FINER, "technology potential " + technologyPotential);
-		
-		    }
-		    
-		}
-		
-        
-        
-        /* (non-Javadoc)
-         * (a) the first two rules because capacity (GW) was not a good measure to limit renewable generation, especially when targets were in terms of energy (GWh). 
-         * For instance, limiting solar capacity (in GW) to 20% of peak demand (say, 70 GW for Germany) would limit investments to 14GW of solar capacity, 
-         * which provides too little energy from solar!
-         * 
-         * (b) the third rule (I don't remember too clearly but), I think it was also because it massively limited which agents could avail of the subsidy 
-         * (especially since the subsidy was credited to the agents _after_ they won the bid...) 
-         * but I'm not too sure about this one and perhaps you can run the code with this rule included to check how the results change! 
-         * 
-         * @see emlab.gen.role.investment.GenericInvestmentRole.FutureCapacityExpectation#check()
-         */
-        @Override
-        public void check() {        	
+    /**
+     * This function transforms a return value for a specific country or technology to
+     * a value that is more realistic (based on empirical paper by Melliger et al.).
+     * See R script for actual function.
+     * 
+     * To get the EmpiricalMappingFunctionParameter, the model should first be run with the linear method.
+     *
+     * @param projectReturnOnEquity 	ROE of the project
+     * @param agent						EnergyProducer
+     * @return double utility value
+     *
+     */
+    protected double mapReturnToEmpiricalRange(double projectReturnOnEquity, PowerGeneratingTechnology technology, ElectricitySpotMarket market) {
+    	
+    	double finalReturnForCalculation = 0;
+    	
+    	if(this.schedule.preRunForMapping) {
+    		finalReturnForCalculation = projectReturnOnEquity;       	
+
+    	} else {
+    		 		
+    		EmpiricalMappingFunctionParameter empiricalMappingParameter = getReps().findEmpiricalMappingParameters(market, technology);
+    		
+    		double intercept = empiricalMappingParameter.getIntercept();
+    		double slope = empiricalMappingParameter.getSlope();
+    		double upper_quartile = empiricalMappingParameter.getModelledRoeMax();
+    		double lower_quartile = empiricalMappingParameter.getModelledRoeMin();
+    		
+    		double capped_return = projectReturnOnEquity; 
+        	if(projectReturnOnEquity >= upper_quartile) {    		
+        		capped_return = upper_quartile;
+        	} else if(projectReturnOnEquity <= lower_quartile) {
+        		capped_return = lower_quartile;
+        	}
         	
-//            if ((expectedInstalledCapacityOfTechnology + plant.getActualNominalCapacity())
-//                    / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
-//                    .getMaximumInstalledCapacityFractionInCountry()) {
-//            	
-//                logger.log(Level.FINE, 
-//                		agent + " will not invest in {} technology because there's too much of this type in the market", technology);
-//            
-//            } else     	
-        	if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
-            		
-            		logger.log(Level.FINE, "Not investing in " + technology.getName() + "because of node limit: " + pgtNodeLimit);	 
-            	
-            } else if (expectedOwnedCapacityInMarketOfThisTechnology > expectedOwnedTotalCapacityInMarket
-                    * technology.getMaximumInstalledCapacityFractionPerAgent()) {
-                 
-            	logger.log(Level.FINE, 
-                		 agent + " will not invest in " + technology.getName() + " because there's too much capacity planned by him");
-//            
-//            } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
-//            	logger.log(Level.FINE, "Not investing because more than 20% of demand in pipeline.");
-//
-//            
-//            } else if ((capacityOfTechnologyInPipeline > 2.0 * operationalCapacityOfTechnology)
-//                    && capacityOfTechnologyInPipeline > 9000) { // TODO: reflects that you cannot expand a technology out of zero.
-//            	logger.log(Level.FINE, agent +" will not invest in {} technology because there's too much capacity in the pipeline", technology);
-//            
-//            } else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
-//                    .getDownpaymentFractionOfCash() * agent.getCash()) {
-//            	logger.log(Level.FINE, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
-//            	
-//            	// TODO: consider support?
-//            
-            } 
-            
-            else {
-            	
-                // Passes all hard limits in terms of capacity
-            	logger.log(Level.FINE, agent + " considers " + technology.getName()  + " to be viable.");
-            	
-            	setViableInvestment(true);
-            	
-	
-            }      
-            
+        	finalReturnForCalculation = intercept + slope * capped_return;
+        	
+    	}
+
+
+    	return finalReturnForCalculation;        	
+    
+    }
+     
+    /**
+     * Determines part-worth utility from technology
+     * @param agent 
+     *
+     * @param projectReturnOnEquity
+     * @return double utility value
+     */
+    protected double determineUtilityTechnology(PowerGeneratingTechnology technology, EnergyProducer agent) {
         
-       }
-       
-
-
-    }
- 
-
-    public double predictSubsidyFip(EnergyProducer agent, long futureTimeStartScheme, PowerGridNode node,
-            PowerGeneratingTechnology technology, boolean isTechSpecificityEnabled) {
-        // Fuel Prices
-        double expectedBaseCostFip = 0d;
-        // Find Clearing Points for the last 5 years (counting current year
-        // as one of the last 5 years).
-        Iterable<BaseCostFip> BaseCostFipSet = null;
-
-        if (isTechSpecificityEnabled) {
-            BaseCostFipSet = getReps()
-            		.findAllBaseCostFipsForTechnologyLocationAndTimeRange(node.getName(), technology,
-                            getCurrentTick() + futureTimeStartScheme
-                                    - (agent.getNumberOfYearsBacklookingForForecasting() - 1),
-                            getCurrentTick() + futureTimeStartScheme);
-            // logger.warn("baseCostFipSet: " + BaseCostFipSet);
-        } else {
-            BaseCostFipSet = getReps().
-            		findAllTechnologyNeutralBaseCostForTimeRange(
-                    getCurrentTick() + futureTimeStartScheme - (agent.getNumberOfYearsBacklookingForForecasting() - 1),
-                    getCurrentTick() + futureTimeStartScheme);
-            // logger.warn("baseCostFipSet: " + BaseCostFipSet);
-        }
-
-        SimpleRegression gtr = new SimpleRegression();
-        if (BaseCostFipSet != null) {
-            for (BaseCostFip baseCostFip : BaseCostFipSet) {
-                // logger.warn("Base cost FIP {} , in predictSubsidyRole" +
-                // baseCostFip.getCostPerMWh());
-
-                gtr.addData(baseCostFip.getStartTime(), baseCostFip.getCostPerMWh());
-            }
-            expectedBaseCostFip = gtr.predict(agent.getInvestmentFutureTimeHorizon());
-        }
-        // logger.warn("Forecast {}: in Step " + futureTimeStartScheme,
-        // gtr.predict(futureTimeStartScheme));
-        return expectedBaseCostFip;
-
+        double utility = agent.getUtilityTechnology().get(technology.getName());
+    	
+        return utility;
     }
     
+    /**
+     * Determines part-worth utility from market. The own country/market is equal to investorMarket
+     * @param agent 
+     *
+     * @param projectReturnOnEquity
+     * @return double utility value
+     */
+    protected double determineUtilityCountry(ElectricitySpotMarket market, EnergyProducer agent) {
+        
+    	double utility;
+    	
+    	if(agent.getInvestorMarket() == market) {
+    		// TODO generalize
+    		utility = agent.getUtilityCountry().get("Own country");
+    		
+    	} else {
+    		utility = agent.getUtilityCountry().get("Known country");
+    		
+    	}
+    	// TODO unkonwn country? Not implementable at all?
+    	
+    	
+        return utility;
+    }
     
-   public class FutureFinancialExpectationWithScheme extends FutureFinancialExpectation{
-	   	   
-	   protected double expectedBaseCost = 0d;
-	   protected double expectedAnnualVariableRevenueByRenewableScheme = 0d;
-
-	   private double projectValueWithScheme;
-       private double discountedGeneration = 0d;
-       
-       protected double discountedOperatingRevenue;
-       protected double waccAdjusted; // Not implemented yet
-
-
-       public FutureFinancialExpectationWithScheme(PowerPlant plant){
-		   
-		   super(plant);
-		   		   
-           waccAdjusted = (1 - agent.getDebtRatioOfInvestments())
-                   * (agent.getEquityInterestRate() + agent.getEquityRatePriceRiskComponent())
-                   + agent.getDebtRatioOfInvestments() * agent.getLoanInterestRate();
-
-    	}
-	   
-
-		/**
-    	 * Calculates the expected base costs per MWh for the technology and if it is eligible for the current scheme
-    	 */
-    	public void calculateExpectedBaseCostWithScheme() {
-            
-            if (scheme != null && (scheme.getPowerGeneratingTechnologiesEligible().contains(technology))) {
-                BaseCostFip baseCostFip = null;
-                if ((scheme.getFutureSchemeStartTime() + getCurrentTick()) == getFutureTimePoint()
-                        && scheme.isTechnologySpecificityEnabled()) {
-                    
-                	baseCostFip = getReps().findOneBaseCostForTechnologyAndNodeAndTime(
-                            node.getName(), getTechnology(), getFutureTimePoint());
-                    expectedBaseCost = baseCostFip.getCostPerMWh();
-                    
-                    logger.log(Level.FINE, 
-                    		"For technology" + technology.getName() + "for node" + node.getName() 
-                    + "Expected Base cost " + baseCostFip.getCostPerMWh());
-                    
-                } else if ((scheme.getFutureSchemeStartTime() + getCurrentTick()) == getFutureTimePoint()
-                        && !scheme.isTechnologySpecificityEnabled()) {
-                    
-                	baseCostFip = getReps().findOneTechnologyNeutralBaseCostForTime(getFutureTimePoint());
-                    expectedBaseCost = baseCostFip.getCostPerMWh();
-                    
-                    logger.log(Level.FINE, 
-                    		"2: For technology" + technology.getName() + "for node" + node.getName() 
-                    		+ "Expected Base cost " + expectedBaseCost);
- 
-                } else {
-
-                    expectedBaseCost = predictSubsidyFip(agent, scheme.getFutureSchemeStartTime(), node,
-                            technology, scheme.isTechnologySpecificityEnabled());
-                    logger.log(Level.FINE, "3: For technology" + technology.getName() + "for node" + node.getName()
-                     + "Expected Base cost " + expectedBaseCost);
-                    
-                }
-
-            }
-		
-    	}
-
+    /**
+     * Should probably be specific and check if support is still available at this tick
+     * @return
+     */
+    protected double determineUtilityPolicy(Boolean supportSchemeAvailable) {
     	
-    	@Override
-    	protected void calculateFinancialIndicatorsForOneSegment(double expectedElectricityPrice, double hours, double capacity, double generationInSegment) {
-            
-    		    		
-    		if (scheme != null && scheme.getPowerGeneratingTechnologiesEligible().contains(getTechnology())) {
-	        	   expectedAnnualVariableRevenueByRenewableScheme += expectedElectricityPrice * generationInSegment;
-	        }
+    	double utility;
+    	
+    	utility = agent.getUtilityPolicy().get("None");
+    	
+    	if(getReps().emlabModel.isFeedInPremiumImplemented() 
+    			&& getReps().emlabModel.isRenewableTenderSchemeImplemented()
+    			&& supportSchemeAvailable) {
     		
-    		super.calculateFinancialIndicatorsForOneSegment(expectedElectricityPrice, hours, capacity, generationInSegment);
-	             
+    			utility = agent.getUtilityPolicy().get("Auction");	
+    		
     	}
     	
-    	protected double calculateDiscountedCashFlowForPlantAdjusted(int depriacationTime,
-                double totalInvestment, double operatingProfit) {
-    		
-    		return calculateDiscountedCashFlowForPlant(depriacationTime,
-                    totalInvestment, operatingProfit, waccAdjusted);
-    	  	
-    	}
-    	
-		/**
-		 * Calculates the discounted Generation
-		 * 
-		 * @return discountedCapitalCosts
-		 */
-		private double calculateDiscountedGeneration() {
-			
-            double discountedGeneration = calculateDiscountedCashFlowForPlant(
-            		(int) scheme.getSupportSchemeDuration(), 0, 1);
-		   
-		    logger.log(Level.FINE, 
-		    		"Agent " + agent +  " found the discounted generation for " + technology + " to be " + discountedGeneration);
-		
-		    return discountedGeneration;  
-		}
-		
-		/**
-		 * Calculates the discounted operating revenue for the electricity market
-		 * Because of the uncertainty of future prices, we adjusted WACCs here for risks.
-		 * TODO:: Not always wacc_adjusted! > maybe calculateDiscountedCashFlowForPlantAdjusted is nonsense
-		 * 
-		 * @return discountedCapitalCosts
-		 */
-		// TODO rename withRisk
-		// TODO it is confusing that I use this here, although these values are only for without the scheme... but it should be correct
-    	private double calculateDiscountedOperatingRevenue() {
-    		
-    		// TODO check usage here,
-			
-			double operatingRevenue = expectedAnnualVariableRevenue;
-            double discountedOperatingRevenue = calculateDiscountedCashFlowForPlantAdjusted(
-                    technology.getDepreciationTime(), 0, operatingRevenue);
-	
-	        logger.log(Level.FINE, 
-	       		"Agent " + agent +  " found the discounted operating revenue for " + technology + " to be " + discountedOperatingRevenue);
-	
-	        return discountedOperatingRevenue;  
-		}
-
-    	/* 
-    	 * calculateProjectValue and with higher risks in the discountedOperatingRevenue.
-    	 * (non-Javadoc)
-    	 */
-		
-		@Override
-		protected double calculateProjectValue() {
-			
-		
-			double calcVariant1 = discountedOperatingProfit +                             discountedCapitalCosts;
-			double calcVariant2 = discountedOperatingRevenue + discountedOperatingCost  + discountedCapitalCosts;
-			
-			if(Math.abs(calcVariant1 - calcVariant2) > 1e-4) {
-				logger.warning("PROBLEM, values are not equal. Var 1: " + calcVariant1 + " and Var 2: " + calcVariant2);
-			}
-
-			return calcVariant2;          
-
-    	}
-		
-    	/**
-    	 * Calculates capital costs, operating costs & revenue, profit and project values
-    	 */
-    	@Override
-		public void calculateDiscountedValues() {
-    		
-    		discountedOperatingRevenue = calculateDiscountedOperatingRevenue();
-    		
-    		if(scheme != null) {
-    			discountedGeneration = calculateDiscountedGeneration();
-    		}
-    		
-    		super.calculateDiscountedValues();	
-
-    			
-    	}
-
-		
-		
-    	
-     	public void calculateProjectValueWithScheme() {
-
-            double operatingCost = expectedMarginalCost * plant.getAnnualFullLoadHours()
-                    * plant.getActualNominalCapacity() + fixedOMCost;
-            double discountedOpCost = calculateDiscountedCashFlowForPlant(
-                    technology.getDepreciationTime(), 0, -operatingCost);
-            
-            
-            double discountedOpRevenue;
-            if (scheme.isEmRevenuePaidExpost()) {
-
-            	double operatingRevenue = expectedBaseCost * plant.getAnnualFullLoadHours()
-                        * plant.getActualNominalCapacity();
-
-                // Is NOT adjusted (WACC), as risk are smaller in Expost tenders
-                discountedOpRevenue = calculateDiscountedCashFlowForPlant(
-                		(int) scheme.getSupportSchemeDuration(), 0, operatingRevenue);
+    	return utility;
+    }
 
 
-            } else {
-                
-            	double operatingRevenueFromElecMarket = expectedAnnualVariableRevenueByRenewableScheme;
-            	double operatingRevenueFromSubsidy = expectedBaseCost * plant.getAnnualFullLoadHours()
-                        * plant.getActualNominalCapacity();
-                                
-                // IS adjusted (WACC), as risks due to uncertain elec. prices is higher for agent in in EX-Ante tenders
-            	double discountedOpRevenueWithoutSubsidy = calculateDiscountedCashFlowForPlantAdjusted(
-                		technology.getDepreciationTime(), 0, operatingRevenueFromElecMarket);
-               
-            	double discountedOpRevenueWithSubsidy = calculateDiscountedCashFlowForPlant(
-                		(int) scheme.getSupportSchemeDuration(),0, operatingRevenueFromSubsidy);
-
-                discountedOpRevenue = discountedOpRevenueWithoutSubsidy
-                        + discountedOpRevenueWithSubsidy;
-            }
-            
-            projectValueWithScheme = discountedOpRevenue + getDiscountedCapitalCosts() + discountedOpCost;
-       		
+    protected double getRandomUtilityBound() {
+		return randomUtilityBound;
 	}
 
-
-
-
-
-		public double getExpectedBaseCost() {
-			return expectedBaseCost;
-		}
-
-
-
-
-
-		public void setExpectedBaseCost(double expectedBaseCost) {
-			this.expectedBaseCost = expectedBaseCost;
-		}
-
-
-		public double getProjectValueWithScheme() {
-			return projectValueWithScheme;
-		}
-
-
-		public double getDiscountedGeneration() {
-			return discountedGeneration;
-		}
-		
-		public double getWaccAdjusted() {
-			return waccAdjusted;
-		}
-		
-		public double getDiscountedOperatingRevenue() {
-			return discountedOperatingRevenue;
-		}
-
-    	
-   }
-
-
-public void setScheme(RenewableSupportFipScheme scheme) {
-	this.scheme = scheme;
-}
-
-  
+    public void setRandomUtilityBound(double randomUtilityBound) {
+		this.randomUtilityBound = randomUtilityBound;
+	}  
 
 }

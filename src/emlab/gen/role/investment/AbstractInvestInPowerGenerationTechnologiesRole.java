@@ -668,13 +668,19 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
     	
     	}
     	
+    	
+    	
     	/**
+    	 * Input is the total project value (i.e.  discountedOperatingProfit + discountedCapitalCosts). 
+    	 * The project value is different if tenders are applied (which differ in respect to income (capital costs remain the same)
+    	 * 
     	 * Calculates a yearly, discounted return on investment as
     	 * an average per year over the expected lifetime of the power plant
     	 * @return return, i.e. 0.1 = 10% return per year
     	 */
-    	protected double calculateDiscountedReturnOnInvestment() {
-    		double returnValue = (discountedOperatingProfit + discountedCapitalCosts) / Math.abs(discountedCapitalCosts) / plant.getTechnology().getExpectedLifetime();
+    	protected double calculateDiscountedReturnOnInvestment(double projectValue) {
+    		
+    		double returnValue = (projectValue) / Math.abs(discountedCapitalCosts) / plant.getTechnology().getExpectedLifetime();
     		return returnValue;
     	}
     	
