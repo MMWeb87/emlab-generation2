@@ -15,6 +15,7 @@
  ******************************************************************************/
 package emlab.gen.role.investment;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -59,8 +60,16 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
 
         PowerPlant bestPlant = null;
         double highestValue = Double.MIN_VALUE;
+        
+        // Limit the potentially available technologies for some agents
+        ArrayList<PowerGeneratingTechnology> technologies; 
+        if(agent.getPotentialPowerGeneratingTechnologies() != null) {
+        	technologies = agent.getPotentialPowerGeneratingTechnologies();
+        } else {
+        	technologies = getReps().powerGeneratingTechnologies;
+        }
 
-        for (PowerGeneratingTechnology technology : getReps().powerGeneratingTechnologies) {
+        for (PowerGeneratingTechnology technology : technologies) {
 
             for (PowerGridNode node : findPossibleInstallationNodes(technology)) {
             	

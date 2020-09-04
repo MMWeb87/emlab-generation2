@@ -15,147 +15,150 @@
  ******************************************************************************/
 package emlab.gen.domain.agent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
+import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.role.investment.GenericInvestmentRole;
 
 public class EnergyProducer extends EMLabAgent {
 
-//    @RelatedTo(type = "PRODUCER_INVESTMENTROLE", elementClass = GenericInvestmentRole.class, direction = Direction.OUTGOING)
-    GenericInvestmentRole<EnergyProducer> investmentRole;
+	//    @RelatedTo(type = "PRODUCER_INVESTMENTROLE", elementClass = GenericInvestmentRole.class, direction = Direction.OUTGOING)
+	GenericInvestmentRole<EnergyProducer> investmentRole;
 
-//    @RelatedTo(type = "INVESTOR_MARKET", elementClass = ElectricitySpotMarket.class, direction = Direction.OUTGOING)
-    // If there is a potentialInvestorMarkets set (currently implemented for preferenceInvestor), investorMarket is treated like the home market of the investor
-    private ElectricitySpotMarket investorMarket;
-    private HashSet<ElectricitySpotMarket> potentialInvestorMarkets;
+	//    @RelatedTo(type = "INVESTOR_MARKET", elementClass = ElectricitySpotMarket.class, direction = Direction.OUTGOING)
+	// If there is a potentialInvestorMarkets set (currently implemented for preferenceInvestor), investorMarket is treated like the home market of the investor
+	private ElectricitySpotMarket investorMarket;
+	private HashSet<ElectricitySpotMarket> potentialInvestorMarkets;
+	private ArrayList<PowerGeneratingTechnology> potentialPowerGeneratingTechnologies; 
 
-//    @SimulationParameter(label = "Price Mark-Up for spotmarket (as multiplier)", from = 1, to = 2)
-    private double priceMarkUp;
+	//    @SimulationParameter(label = "Price Mark-Up for spotmarket (as multiplier)", from = 1, to = 2)
+	private double priceMarkUp;
 
-//    @SimulationParameter(label = "Long-term contract margin", from = 0, to = 1)
-    private double longTermContractMargin;
+	//    @SimulationParameter(label = "Long-term contract margin", from = 0, to = 1)
+	private double longTermContractMargin;
 
-//    @SimulationParameter(label = "Long-term contract horizon", from = 0, to = 10)
-    private double longTermContractPastTimeHorizon;
+	//    @SimulationParameter(label = "Long-term contract horizon", from = 0, to = 10)
+	private double longTermContractPastTimeHorizon;
 
-    //Investment
-//    @SimulationParameter(label = "Investment horizon", from = 0, to = 15)
-    private int investmentFutureTimeHorizon;
-//    @SimulationParameter(label = "Equity Interest Rate", from = 0, to = 1)
-    private double equityInterestRate;
-    
-    // for ex-post renewable policy scenarios where there is zero price risk
-    // involved.
-    private double equityRatePriceRiskComponent;
-    
-    private double downpaymentFractionOfCash;
-//    @SimulationParameter(label = "Debt ratio in investments", from = 0, to = 1)
-    private double debtRatioOfInvestments;
-    private boolean willingToInvest;
+	//Investment
+	//    @SimulationParameter(label = "Investment horizon", from = 0, to = 15)
+	private int investmentFutureTimeHorizon;
+	//    @SimulationParameter(label = "Equity Interest Rate", from = 0, to = 1)
+	private double equityInterestRate;
 
-    // Loan
-//    @SimulationParameter(label = "Loan Interest Rate", from = 0, to = 1)
-    private double loanInterestRate;
+	// for ex-post renewable policy scenarios where there is zero price risk
+	// involved.
+	private double equityRatePriceRiskComponent;
 
-    //Forecasting
-    private int numberOfYearsBacklookingForForecasting;
+	private double downpaymentFractionOfCash;
+	//    @SimulationParameter(label = "Debt ratio in investments", from = 0, to = 1)
+	private double debtRatioOfInvestments;
+	private boolean willingToInvest;
 
-    // Dismantling
-    private int dismantlingProlongingYearsAfterTechnicalLifetime;
-    private double dismantlingRequiredOperatingProfit;
-    private long pastTimeHorizon;
+	// Loan
+	//    @SimulationParameter(label = "Loan Interest Rate", from = 0, to = 1)
+	private double loanInterestRate;
 
-    // Historical CVar Parameters
-    private double historicalCVarAlpha;
-    private double historicalCVarBeta;
-    private double historicalCVarPropensityForNewTechnologies;
-    private double historicalCVarInterestRateIncreaseForNewTechnologies;
-    private long historicalCvarBacklookingYears;
-    private boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies;
-    
-    // For investors with empirical preferences
-    private HashMap<String, Double> utilityTechnology;
-    private HashMap<String, Double> utilityReturn;
-    private HashMap<String, Double> utilityCountry;
-    private HashMap<String, Double> utilityPolicy;
+	//Forecasting
+	private int numberOfYearsBacklookingForForecasting;
+
+	// Dismantling
+	private int dismantlingProlongingYearsAfterTechnicalLifetime;
+	private double dismantlingRequiredOperatingProfit;
+	private long pastTimeHorizon;
+
+	// Historical CVar Parameters
+	private double historicalCVarAlpha;
+	private double historicalCVarBeta;
+	private double historicalCVarPropensityForNewTechnologies;
+	private double historicalCVarInterestRateIncreaseForNewTechnologies;
+	private long historicalCvarBacklookingYears;
+	private boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+
+	// For investors with empirical preferences
+	private HashMap<String, Double> utilityTechnology;
+	private HashMap<String, Double> utilityReturn;
+	private HashMap<String, Double> utilityCountry;
+	private HashMap<String, Double> utilityPolicy;
 
 
-    public boolean isWillingToInvest() {
-        return willingToInvest;
-    }
+	public boolean isWillingToInvest() {
+		return willingToInvest;
+	}
 
-    public void setWillingToInvest(boolean willingToInvest) {
-        this.willingToInvest = willingToInvest;
-    }
+	public void setWillingToInvest(boolean willingToInvest) {
+		this.willingToInvest = willingToInvest;
+	}
 
-    public double getDownpaymentFractionOfCash() {
-        return downpaymentFractionOfCash;
-    }
+	public double getDownpaymentFractionOfCash() {
+		return downpaymentFractionOfCash;
+	}
 
-    public void setDownpaymentFractionOfCash(double downpaymentFractionOfCash) {
-        this.downpaymentFractionOfCash = downpaymentFractionOfCash;
-    }
+	public void setDownpaymentFractionOfCash(double downpaymentFractionOfCash) {
+		this.downpaymentFractionOfCash = downpaymentFractionOfCash;
+	}
 
-    public double getLoanInterestRate() {
-        return loanInterestRate;
-    }
+	public double getLoanInterestRate() {
+		return loanInterestRate;
+	}
 
-    public void setLoanInterestRate(double loanInterestRate) {
-        this.loanInterestRate = loanInterestRate;
-    }
+	public void setLoanInterestRate(double loanInterestRate) {
+		this.loanInterestRate = loanInterestRate;
+	}
 
-    public long getPastTimeHorizon() {
-        return pastTimeHorizon;
-    }
+	public long getPastTimeHorizon() {
+		return pastTimeHorizon;
+	}
 
-    public void setPastTimeHorizon(long pastTimeHorizon) {
-        this.pastTimeHorizon = pastTimeHorizon;
-    }
+	public void setPastTimeHorizon(long pastTimeHorizon) {
+		this.pastTimeHorizon = pastTimeHorizon;
+	}
 
-    public int getNumberOfYearsBacklookingForForecasting() {
-        return numberOfYearsBacklookingForForecasting;
-    }
+	public int getNumberOfYearsBacklookingForForecasting() {
+		return numberOfYearsBacklookingForForecasting;
+	}
 
-    public void setNumberOfYearsBacklookingForForecasting(int numberOfYearsBacklookingForForecasting) {
-        this.numberOfYearsBacklookingForForecasting = numberOfYearsBacklookingForForecasting;
-    }
+	public void setNumberOfYearsBacklookingForForecasting(int numberOfYearsBacklookingForForecasting) {
+		this.numberOfYearsBacklookingForForecasting = numberOfYearsBacklookingForForecasting;
+	}
 
-    public int getDismantlingProlongingYearsAfterTechnicalLifetime() {
-        return dismantlingProlongingYearsAfterTechnicalLifetime;
-    }
+	public int getDismantlingProlongingYearsAfterTechnicalLifetime() {
+		return dismantlingProlongingYearsAfterTechnicalLifetime;
+	}
 
-    public void setDismantlingProlongingYearsAfterTechnicalLifetime(int dismantlingProlongingYearsAfterTechnicalLifetime) {
-        this.dismantlingProlongingYearsAfterTechnicalLifetime = dismantlingProlongingYearsAfterTechnicalLifetime;
-    }
+	public void setDismantlingProlongingYearsAfterTechnicalLifetime(int dismantlingProlongingYearsAfterTechnicalLifetime) {
+		this.dismantlingProlongingYearsAfterTechnicalLifetime = dismantlingProlongingYearsAfterTechnicalLifetime;
+	}
 
-    public double getDismantlingRequiredOperatingProfit() {
-        return dismantlingRequiredOperatingProfit;
-    }
+	public double getDismantlingRequiredOperatingProfit() {
+		return dismantlingRequiredOperatingProfit;
+	}
 
-    public void setDismantlingRequiredOperatingProfit(double dismantlingRequiredOperatingProfit) {
-        this.dismantlingRequiredOperatingProfit = dismantlingRequiredOperatingProfit;
-    }
+	public void setDismantlingRequiredOperatingProfit(double dismantlingRequiredOperatingProfit) {
+		this.dismantlingRequiredOperatingProfit = dismantlingRequiredOperatingProfit;
+	}
 
-    public int getInvestmentFutureTimeHorizon() {
-        return investmentFutureTimeHorizon;
-    }
+	public int getInvestmentFutureTimeHorizon() {
+		return investmentFutureTimeHorizon;
+	}
 
-    public void setInvestmentFutureTimeHorizon(int investmentFutureTimeHorizon) {
-        this.investmentFutureTimeHorizon = investmentFutureTimeHorizon;
-    }
+	public void setInvestmentFutureTimeHorizon(int investmentFutureTimeHorizon) {
+		this.investmentFutureTimeHorizon = investmentFutureTimeHorizon;
+	}
 
-    public double getEquityInterestRate() {
-        return equityInterestRate;
-    }
+	public double getEquityInterestRate() {
+		return equityInterestRate;
+	}
 
-    public void setEquityInterestRate(double investmentDiscountRate) {
-        this.equityInterestRate = investmentDiscountRate;
-    }
+	public void setEquityInterestRate(double investmentDiscountRate) {
+		this.equityInterestRate = investmentDiscountRate;
+	}
 
-    // TODO integrate in main EMLab?
-    public double getEquityRatePriceRiskComponent() {
+	// TODO integrate in main EMLab?
+	public double getEquityRatePriceRiskComponent() {
 		return equityRatePriceRiskComponent;
 	}
 
@@ -164,54 +167,54 @@ public class EnergyProducer extends EMLabAgent {
 	}
 
 	public double getLongTermContractMargin() {
-        return longTermContractMargin;
-    }
+		return longTermContractMargin;
+	}
 
-    public void setLongTermContractMargin(double longTermContractMargin) {
-        this.longTermContractMargin = longTermContractMargin;
-    }
+	public void setLongTermContractMargin(double longTermContractMargin) {
+		this.longTermContractMargin = longTermContractMargin;
+	}
 
-    public double getLongTermContractPastTimeHorizon() {
-        return longTermContractPastTimeHorizon;
-    }
+	public double getLongTermContractPastTimeHorizon() {
+		return longTermContractPastTimeHorizon;
+	}
 
-    public void setLongTermContractPastTimeHorizon(double longTermContractPastTimeHorizon) {
-        this.longTermContractPastTimeHorizon = longTermContractPastTimeHorizon;
-    }
+	public void setLongTermContractPastTimeHorizon(double longTermContractPastTimeHorizon) {
+		this.longTermContractPastTimeHorizon = longTermContractPastTimeHorizon;
+	}
 
-    public double getDebtRatioOfInvestments() {
-        return debtRatioOfInvestments;
-    }
+	public double getDebtRatioOfInvestments() {
+		return debtRatioOfInvestments;
+	}
 
-    public void setDebtRatioOfInvestments(double debtRatioOfInvestments) {
-        this.debtRatioOfInvestments = debtRatioOfInvestments;
-    }
+	public void setDebtRatioOfInvestments(double debtRatioOfInvestments) {
+		this.debtRatioOfInvestments = debtRatioOfInvestments;
+	}
 
-    public double getPriceMarkUp() {
-        return priceMarkUp;
-    }
+	public double getPriceMarkUp() {
+		return priceMarkUp;
+	}
 
-    public void setPriceMarkUp(double priceMarkUp) {
-        this.priceMarkUp = priceMarkUp;
-    }
+	public void setPriceMarkUp(double priceMarkUp) {
+		this.priceMarkUp = priceMarkUp;
+	}
 
-    public GenericInvestmentRole getInvestmentRole() {
-        return investmentRole;
-    }
+	public GenericInvestmentRole getInvestmentRole() {
+		return investmentRole;
+	}
 
-    public void setInvestmentRole(GenericInvestmentRole investmentRole) {
-        this.investmentRole = investmentRole;
-    }
+	public void setInvestmentRole(GenericInvestmentRole investmentRole) {
+		this.investmentRole = investmentRole;
+	}
 
-    public ElectricitySpotMarket getInvestorMarket() {
-        return investorMarket;
-    }
+	public ElectricitySpotMarket getInvestorMarket() {
+		return investorMarket;
+	}
 
-    public void setInvestorMarket(ElectricitySpotMarket investorMarket) {
-        this.investorMarket = investorMarket;
-    }
+	public void setInvestorMarket(ElectricitySpotMarket investorMarket) {
+		this.investorMarket = investorMarket;
+	}
 
-    public HashSet<ElectricitySpotMarket> getPotentialInvestorMarkets() {
+	public HashSet<ElectricitySpotMarket> getPotentialInvestorMarkets() {
 		return potentialInvestorMarkets;
 	}
 
@@ -219,65 +222,73 @@ public class EnergyProducer extends EMLabAgent {
 		this.potentialInvestorMarkets = potentialInvestorMarkets;
 	}
 
+	public ArrayList<PowerGeneratingTechnology> getPotentialPowerGeneratingTechnologies() {
+		return potentialPowerGeneratingTechnologies;
+	}
+
+	public void setPotentialPowerGeneratingTechnologies(ArrayList<PowerGeneratingTechnology> potentialPowerGeneratingTechnologies) {
+		this.potentialPowerGeneratingTechnologies = potentialPowerGeneratingTechnologies;
+	}
+
 	public double getHistoricalCVarAlpha() {
-        return historicalCVarAlpha;
-    }
+		return historicalCVarAlpha;
+	}
 
-    public void setHistoricalCVarAlpha(double historicalCVarAlpha) {
-        this.historicalCVarAlpha = historicalCVarAlpha;
-    }
+	public void setHistoricalCVarAlpha(double historicalCVarAlpha) {
+		this.historicalCVarAlpha = historicalCVarAlpha;
+	}
 
-    public double getHistoricalCVarBeta() {
-        return historicalCVarBeta;
-    }
+	public double getHistoricalCVarBeta() {
+		return historicalCVarBeta;
+	}
 
-    public void setHistoricalCVarBeta(double historicalCVarBeta) {
-        this.historicalCVarBeta = historicalCVarBeta;
-    }
+	public void setHistoricalCVarBeta(double historicalCVarBeta) {
+		this.historicalCVarBeta = historicalCVarBeta;
+	}
 
-    public double getHistoricalCVarPropensityForNewTechnologies() {
-        return historicalCVarPropensityForNewTechnologies;
-    }
+	public double getHistoricalCVarPropensityForNewTechnologies() {
+		return historicalCVarPropensityForNewTechnologies;
+	}
 
-    public void setHistoricalCVarPropensityForNewTechnologies(double historicalCVarPropensityForNewTechnologies) {
-        this.historicalCVarPropensityForNewTechnologies = historicalCVarPropensityForNewTechnologies;
-    }
+	public void setHistoricalCVarPropensityForNewTechnologies(double historicalCVarPropensityForNewTechnologies) {
+		this.historicalCVarPropensityForNewTechnologies = historicalCVarPropensityForNewTechnologies;
+	}
 
-    public double getHistoricalCVarInterestRateIncreaseForNewTechnologies() {
-        return historicalCVarInterestRateIncreaseForNewTechnologies;
-    }
+	public double getHistoricalCVarInterestRateIncreaseForNewTechnologies() {
+		return historicalCVarInterestRateIncreaseForNewTechnologies;
+	}
 
-    public void setHistoricalCVarInterestRateIncreaseForNewTechnologies(
-            double historicalCVarInterestRateIncreaseForNewTechnologies) {
-        this.historicalCVarInterestRateIncreaseForNewTechnologies = historicalCVarInterestRateIncreaseForNewTechnologies;
-    }
+	public void setHistoricalCVarInterestRateIncreaseForNewTechnologies(
+			double historicalCVarInterestRateIncreaseForNewTechnologies) {
+		this.historicalCVarInterestRateIncreaseForNewTechnologies = historicalCVarInterestRateIncreaseForNewTechnologies;
+	}
 
-    public long getHistoricalCvarBacklookingYears() {
-        return historicalCvarBacklookingYears;
-    }
+	public long getHistoricalCvarBacklookingYears() {
+		return historicalCvarBacklookingYears;
+	}
 
-    public void setHistoricalCvarBacklookingYears(long historicalCvarBacklookingYears) {
-        this.historicalCvarBacklookingYears = historicalCvarBacklookingYears;
-    }
+	public void setHistoricalCvarBacklookingYears(long historicalCvarBacklookingYears) {
+		this.historicalCvarBacklookingYears = historicalCvarBacklookingYears;
+	}
 
-    public boolean isHistoricalCvarCreateDummyPowerPlantsForNewTechnologies() {
-        return historicalCvarCreateDummyPowerPlantsForNewTechnologies;
-    }
+	public boolean isHistoricalCvarCreateDummyPowerPlantsForNewTechnologies() {
+		return historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+	}
 
-    public void setHistoricalCvarCreateDummyPowerPlantsForNewTechnologies(
-            boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies) {
-        this.historicalCvarCreateDummyPowerPlantsForNewTechnologies = historicalCvarCreateDummyPowerPlantsForNewTechnologies;
-    }
-    
-    
-    public HashMap<String, Double> getUtilityTechnology() {
-        return utilityTechnology;
-    }
+	public void setHistoricalCvarCreateDummyPowerPlantsForNewTechnologies(
+			boolean historicalCvarCreateDummyPowerPlantsForNewTechnologies) {
+		this.historicalCvarCreateDummyPowerPlantsForNewTechnologies = historicalCvarCreateDummyPowerPlantsForNewTechnologies;
+	}
 
-    public void setUtilityTechnology(HashMap<String, Double> utilityTechnology) {
-                
-        this.utilityTechnology = utilityTechnology;
-    }
+
+	public HashMap<String, Double> getUtilityTechnology() {
+		return utilityTechnology;
+	}
+
+	public void setUtilityTechnology(HashMap<String, Double> utilityTechnology) {
+
+		this.utilityTechnology = utilityTechnology;
+	}
 
 	public HashMap<String, Double> getUtilityReturn() {
 		return utilityReturn;
@@ -302,5 +313,5 @@ public class EnergyProducer extends EMLabAgent {
 	public void setUtilityPolicy(HashMap<String, Double> utilityPolicy) {
 		this.utilityPolicy = utilityPolicy;
 	}
-    
+
 }

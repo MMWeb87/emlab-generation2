@@ -45,6 +45,7 @@ import emlab.gen.trend.StepTrend;
 import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.trend.TriangularTrend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -152,7 +153,13 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		reps.powerGridNodes.add(deNode);
 
 		Interconnector interconnectorNetherlandsGermany = new Interconnector();
+		
+//		GeometricTrend interconnectorNetherlandsGermanyTimeSeries = new GeometricTrend();
+//		interconnectorNetherlandsGermanyTimeSeries.setStart(4450);
+		
 		interconnectorNetherlandsGermany.setCapacity(4450);
+		//interconnectorNetherlandsGermany.setCapacity(0); // only TEST
+
 		Set<PowerGridNode> connections = new HashSet<>();
 		connections.add(nlNode);
 		connections.add(deNode);
@@ -253,6 +260,429 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyConsumer.setLtcMaximumCoverageFraction(0.8);
 		reps.energyConsumers.add(energyConsumer);
 
+
+		// ——————————————————————————————————————————————————
+		// Carbon prices 
+		// ——————————————————————————————————————————————————
+
+
+		reps.bigBank = new BigBank();
+
+		StepTrend co2TaxTrend = new StepTrend();
+		co2TaxTrend.setDuration(1);
+		co2TaxTrend.setStart(5);
+		co2TaxTrend.setMinValue(5);
+		co2TaxTrend.setIncrement(0);
+
+		StepTrend co2CapTrend = new StepTrend();
+		co2CapTrend.setDuration(1);
+		co2CapTrend.setStart(10e9);
+		co2CapTrend.setMinValue(0);
+		co2CapTrend.setIncrement(0);
+		
+		StepTrend minCo2PriceTrend = new StepTrend();
+		minCo2PriceTrend.setDuration(1);
+		minCo2PriceTrend.setStart(7);
+		minCo2PriceTrend.setMinValue(0);
+		minCo2PriceTrend.setIncrement(1.5);
+
+		
+		reps.government = new Government();
+		reps.government.setName("EuropeanGov");
+		reps.government.setCo2Penalty(500);
+		reps.government.setCo2TaxTrend(co2TaxTrend);
+		reps.government.setCo2CapTrend(co2CapTrend);
+		reps.government.setMinCo2PriceTrend(minCo2PriceTrend);
+		
+
+		StepTrend minCo2PriceTrendNL = new StepTrend();
+		minCo2PriceTrendNL.setDuration(1);
+		minCo2PriceTrendNL.setStart(0);
+		minCo2PriceTrendNL.setMinValue(0);
+		minCo2PriceTrendNL.setIncrement(0);
+
+		StepTrend minCo2PriceTrendDE = new StepTrend();
+		minCo2PriceTrendDE.setDuration(1);
+		minCo2PriceTrendDE.setStart(0);
+		minCo2PriceTrendDE.setMinValue(0);
+		minCo2PriceTrendDE.setIncrement(0);
+
+		NationalGovernment governmentNL = reps.createNationalGovernment("DutchGov", nl, minCo2PriceTrendNL);  
+		NationalGovernment governmentDE = reps.createNationalGovernment("GermanGov", de, minCo2PriceTrendDE);    
+
+		// ——————————————————————————————————————————————————
+		// Technologies
+		// ——————————————————————————————————————————————————
+
+		GeometricTrend coalPSCInvestmentCostTimeSeries = new GeometricTrend();
+		coalPSCInvestmentCostTimeSeries.setStart(1365530);
+
+		GeometricTrend coalPSCFixedOperatingCostTimeSeries = new GeometricTrend();
+		coalPSCFixedOperatingCostTimeSeries.setStart(40970);
+
+		GeometricTrend coalPSCEfficiencyTimeSeries = new GeometricTrend();
+		coalPSCEfficiencyTimeSeries.setStart(.44);
+
+		PowerGeneratingTechnology coalPSC = reps.createPowerGeneratingTechnology();
+		coalPSC.setName("Coal PSC");
+		coalPSC.setCapacity(750);
+		coalPSC.setIntermittent(false);
+		coalPSC.setApplicableForLongTermContract(true);
+		coalPSC.setPeakSegmentDependentAvailability(1);
+		coalPSC.setBaseSegmentDependentAvailability(1);
+		coalPSC.setMaximumInstalledCapacityFractionPerAgent(0);
+		coalPSC.setMaximumInstalledCapacityFractionInCountry(0);
+		coalPSC.setMinimumFuelQuality(.95);
+		coalPSC.setExpectedPermittime(1);
+		coalPSC.setExpectedLeadtime(4);
+		coalPSC.setExpectedLifetime(40);
+		coalPSC.setFixedOperatingCostModifierAfterLifetime(.05);
+		coalPSC.setMinimumRunningHours(5000);
+		coalPSC.setDepreciationTime(20);
+		coalPSC.setEfficiencyTimeSeries(coalPSCEfficiencyTimeSeries);
+		coalPSC.setFixedOperatingCostTimeSeries(coalPSCFixedOperatingCostTimeSeries);
+		coalPSC.setInvestmentCostTimeSeries(coalPSCInvestmentCostTimeSeries);
+		Set<Substance> coalPSCFuels = new HashSet<>();
+		coalPSCFuels.add(hardCoal);
+		coalPSC.setFuels(coalPSCFuels);
+
+		GeometricTrend lignitePSCInvestmentCostTimeSeries = new GeometricTrend();
+		lignitePSCInvestmentCostTimeSeries.setStart(1700000);
+
+		GeometricTrend lignitePSCFixedOperatingCostTimeSeries = new GeometricTrend();
+		lignitePSCFixedOperatingCostTimeSeries.setStart(41545);
+
+		GeometricTrend lignitePSCEfficiencyTimeSeries = new GeometricTrend();
+		lignitePSCEfficiencyTimeSeries.setStart(.45);
+
+		PowerGeneratingTechnology lignitePSC = reps.createPowerGeneratingTechnology();
+		lignitePSC.setName("Lignite PSC");
+		lignitePSC.setCapacity(1000);
+		lignitePSC.setIntermittent(false);
+		lignitePSC.setApplicableForLongTermContract(true);
+		lignitePSC.setPeakSegmentDependentAvailability(1);
+		lignitePSC.setBaseSegmentDependentAvailability(1);
+		lignitePSC.setMaximumInstalledCapacityFractionPerAgent(0);
+		lignitePSC.setMaximumInstalledCapacityFractionInCountry(0);
+		lignitePSC.setMinimumFuelQuality(.95);
+		lignitePSC.setExpectedPermittime(1);
+		lignitePSC.setExpectedLeadtime(5);
+		lignitePSC.setExpectedLifetime(40);
+		lignitePSC.setFixedOperatingCostModifierAfterLifetime(.05);
+		lignitePSC.setMinimumRunningHours(5000);
+		lignitePSC.setDepreciationTime(20);
+		lignitePSC.setEfficiencyTimeSeries(lignitePSCEfficiencyTimeSeries);
+		lignitePSC.setFixedOperatingCostTimeSeries(lignitePSCFixedOperatingCostTimeSeries);
+		lignitePSC.setInvestmentCostTimeSeries(lignitePSCInvestmentCostTimeSeries);
+		Set<Substance> lignitePSCFuels = new HashSet<>();
+		lignitePSCFuels.add(ligniteCoal);
+		lignitePSC.setFuels(lignitePSCFuels);        
+
+		GeometricTrend biomassCHPInvestmentCostTimeSeries = new GeometricTrend();
+		biomassCHPInvestmentCostTimeSeries.setStart(1703320);
+
+		GeometricTrend biomassCHPFixedOperatingCostTimeSeries = new GeometricTrend();
+		biomassCHPFixedOperatingCostTimeSeries.setStart(59620);
+
+		GeometricTrend biomassCHPEfficiencyTimeSeries = new GeometricTrend();
+		biomassCHPEfficiencyTimeSeries.setStart(.35);
+
+		PowerGeneratingTechnology biomassCHP = reps.createPowerGeneratingTechnology();
+		biomassCHP.setName("Biomass CHP");
+		biomassCHP.setCapacity(500);
+		biomassCHP.setIntermittent(false);
+		biomassCHP.setApplicableForLongTermContract(true);
+		biomassCHP.setPeakSegmentDependentAvailability(0.7);
+		biomassCHP.setBaseSegmentDependentAvailability(0.7);
+		biomassCHP.setMaximumInstalledCapacityFractionPerAgent(1);
+		biomassCHP.setMaximumInstalledCapacityFractionInCountry(1);
+		biomassCHP.setMinimumFuelQuality(0.5);
+		biomassCHP.setExpectedPermittime(1);
+		biomassCHP.setExpectedLeadtime(3);
+		biomassCHP.setExpectedLifetime(30);
+		biomassCHP.setFixedOperatingCostModifierAfterLifetime(.05);
+		biomassCHP.setMinimumRunningHours(0);
+		biomassCHP.setDepreciationTime(15);
+		biomassCHP.setEfficiencyTimeSeries(biomassCHPEfficiencyTimeSeries);
+		biomassCHP.setFixedOperatingCostTimeSeries(biomassCHPFixedOperatingCostTimeSeries);
+		biomassCHP.setInvestmentCostTimeSeries(biomassCHPInvestmentCostTimeSeries);
+		Set<Substance> biomassCHPFuels = new HashSet<>();
+		biomassCHPFuels.add(biomass);
+		biomassCHP.setFuels(biomassCHPFuels);
+
+		GeometricTrend ccgtInvestmentCostTimeSeries = new GeometricTrend();
+		ccgtInvestmentCostTimeSeries.setStart(646830);
+
+		GeometricTrend ccgtFixedOperatingCostTimeSeries = new GeometricTrend();
+		ccgtFixedOperatingCostTimeSeries.setStart(29470);
+
+		GeometricTrend ccgtEfficiencyTimeSeries = new GeometricTrend();
+		ccgtEfficiencyTimeSeries.setStart(.59);
+
+		PowerGeneratingTechnology ccgt = reps.createPowerGeneratingTechnology();
+		ccgt.setName("CCGT");
+		ccgt.setCapacity(775);
+		ccgt.setIntermittent(false);
+		ccgt.setApplicableForLongTermContract(true);
+		ccgt.setPeakSegmentDependentAvailability(1);
+		ccgt.setBaseSegmentDependentAvailability(1);
+		ccgt.setMaximumInstalledCapacityFractionPerAgent(1);
+		ccgt.setMaximumInstalledCapacityFractionInCountry(1);
+		ccgt.setMinimumFuelQuality(1);
+		ccgt.setExpectedPermittime(1);
+		ccgt.setExpectedLeadtime(2);
+		ccgt.setExpectedLifetime(30);
+		ccgt.setFixedOperatingCostModifierAfterLifetime(.05);
+		ccgt.setMinimumRunningHours(0);
+		ccgt.setDepreciationTime(15);
+		ccgt.setEfficiencyTimeSeries(ccgtEfficiencyTimeSeries);
+		ccgt.setFixedOperatingCostTimeSeries(ccgtFixedOperatingCostTimeSeries);
+		ccgt.setInvestmentCostTimeSeries(ccgtInvestmentCostTimeSeries);
+		Set<Substance> ccgtFuels = new HashSet<>();
+		ccgtFuels.add(naturalGas);
+		ccgt.setFuels(ccgtFuels);
+
+		GeometricTrend ocgtInvestmentCostTimeSeries = new GeometricTrend();
+		ocgtInvestmentCostTimeSeries.setStart(359350);
+
+		GeometricTrend ocgtFixedOperatingCostTimeSeries = new GeometricTrend();
+		ocgtFixedOperatingCostTimeSeries.setStart(14370);
+
+		GeometricTrend ocgtEfficiencyTimeSeries = new GeometricTrend();
+		ocgtEfficiencyTimeSeries.setStart(.38);
+
+		PowerGeneratingTechnology ocgt = reps.createPowerGeneratingTechnology();
+		ocgt.setName("OCGT");
+		ocgt.setCapacity(150);
+		ocgt.setIntermittent(false);
+		ocgt.setApplicableForLongTermContract(true);
+		ocgt.setPeakSegmentDependentAvailability(1);
+		ocgt.setBaseSegmentDependentAvailability(1);
+		ocgt.setMaximumInstalledCapacityFractionPerAgent(1);
+		ocgt.setMaximumInstalledCapacityFractionInCountry(1);
+		ocgt.setMinimumFuelQuality(1);
+		ocgt.setExpectedPermittime(0);
+		ocgt.setExpectedLeadtime(1);
+		ocgt.setExpectedLifetime(30);
+		ocgt.setFixedOperatingCostModifierAfterLifetime(.05);
+		ocgt.setMinimumRunningHours(0);
+		ocgt.setDepreciationTime(15);
+		ocgt.setEfficiencyTimeSeries(ocgtEfficiencyTimeSeries);
+		ocgt.setFixedOperatingCostTimeSeries(ocgtFixedOperatingCostTimeSeries);
+		ocgt.setInvestmentCostTimeSeries(ocgtInvestmentCostTimeSeries);
+		Set<Substance> ocgtFuels = new HashSet<>();
+		ocgtFuels.add(naturalGas);
+		ocgt.setFuels(ocgtFuels);
+
+		GeometricTrend oilPGTInvestmentCostTimeSeries = new GeometricTrend();
+		oilPGTInvestmentCostTimeSeries.setStart(250000);
+
+		GeometricTrend oilPGTFixedOperatingCostTimeSeries = new GeometricTrend();
+		oilPGTFixedOperatingCostTimeSeries.setStart(10000);
+
+		GeometricTrend oilPGTEfficiencyTimeSeries = new GeometricTrend();
+		oilPGTEfficiencyTimeSeries.setStart(.35);
+
+		PowerGeneratingTechnology oilPGT = reps.createPowerGeneratingTechnology();
+		oilPGT.setName("Fuel oil PGT");
+		oilPGT.setCapacity(50);
+		oilPGT.setIntermittent(false);
+		oilPGT.setApplicableForLongTermContract(true);
+		oilPGT.setPeakSegmentDependentAvailability(1);
+		oilPGT.setBaseSegmentDependentAvailability(1);
+		oilPGT.setMaximumInstalledCapacityFractionPerAgent(1);
+		oilPGT.setMaximumInstalledCapacityFractionInCountry(1);
+		oilPGT.setMinimumFuelQuality(1);
+		oilPGT.setExpectedPermittime(0);
+		oilPGT.setExpectedLeadtime(1);
+		oilPGT.setExpectedLifetime(30);
+		oilPGT.setFixedOperatingCostModifierAfterLifetime(.05);
+		oilPGT.setMinimumRunningHours(0);
+		oilPGT.setDepreciationTime(15);
+		oilPGT.setEfficiencyTimeSeries(oilPGTEfficiencyTimeSeries);
+		oilPGT.setFixedOperatingCostTimeSeries(oilPGTFixedOperatingCostTimeSeries);
+		oilPGT.setInvestmentCostTimeSeries(oilPGTInvestmentCostTimeSeries);
+		Set<Substance> oilPGTFuels = new HashSet<>();
+		oilPGTFuels.add(fuelOil);
+		oilPGT.setFuels(oilPGTFuels);
+
+		GeometricTrend nuclearPGTInvestmentCostTimeSeries = new GeometricTrend();
+		nuclearPGTInvestmentCostTimeSeries.setStart(2874800);
+
+		GeometricTrend nuclearPGTFixedOperatingCostTimeSeries = new GeometricTrend();
+		nuclearPGTFixedOperatingCostTimeSeries.setStart(71870);
+
+		GeometricTrend nuclearPGTEfficiencyTimeSeries = new GeometricTrend();
+		nuclearPGTEfficiencyTimeSeries.setStart(.33);
+
+		PowerGeneratingTechnology nuclearPGT = reps.createPowerGeneratingTechnology();
+		nuclearPGT.setName("Nuclear PGT");
+		nuclearPGT.setCapacity(1000);
+		nuclearPGT.setIntermittent(false);
+		nuclearPGT.setApplicableForLongTermContract(true);
+		nuclearPGT.setPeakSegmentDependentAvailability(1);
+		nuclearPGT.setBaseSegmentDependentAvailability(1);
+		nuclearPGT.setMaximumInstalledCapacityFractionPerAgent(0);
+		nuclearPGT.setMaximumInstalledCapacityFractionInCountry(0);
+		nuclearPGT.setMinimumFuelQuality(1);
+		nuclearPGT.setExpectedPermittime(2);
+		nuclearPGT.setExpectedLeadtime(5);
+		nuclearPGT.setExpectedLifetime(40);
+		nuclearPGT.setFixedOperatingCostModifierAfterLifetime(.05);
+		nuclearPGT.setMinimumRunningHours(5000);
+		nuclearPGT.setDepreciationTime(25);
+		nuclearPGT.setEfficiencyTimeSeries(nuclearPGTEfficiencyTimeSeries);
+		nuclearPGT.setFixedOperatingCostTimeSeries(nuclearPGTFixedOperatingCostTimeSeries);
+		nuclearPGT.setInvestmentCostTimeSeries(nuclearPGTInvestmentCostTimeSeries);
+		Set<Substance> nuclearPGTFuels = new HashSet<>();
+		nuclearPGTFuels.add(uranium);
+		nuclearPGT.setFuels(nuclearPGTFuels);
+
+		GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
+		pvInvestmentCostTimeSeries.setStart(2048300);
+
+		GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
+		pvFixedOperatingCostTimeSeries.setStart(20480);
+
+		GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
+		pvEfficiencyTimeSeries.setStart(1);
+
+		PowerGeneratingTechnology pv = reps.createPowerGeneratingTechnology();
+		pv.setName("Photovoltaic PGT");
+		pv.setCapacity(500);
+		pv.setIntermittent(true);
+		pv.setApplicableForLongTermContract(true);
+		pv.setPeakSegmentDependentAvailability(0.08);
+		pv.setBaseSegmentDependentAvailability(0.16);
+		pv.setMaximumInstalledCapacityFractionPerAgent(1);
+		pv.setMaximumInstalledCapacityFractionInCountry(1);
+		pv.setMinimumFuelQuality(1);
+		pv.setExpectedPermittime(0);
+		pv.setExpectedLeadtime(1);
+		pv.setExpectedLifetime(25);
+		pv.setFixedOperatingCostModifierAfterLifetime(.05);
+		pv.setMinimumRunningHours(0);
+		pv.setDepreciationTime(15);
+		pv.setEfficiencyTimeSeries(pvEfficiencyTimeSeries);
+		pv.setFixedOperatingCostTimeSeries(pvFixedOperatingCostTimeSeries);
+		pv.setInvestmentCostTimeSeries(pvInvestmentCostTimeSeries);
+		Set<Substance> pvPGTFuels = new HashSet<>();
+		pv.setFuels(pvPGTFuels);
+
+		GeometricTrend hydroInvestmentCostTimeSeries = new GeometricTrend();
+		hydroInvestmentCostTimeSeries.setStart(800000);
+
+		GeometricTrend hydroFixedOperatingCostTimeSeries = new GeometricTrend();
+		hydroFixedOperatingCostTimeSeries.setStart(10000);
+
+		GeometricTrend hydroEfficiencyTimeSeries = new GeometricTrend();
+		hydroEfficiencyTimeSeries.setStart(.9);
+
+		PowerGeneratingTechnology hydro = reps.createPowerGeneratingTechnology();
+		hydro.setName("Hydroelectric");
+		hydro.setCapacity(250);
+		hydro.setApplicableForLongTermContract(true);
+		hydro.setPeakSegmentDependentAvailability(0.08);
+		hydro.setBaseSegmentDependentAvailability(0.16);
+		hydro.setMaximumInstalledCapacityFractionPerAgent(0);
+		hydro.setMaximumInstalledCapacityFractionInCountry(0);
+		hydro.setMinimumFuelQuality(1);
+		hydro.setExpectedPermittime(2);
+		hydro.setExpectedLeadtime(5);
+		hydro.setExpectedLifetime(50);
+		hydro.setFixedOperatingCostModifierAfterLifetime(.05);
+		hydro.setMinimumRunningHours(0);
+		hydro.setDepreciationTime(30);
+		hydro.setEfficiencyTimeSeries(hydroEfficiencyTimeSeries);
+		hydro.setFixedOperatingCostTimeSeries(hydroFixedOperatingCostTimeSeries);
+		hydro.setInvestmentCostTimeSeries(hydroInvestmentCostTimeSeries);
+		Set<Substance> hydroPGTFuels = new HashSet<>();
+		hydro.setFuels(hydroPGTFuels);
+
+		GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
+		windOnshoreInvestmentCostTimeSeries.setStart(1214600);
+
+		GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
+		windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
+
+		GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
+		windOnshoreEfficiencyTimeSeries.setStart(1);
+
+		PowerGeneratingTechnology windOnshore = reps.createPowerGeneratingTechnology();
+		windOnshore.setName("Onshore wind PGT");
+		windOnshore.setCapacity(600);
+		windOnshore.setIntermittent(true);
+		windOnshore.setApplicableForLongTermContract(true);
+		windOnshore.setPeakSegmentDependentAvailability(0.05);
+		windOnshore.setBaseSegmentDependentAvailability(0.40);
+		windOnshore.setMaximumInstalledCapacityFractionPerAgent(1);
+		windOnshore.setMaximumInstalledCapacityFractionInCountry(1);
+		windOnshore.setMinimumFuelQuality(1);
+		windOnshore.setExpectedPermittime(1);
+		windOnshore.setExpectedLeadtime(1);
+		windOnshore.setExpectedLifetime(25);
+		windOnshore.setFixedOperatingCostModifierAfterLifetime(.05);
+		windOnshore.setMinimumRunningHours(0);
+		windOnshore.setDepreciationTime(15);
+		windOnshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
+		windOnshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
+		windOnshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries);        
+		Set<Substance> windOnshorePGTFuels = new HashSet<>();
+		windOnshore.setFuels(windOnshorePGTFuels);
+
+		GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
+		windOffshoreInvestmentCostTimeSeries.setStart(2450770);
+
+		GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
+		windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
+
+		GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
+		windOffshoreEfficiencyTimeSeries.setStart(1);
+
+		PowerGeneratingTechnology windOffshore = reps.createPowerGeneratingTechnology();
+		windOffshore.setName("Offshore wind PGT");
+		windOffshore.setCapacity(600);
+		windOffshore.setIntermittent(true);
+		windOffshore.setApplicableForLongTermContract(true);
+		windOffshore.setPeakSegmentDependentAvailability(0.08);
+		windOffshore.setBaseSegmentDependentAvailability(0.65);
+		windOffshore.setMaximumInstalledCapacityFractionPerAgent(1);
+		windOffshore.setMaximumInstalledCapacityFractionInCountry(1);
+		windOffshore.setMinimumFuelQuality(1);
+		windOffshore.setExpectedPermittime(1);
+		windOffshore.setExpectedLeadtime(2);
+		windOffshore.setExpectedLifetime(25);
+		windOffshore.setFixedOperatingCostModifierAfterLifetime(.05);
+		windOffshore.setMinimumRunningHours(0);
+		windOffshore.setDepreciationTime(15);
+		windOffshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
+		windOffshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
+		windOffshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries); 
+		Set<Substance> windOffshorePGTFuels = new HashSet<>();
+		windOffshore.setFuels(windOffshorePGTFuels);
+		
+		// Technologies in which incumbents invest
+		ArrayList<PowerGeneratingTechnology> conventionalPowerGeneratingTechnologies = new ArrayList<>(); 
+		conventionalPowerGeneratingTechnologies.add(nuclearPGT);
+		conventionalPowerGeneratingTechnologies.add(lignitePSC);
+		conventionalPowerGeneratingTechnologies.add(hydro);
+		conventionalPowerGeneratingTechnologies.add(oilPGT);
+		conventionalPowerGeneratingTechnologies.add(ocgt);
+		conventionalPowerGeneratingTechnologies.add(ccgt);
+		conventionalPowerGeneratingTechnologies.add(biomassCHP);
+		conventionalPowerGeneratingTechnologies.add(coalPSC);
+
+
+
+		// Profiles for intermittent technologies
+		windProfileOnShoreNL.setIntermittentTechnology(windOnshore);
+		windProfileOffShoreNL.setIntermittentTechnology(windOffshore);
+		solarProfileNL.setIntermittentTechnology(pv);
+
+		windProfileOnShoreDE.setIntermittentTechnology(windOnshore);
+		windProfileOffShoreDE.setIntermittentTechnology(windOffshore);
+		solarProfileDE.setIntermittentTechnology(pv);
+		
 
 		// ——————————————————————————————————————————————————
 		// Producers with preferences 
@@ -666,6 +1096,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyProducerNLA.setLongTermContractMargin(0.1);
 		energyProducerNLA.setCash(3e9);
 		energyProducerNLA.setInvestmentRole(tenderInvestmentRole);
+		energyProducerNLA.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 
 		EnergyProducer energyProducerNLB = reps.createEnergyProducer();
 		energyProducerNLB.setName("Energy Producer NL B");
@@ -685,26 +1116,27 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyProducerNLB.setLongTermContractMargin(0.1);
 		energyProducerNLB.setCash(3e9);
 		energyProducerNLB.setInvestmentRole(tenderInvestmentRole);
+		energyProducerNLB.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 
-		EnergyProducer energyProducerINTC = reps.createEnergyProducer();
-		energyProducerINTC.setName("Energy Producer NL C");
-		energyProducerINTC.setInvestorMarket(netherlandsElectricitySpotMarket);
-		// energyProducerINTC.setInvestorMarket(germanyElectricitySpotMarket);
-		energyProducerINTC.setNumberOfYearsBacklookingForForecasting(5);
-		energyProducerINTC.setPriceMarkUp(1.0);
-		energyProducerINTC.setWillingToInvest(true);
-		energyProducerINTC.setDownpaymentFractionOfCash(.5);
-		energyProducerINTC.setDismantlingRequiredOperatingProfit(0);
-		energyProducerINTC.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
-		energyProducerINTC.setDebtRatioOfInvestments(0.7);
-		energyProducerINTC.setLoanInterestRate(0.1);
-		energyProducerINTC.setEquityInterestRate(0.1);
-		energyProducerINTC.setPastTimeHorizon(5);
-		energyProducerINTC.setInvestmentFutureTimeHorizon(7);
-		energyProducerINTC.setLongTermContractPastTimeHorizon(3);
-		energyProducerINTC.setLongTermContractMargin(0.1);
-		energyProducerINTC.setCash(3e9);
-		energyProducerINTC.setInvestmentRole(tenderInvestmentRole);
+		EnergyProducer energyProducerNLC = reps.createEnergyProducer();
+		energyProducerNLC.setName("Energy Producer NL C");
+		energyProducerNLC.setInvestorMarket(netherlandsElectricitySpotMarket);
+		energyProducerNLC.setNumberOfYearsBacklookingForForecasting(5);
+		energyProducerNLC.setPriceMarkUp(1.0);
+		energyProducerNLC.setWillingToInvest(true);
+		energyProducerNLC.setDownpaymentFractionOfCash(.5);
+		energyProducerNLC.setDismantlingRequiredOperatingProfit(0);
+		energyProducerNLC.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
+		energyProducerNLC.setDebtRatioOfInvestments(0.7);
+		energyProducerNLC.setLoanInterestRate(0.1);
+		energyProducerNLC.setEquityInterestRate(0.1);
+		energyProducerNLC.setPastTimeHorizon(5);
+		energyProducerNLC.setInvestmentFutureTimeHorizon(7);
+		energyProducerNLC.setLongTermContractPastTimeHorizon(3);
+		energyProducerNLC.setLongTermContractMargin(0.1);
+		energyProducerNLC.setCash(3e9);
+		energyProducerNLC.setInvestmentRole(tenderInvestmentRole);
+		energyProducerNLC.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 
 		EnergyProducer energyProducerDEA = reps.createEnergyProducer();
 		energyProducerDEA.setName("Energy Producer DE A");
@@ -724,6 +1156,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyProducerDEA.setLongTermContractMargin(0.1);
 		energyProducerDEA.setCash(3e9);
 		energyProducerDEA.setInvestmentRole(tenderInvestmentRole);
+		energyProducerDEA.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 
 		EnergyProducer energyProducerDEB = reps.createEnergyProducer();
 		energyProducerDEB.setName("Energy Producer DE B");
@@ -743,6 +1176,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyProducerDEB.setLongTermContractMargin(0.1);
 		energyProducerDEB.setCash(3e9);
 		energyProducerDEB.setInvestmentRole(tenderInvestmentRole);
+		energyProducerDEB.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 
 		EnergyProducer energyProducerDEC = reps.createEnergyProducer();
 		energyProducerDEC.setName("Energy Producer DE C");
@@ -761,427 +1195,19 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		energyProducerDEC.setLongTermContractPastTimeHorizon(3);
 		energyProducerDEC.setLongTermContractMargin(0.1);
 		energyProducerDEC.setCash(3e9);
-		energyProducerDEC.setInvestmentRole(tenderInvestmentRole);  
-
-		// ——————————————————————————————————————————————————
-		// Carbon prices 
-		// ——————————————————————————————————————————————————
-
-
-		reps.bigBank = new BigBank();
-
-		StepTrend co2TaxTrend = new StepTrend();
-		co2TaxTrend.setDuration(1);
-		co2TaxTrend.setStart(5);
-		co2TaxTrend.setMinValue(5);
-		co2TaxTrend.setIncrement(0);
-
-		StepTrend co2CapTrend = new StepTrend();
-		co2CapTrend.setDuration(1);
-		co2CapTrend.setStart(10e9);
-		co2CapTrend.setMinValue(0);
-		co2CapTrend.setIncrement(0);
+		energyProducerDEC.setInvestmentRole(tenderInvestmentRole); 
+		energyProducerDEC.setPotentialPowerGeneratingTechnologies(conventionalPowerGeneratingTechnologies);
 		
-		StepTrend minCo2PriceTrend = new StepTrend();
-		minCo2PriceTrend.setDuration(1);
-		minCo2PriceTrend.setStart(7);
-		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.5);
-
-		
-		reps.government = new Government();
-		reps.government.setName("EuropeanGov");
-		reps.government.setCo2Penalty(500);
-		reps.government.setCo2TaxTrend(co2TaxTrend);
-		reps.government.setCo2CapTrend(co2CapTrend);
-		reps.government.setMinCo2PriceTrend(minCo2PriceTrend);
-		
-
-		StepTrend minCo2PriceTrendNL = new StepTrend();
-		minCo2PriceTrendNL.setDuration(1);
-		minCo2PriceTrendNL.setStart(0);
-		minCo2PriceTrendNL.setMinValue(0);
-		minCo2PriceTrendNL.setIncrement(0);
-
-		StepTrend minCo2PriceTrendDE = new StepTrend();
-		minCo2PriceTrendDE.setDuration(1);
-		minCo2PriceTrendDE.setStart(0);
-		minCo2PriceTrendDE.setMinValue(0);
-		minCo2PriceTrendDE.setIncrement(0);
-
-		NationalGovernment governmentNL = reps.createNationalGovernment("DutchGov", nl, minCo2PriceTrendNL);  
-		NationalGovernment governmentDE = reps.createNationalGovernment("GermanGov", de, minCo2PriceTrendDE);    
-
-		// ——————————————————————————————————————————————————
-		// Technologies
-		// ——————————————————————————————————————————————————
-
-		GeometricTrend coalPSCInvestmentCostTimeSeries = new GeometricTrend();
-		coalPSCInvestmentCostTimeSeries.setStart(1365530);
-
-		GeometricTrend coalPSCFixedOperatingCostTimeSeries = new GeometricTrend();
-		coalPSCFixedOperatingCostTimeSeries.setStart(40970);
-
-		GeometricTrend coalPSCEfficiencyTimeSeries = new GeometricTrend();
-		coalPSCEfficiencyTimeSeries.setStart(.44);
-
-		PowerGeneratingTechnology coalPSC = reps.createPowerGeneratingTechnology();
-		coalPSC.setName("Coal PSC");
-		coalPSC.setCapacity(750);
-		coalPSC.setIntermittent(false);
-		coalPSC.setApplicableForLongTermContract(true);
-		coalPSC.setPeakSegmentDependentAvailability(1);
-		coalPSC.setBaseSegmentDependentAvailability(1);
-		coalPSC.setMaximumInstalledCapacityFractionPerAgent(0);
-		coalPSC.setMaximumInstalledCapacityFractionInCountry(0);
-		coalPSC.setMinimumFuelQuality(.95);
-		coalPSC.setExpectedPermittime(1);
-		coalPSC.setExpectedLeadtime(4);
-		coalPSC.setExpectedLifetime(40);
-		coalPSC.setFixedOperatingCostModifierAfterLifetime(.05);
-		coalPSC.setMinimumRunningHours(5000);
-		coalPSC.setDepreciationTime(20);
-		coalPSC.setEfficiencyTimeSeries(coalPSCEfficiencyTimeSeries);
-		coalPSC.setFixedOperatingCostTimeSeries(coalPSCFixedOperatingCostTimeSeries);
-		coalPSC.setInvestmentCostTimeSeries(coalPSCInvestmentCostTimeSeries);
-		Set<Substance> coalPSCFuels = new HashSet<>();
-		coalPSCFuels.add(hardCoal);
-		coalPSC.setFuels(coalPSCFuels);
-
-		GeometricTrend lignitePSCInvestmentCostTimeSeries = new GeometricTrend();
-		lignitePSCInvestmentCostTimeSeries.setStart(1700000);
-
-		GeometricTrend lignitePSCFixedOperatingCostTimeSeries = new GeometricTrend();
-		lignitePSCFixedOperatingCostTimeSeries.setStart(41545);
-
-		GeometricTrend lignitePSCEfficiencyTimeSeries = new GeometricTrend();
-		lignitePSCEfficiencyTimeSeries.setStart(.45);
-
-		PowerGeneratingTechnology lignitePSC = reps.createPowerGeneratingTechnology();
-		lignitePSC.setName("Lignite PSC");
-		lignitePSC.setCapacity(1000);
-		lignitePSC.setIntermittent(false);
-		lignitePSC.setApplicableForLongTermContract(true);
-		lignitePSC.setPeakSegmentDependentAvailability(1);
-		lignitePSC.setBaseSegmentDependentAvailability(1);
-		lignitePSC.setMaximumInstalledCapacityFractionPerAgent(0);
-		lignitePSC.setMaximumInstalledCapacityFractionInCountry(0);
-		lignitePSC.setMinimumFuelQuality(.95);
-		lignitePSC.setExpectedPermittime(1);
-		lignitePSC.setExpectedLeadtime(5);
-		lignitePSC.setExpectedLifetime(40);
-		lignitePSC.setFixedOperatingCostModifierAfterLifetime(.05);
-		lignitePSC.setMinimumRunningHours(5000);
-		lignitePSC.setDepreciationTime(20);
-		lignitePSC.setEfficiencyTimeSeries(lignitePSCEfficiencyTimeSeries);
-		lignitePSC.setFixedOperatingCostTimeSeries(lignitePSCFixedOperatingCostTimeSeries);
-		lignitePSC.setInvestmentCostTimeSeries(lignitePSCInvestmentCostTimeSeries);
-		Set<Substance> lignitePSCFuels = new HashSet<>();
-		lignitePSCFuels.add(ligniteCoal);
-		lignitePSC.setFuels(lignitePSCFuels);        
-
-		GeometricTrend biomassCHPInvestmentCostTimeSeries = new GeometricTrend();
-		biomassCHPInvestmentCostTimeSeries.setStart(1703320);
-
-		GeometricTrend biomassCHPFixedOperatingCostTimeSeries = new GeometricTrend();
-		biomassCHPFixedOperatingCostTimeSeries.setStart(59620);
-
-		GeometricTrend biomassCHPEfficiencyTimeSeries = new GeometricTrend();
-		biomassCHPEfficiencyTimeSeries.setStart(.35);
-
-		PowerGeneratingTechnology biomassCHP = reps.createPowerGeneratingTechnology();
-		biomassCHP.setName("Biomass CHP");
-		biomassCHP.setCapacity(500);
-		biomassCHP.setIntermittent(false);
-		biomassCHP.setApplicableForLongTermContract(true);
-		biomassCHP.setPeakSegmentDependentAvailability(0.7);
-		biomassCHP.setBaseSegmentDependentAvailability(0.7);
-		biomassCHP.setMaximumInstalledCapacityFractionPerAgent(1);
-		biomassCHP.setMaximumInstalledCapacityFractionInCountry(1);
-		biomassCHP.setMinimumFuelQuality(0.5);
-		biomassCHP.setExpectedPermittime(1);
-		biomassCHP.setExpectedLeadtime(3);
-		biomassCHP.setExpectedLifetime(30);
-		biomassCHP.setFixedOperatingCostModifierAfterLifetime(.05);
-		biomassCHP.setMinimumRunningHours(0);
-		biomassCHP.setDepreciationTime(15);
-		biomassCHP.setEfficiencyTimeSeries(biomassCHPEfficiencyTimeSeries);
-		biomassCHP.setFixedOperatingCostTimeSeries(biomassCHPFixedOperatingCostTimeSeries);
-		biomassCHP.setInvestmentCostTimeSeries(biomassCHPInvestmentCostTimeSeries);
-		Set<Substance> biomassCHPFuels = new HashSet<>();
-		biomassCHPFuels.add(biomass);
-		biomassCHP.setFuels(biomassCHPFuels);
-
-		GeometricTrend ccgtInvestmentCostTimeSeries = new GeometricTrend();
-		ccgtInvestmentCostTimeSeries.setStart(646830);
-
-		GeometricTrend ccgtFixedOperatingCostTimeSeries = new GeometricTrend();
-		ccgtFixedOperatingCostTimeSeries.setStart(29470);
-
-		GeometricTrend ccgtEfficiencyTimeSeries = new GeometricTrend();
-		ccgtEfficiencyTimeSeries.setStart(.59);
-
-		PowerGeneratingTechnology ccgt = reps.createPowerGeneratingTechnology();
-		ccgt.setName("CCGT");
-		ccgt.setCapacity(775);
-		ccgt.setIntermittent(false);
-		ccgt.setApplicableForLongTermContract(true);
-		ccgt.setPeakSegmentDependentAvailability(1);
-		ccgt.setBaseSegmentDependentAvailability(1);
-		ccgt.setMaximumInstalledCapacityFractionPerAgent(1);
-		ccgt.setMaximumInstalledCapacityFractionInCountry(1);
-		ccgt.setMinimumFuelQuality(1);
-		ccgt.setExpectedPermittime(1);
-		ccgt.setExpectedLeadtime(2);
-		ccgt.setExpectedLifetime(30);
-		ccgt.setFixedOperatingCostModifierAfterLifetime(.05);
-		ccgt.setMinimumRunningHours(0);
-		ccgt.setDepreciationTime(15);
-		ccgt.setEfficiencyTimeSeries(ccgtEfficiencyTimeSeries);
-		ccgt.setFixedOperatingCostTimeSeries(ccgtFixedOperatingCostTimeSeries);
-		ccgt.setInvestmentCostTimeSeries(ccgtInvestmentCostTimeSeries);
-		Set<Substance> ccgtFuels = new HashSet<>();
-		ccgtFuels.add(naturalGas);
-		ccgt.setFuels(ccgtFuels);
-
-		GeometricTrend ocgtInvestmentCostTimeSeries = new GeometricTrend();
-		ocgtInvestmentCostTimeSeries.setStart(359350);
-
-		GeometricTrend ocgtFixedOperatingCostTimeSeries = new GeometricTrend();
-		ocgtFixedOperatingCostTimeSeries.setStart(14370);
-
-		GeometricTrend ocgtEfficiencyTimeSeries = new GeometricTrend();
-		ocgtEfficiencyTimeSeries.setStart(.38);
-
-		PowerGeneratingTechnology ocgt = reps.createPowerGeneratingTechnology();
-		ocgt.setName("OCGT");
-		ocgt.setCapacity(150);
-		ocgt.setIntermittent(false);
-		ocgt.setApplicableForLongTermContract(true);
-		ocgt.setPeakSegmentDependentAvailability(1);
-		ocgt.setBaseSegmentDependentAvailability(1);
-		ocgt.setMaximumInstalledCapacityFractionPerAgent(1);
-		ocgt.setMaximumInstalledCapacityFractionInCountry(1);
-		ocgt.setMinimumFuelQuality(1);
-		ocgt.setExpectedPermittime(0);
-		ocgt.setExpectedLeadtime(1);
-		ocgt.setExpectedLifetime(30);
-		ocgt.setFixedOperatingCostModifierAfterLifetime(.05);
-		ocgt.setMinimumRunningHours(0);
-		ocgt.setDepreciationTime(15);
-		ocgt.setEfficiencyTimeSeries(ocgtEfficiencyTimeSeries);
-		ocgt.setFixedOperatingCostTimeSeries(ocgtFixedOperatingCostTimeSeries);
-		ocgt.setInvestmentCostTimeSeries(ocgtInvestmentCostTimeSeries);
-		Set<Substance> ocgtFuels = new HashSet<>();
-		ocgtFuels.add(naturalGas);
-		ocgt.setFuels(ocgtFuels);
-
-		GeometricTrend oilPGTInvestmentCostTimeSeries = new GeometricTrend();
-		oilPGTInvestmentCostTimeSeries.setStart(250000);
-
-		GeometricTrend oilPGTFixedOperatingCostTimeSeries = new GeometricTrend();
-		oilPGTFixedOperatingCostTimeSeries.setStart(10000);
-
-		GeometricTrend oilPGTEfficiencyTimeSeries = new GeometricTrend();
-		oilPGTEfficiencyTimeSeries.setStart(.35);
-
-		PowerGeneratingTechnology oilPGT = reps.createPowerGeneratingTechnology();
-		oilPGT.setName("Fuel oil PGT");
-		oilPGT.setCapacity(50);
-		oilPGT.setIntermittent(false);
-		oilPGT.setApplicableForLongTermContract(true);
-		oilPGT.setPeakSegmentDependentAvailability(1);
-		oilPGT.setBaseSegmentDependentAvailability(1);
-		oilPGT.setMaximumInstalledCapacityFractionPerAgent(1);
-		oilPGT.setMaximumInstalledCapacityFractionInCountry(1);
-		oilPGT.setMinimumFuelQuality(1);
-		oilPGT.setExpectedPermittime(0);
-		oilPGT.setExpectedLeadtime(1);
-		oilPGT.setExpectedLifetime(30);
-		oilPGT.setFixedOperatingCostModifierAfterLifetime(.05);
-		oilPGT.setMinimumRunningHours(0);
-		oilPGT.setDepreciationTime(15);
-		oilPGT.setEfficiencyTimeSeries(oilPGTEfficiencyTimeSeries);
-		oilPGT.setFixedOperatingCostTimeSeries(oilPGTFixedOperatingCostTimeSeries);
-		oilPGT.setInvestmentCostTimeSeries(oilPGTInvestmentCostTimeSeries);
-		Set<Substance> oilPGTFuels = new HashSet<>();
-		oilPGTFuels.add(fuelOil);
-		oilPGT.setFuels(oilPGTFuels);
-
-		GeometricTrend nuclearPGTInvestmentCostTimeSeries = new GeometricTrend();
-		nuclearPGTInvestmentCostTimeSeries.setStart(2874800);
-
-		GeometricTrend nuclearPGTFixedOperatingCostTimeSeries = new GeometricTrend();
-		nuclearPGTFixedOperatingCostTimeSeries.setStart(71870);
-
-		GeometricTrend nuclearPGTEfficiencyTimeSeries = new GeometricTrend();
-		nuclearPGTEfficiencyTimeSeries.setStart(.33);
-
-		PowerGeneratingTechnology nuclearPGT = reps.createPowerGeneratingTechnology();
-		nuclearPGT.setName("Nuclear PGT");
-		nuclearPGT.setCapacity(1000);
-		nuclearPGT.setIntermittent(false);
-		nuclearPGT.setApplicableForLongTermContract(true);
-		nuclearPGT.setPeakSegmentDependentAvailability(1);
-		nuclearPGT.setBaseSegmentDependentAvailability(1);
-		nuclearPGT.setMaximumInstalledCapacityFractionPerAgent(0);
-		nuclearPGT.setMaximumInstalledCapacityFractionInCountry(0);
-		nuclearPGT.setMinimumFuelQuality(1);
-		nuclearPGT.setExpectedPermittime(2);
-		nuclearPGT.setExpectedLeadtime(5);
-		nuclearPGT.setExpectedLifetime(40);
-		nuclearPGT.setFixedOperatingCostModifierAfterLifetime(.05);
-		nuclearPGT.setMinimumRunningHours(5000);
-		nuclearPGT.setDepreciationTime(25);
-		nuclearPGT.setEfficiencyTimeSeries(nuclearPGTEfficiencyTimeSeries);
-		nuclearPGT.setFixedOperatingCostTimeSeries(nuclearPGTFixedOperatingCostTimeSeries);
-		nuclearPGT.setInvestmentCostTimeSeries(nuclearPGTInvestmentCostTimeSeries);
-		Set<Substance> nuclearPGTFuels = new HashSet<>();
-		nuclearPGTFuels.add(uranium);
-		nuclearPGT.setFuels(nuclearPGTFuels);
-
-		GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
-		pvInvestmentCostTimeSeries.setStart(2048300);
-
-		GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
-		pvFixedOperatingCostTimeSeries.setStart(20480);
-
-		GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
-		pvEfficiencyTimeSeries.setStart(1);
-
-		PowerGeneratingTechnology pv = reps.createPowerGeneratingTechnology();
-		pv.setName("Photovoltaic PGT");
-		pv.setCapacity(500);
-		pv.setIntermittent(true);
-		pv.setApplicableForLongTermContract(true);
-		pv.setPeakSegmentDependentAvailability(0.08);
-		pv.setBaseSegmentDependentAvailability(0.16);
-		pv.setMaximumInstalledCapacityFractionPerAgent(1);
-		pv.setMaximumInstalledCapacityFractionInCountry(1);
-		pv.setMinimumFuelQuality(1);
-		pv.setExpectedPermittime(0);
-		pv.setExpectedLeadtime(1);
-		pv.setExpectedLifetime(25);
-		pv.setFixedOperatingCostModifierAfterLifetime(.05);
-		pv.setMinimumRunningHours(0);
-		pv.setDepreciationTime(15);
-		pv.setEfficiencyTimeSeries(pvEfficiencyTimeSeries);
-		pv.setFixedOperatingCostTimeSeries(pvFixedOperatingCostTimeSeries);
-		pv.setInvestmentCostTimeSeries(pvInvestmentCostTimeSeries);
-		Set<Substance> pvPGTFuels = new HashSet<>();
-		pv.setFuels(pvPGTFuels);
-
-		GeometricTrend hydroInvestmentCostTimeSeries = new GeometricTrend();
-		hydroInvestmentCostTimeSeries.setStart(800000);
-
-		GeometricTrend hydroFixedOperatingCostTimeSeries = new GeometricTrend();
-		hydroFixedOperatingCostTimeSeries.setStart(10000);
-
-		GeometricTrend hydroEfficiencyTimeSeries = new GeometricTrend();
-		hydroEfficiencyTimeSeries.setStart(.9);
-
-		PowerGeneratingTechnology hydro = reps.createPowerGeneratingTechnology();
-		hydro.setName("Hydroelectric");
-		hydro.setCapacity(250);
-		hydro.setApplicableForLongTermContract(true);
-		hydro.setPeakSegmentDependentAvailability(0.08);
-		hydro.setBaseSegmentDependentAvailability(0.16);
-		hydro.setMaximumInstalledCapacityFractionPerAgent(0);
-		hydro.setMaximumInstalledCapacityFractionInCountry(0);
-		hydro.setMinimumFuelQuality(1);
-		hydro.setExpectedPermittime(2);
-		hydro.setExpectedLeadtime(5);
-		hydro.setExpectedLifetime(50);
-		hydro.setFixedOperatingCostModifierAfterLifetime(.05);
-		hydro.setMinimumRunningHours(0);
-		hydro.setDepreciationTime(30);
-		hydro.setEfficiencyTimeSeries(hydroEfficiencyTimeSeries);
-		hydro.setFixedOperatingCostTimeSeries(hydroFixedOperatingCostTimeSeries);
-		hydro.setInvestmentCostTimeSeries(hydroInvestmentCostTimeSeries);
-		Set<Substance> hydroPGTFuels = new HashSet<>();
-		hydro.setFuels(hydroPGTFuels);
-
-		GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
-		windOnshoreInvestmentCostTimeSeries.setStart(1214600);
-
-		GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-		windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
-
-		GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
-		windOnshoreEfficiencyTimeSeries.setStart(1);
-
-		PowerGeneratingTechnology windOnshore = reps.createPowerGeneratingTechnology();
-		windOnshore.setName("Onshore wind PGT");
-		windOnshore.setCapacity(600);
-		windOnshore.setIntermittent(true);
-		windOnshore.setApplicableForLongTermContract(true);
-		windOnshore.setPeakSegmentDependentAvailability(0.05);
-		windOnshore.setBaseSegmentDependentAvailability(0.40);
-		windOnshore.setMaximumInstalledCapacityFractionPerAgent(1);
-		windOnshore.setMaximumInstalledCapacityFractionInCountry(1);
-		windOnshore.setMinimumFuelQuality(1);
-		windOnshore.setExpectedPermittime(1);
-		windOnshore.setExpectedLeadtime(1);
-		windOnshore.setExpectedLifetime(25);
-		windOnshore.setFixedOperatingCostModifierAfterLifetime(.05);
-		windOnshore.setMinimumRunningHours(0);
-		windOnshore.setDepreciationTime(15);
-		windOnshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
-		windOnshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
-		windOnshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries);        
-		Set<Substance> windOnshorePGTFuels = new HashSet<>();
-		windOnshore.setFuels(windOnshorePGTFuels);
-
-		GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
-		windOffshoreInvestmentCostTimeSeries.setStart(2450770);
-
-		GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-		windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
-
-		GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
-		windOffshoreEfficiencyTimeSeries.setStart(1);
-
-		PowerGeneratingTechnology windOffshore = reps.createPowerGeneratingTechnology();
-		windOffshore.setName("Offshore wind PGT");
-		windOffshore.setCapacity(600);
-		windOffshore.setIntermittent(true);
-		windOffshore.setApplicableForLongTermContract(true);
-		windOffshore.setPeakSegmentDependentAvailability(0.08);
-		windOffshore.setBaseSegmentDependentAvailability(0.65);
-		windOffshore.setMaximumInstalledCapacityFractionPerAgent(1);
-		windOffshore.setMaximumInstalledCapacityFractionInCountry(1);
-		windOffshore.setMinimumFuelQuality(1);
-		windOffshore.setExpectedPermittime(1);
-		windOffshore.setExpectedLeadtime(2);
-		windOffshore.setExpectedLifetime(25);
-		windOffshore.setFixedOperatingCostModifierAfterLifetime(.05);
-		windOffshore.setMinimumRunningHours(0);
-		windOffshore.setDepreciationTime(15);
-		windOffshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
-		windOffshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
-		windOffshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries); 
-		Set<Substance> windOffshorePGTFuels = new HashSet<>();
-		windOffshore.setFuels(windOffshorePGTFuels);
-
 		// ——————————————————————————————————————————————————
 		// Power Plant Factory
 		// ——————————————————————————————————————————————————
 
-		windProfileOnShoreNL.setIntermittentTechnology(windOnshore);
-		windProfileOffShoreNL.setIntermittentTechnology(windOffshore);
-		solarProfileNL.setIntermittentTechnology(pv);
-
-		windProfileOnShoreDE.setIntermittentTechnology(windOnshore);
-		windProfileOffShoreDE.setIntermittentTechnology(windOffshore);
-		solarProfileDE.setIntermittentTechnology(pv);
-
 		PowerPlantCSVFactory powerPlantCSVFactory = new PowerPlantCSVFactory(reps);
-		//powerPlantCSVFactory.setCsvFile("/data/dutchGermanPlants2015.csv");
-		powerPlantCSVFactory.setCsvFile("/data/dutchGermanPlants2015For14investors.csv");
+		powerPlantCSVFactory.setCsvFile("/data/separatedDutchGermanPlants2015For14investors.csv");
 		for (PowerPlant plant : powerPlantCSVFactory.read()) {
 			reps.createPowerPlantFromPlant(plant);
-
-		}	
+		}
+		
 
 		// ——————————————————————————————————————————————————
 		// Empirical mapping parameters
@@ -1248,12 +1274,12 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		HashMap<PowerGeneratingTechnology, Integer> schemePhaseOutTimeNL = new HashMap<>();
 		schemePhaseOutTimeNL.put(windOnshore, 100);
 		schemePhaseOutTimeNL.put(pv, 100);
-		schemePhaseOutTimeNL.put(windOffshore, 10);
+		schemePhaseOutTimeNL.put(windOffshore, 100);
 
 		HashMap<PowerGeneratingTechnology, Integer> schemePhaseOutTimeDE = new HashMap<>();
 		schemePhaseOutTimeDE.put(windOnshore, 100);
 		schemePhaseOutTimeDE.put(pv, 100);
-		schemePhaseOutTimeDE.put(windOffshore, 10);
+		schemePhaseOutTimeDE.put(windOffshore, 100);
 
 		// setups
 
