@@ -11,9 +11,10 @@ source("prepare_power_plants_functions.R")
 
 random_seed <- "3498563"
 save <- TRUE
-show_debug <- FALSE
+show_debug <- TRUE
 data_folder <- "/Users/marcmel/Documents/PhD/Papers/05 ABM PhD paper 2/data/powerplants"
-output_folder <- "/Users/marcmel/Development/java-projects/emlab-generation2/resources/sources/powerplants/output"
+output_folder <- "../../data/"
+prefix_for_result <- "separated"
 
 #my_countries <- c("NL", "FR", "BE", "LU", "DE")
 my_countries <- c("NL", "DE")
@@ -22,14 +23,9 @@ my_countries_B <- c("NL")
 my_countries_A_node <- "deNode"
 my_countries_B_node <- "nlNode"
 
-plants <- list()
+# Owners
+# make sure that the names correspond to the java scenario file
 
-technologies <- list()
-technologies[["conventional"]] <- c("Biomass CHP", "Coal PSC", "Lignite PSC", "Hydroelectric", "OCGT", "CCGT","Nuclear PGT", "Fuel oil PGT")
-#technologies[["renewables"]] <- c("Offshore wind PGT", "Onshore wind PGT", "Hydroelectric", "Photovoltaic PGT", "Biomass CHP")
-technologies[["renewables"]] <- c("Offshore wind PGT", "Onshore wind PGT", "Photovoltaic PGT", "Hydroelectric")
-
-# ! make sure it's the same as in main thing
 owners <- list()
 owners[["countries_A_renewables"]] <- c(
   "Pref Investor Small DE",
@@ -54,6 +50,20 @@ owners[["countries_B_conventional"]]  <- c(
   "Energy Producer NL B",
   "Energy Producer NL C"
 )
+
+# list of any of the owners defined above
+my_countries_A_renwables_owners <- owners$countries_A_renewables
+my_countries_B_renwables_owners <- owners$countries_B_renewables
+my_countries_A_conventional_owners <- owners$countries_A_conventional
+my_countries_B_conventional_owners <- owners$countries_B_conventional
+
+# Technologies
+
+plants <- list()
+plants_and_owners <- list()
+technologies <- list()
+technologies[["conventional"]] <- c("Biomass CHP", "Coal PSC", "Lignite PSC", "Hydroelectric", "OCGT", "CCGT","Nuclear PGT", "Fuel oil PGT")
+technologies[["renewables"]] <- c("Offshore wind PGT", "Onshore wind PGT", "Photovoltaic PGT")
 
 technology_translations <- read_excel(path = "translation table.xlsx")
 
@@ -94,8 +104,7 @@ typical_efficiencies <- tribble(
   "Offshore wind PGT", 1.02,
   "Biomass CHP", 0.35, 
   "Hydroelectric", 0.9, # source scenario file
-#  "OCGT", 0.489,
-  "OCGT", 0.38, #Difference?
+  "OCGT", 0.38,
   "Coal PSC", 0.44,
   "Lignite PSC", 0.45,
   "CCGT", 0.59, 
@@ -151,15 +160,14 @@ if(show_debug){
 }
 
 
-# Renewables ALL ----------------------------------------------------------
+# Renewables all countries ----------------------------------------------------------
 
 if(show_debug){
-  # Test:
-  # There are too many plants to handle efficiently in EMlab!
+  # There are too many plants in the dataset to handle efficiently in EMlab!
   # Hence, estimate plants based on capacity
   raw_data[["opsd_renewable_power_plants"]] %>% 
     filter(
-      country %in% c("NL", "FR", "BE", "LU", "DE")) %>% 
+      country %in% my_countries) %>% 
     group_by(country, energy_source_level_2) %>% 
     count() %>% 
     arrange(n) 
@@ -173,29 +181,32 @@ plants[["renewables"]] <- national_generation_capacity_data %>%
     number_of_plants = floor(capacity / typical_capacity), # number of plants without last one
     last_plant_capacity = capacity %% typical_capacity) %>% 
   select(technology, country, typical_capacity, number_of_plants, last_plant_capacity) %>% 
-  pmap_dfr(new_renewables_list)
+  pmap_dfr(new_renewables_list) %>% 
+  add_age_and_efficiencies() 
+  
 
-plants[["renewables_final_countries_A"]] <- plants[["renewables"]] %>%
+plants_and_owners[["renewables_countries_A"]] <- plants[["renewables"]] %>%
   filter(country %in% my_countries_A) %>% 
-  add_owners_and_age(c(owners$countries_A_renewables, owners$countries_A_conventional)) %>% 
+  add_owners(my_countries_A_renwables_owners) %>% 
   add_column(node = my_countries_A_node)
 
-plants[["renewables_final_countries_B"]] <- plants[["renewables"]] %>% 
+plants_and_owners[["renewables_countries_B"]] <- plants[["renewables"]] %>% 
   filter(country %in% my_countries_B) %>% 
-  add_owners_and_age(c(owners$countries_B_renewables, owners$countries_B_conventional)) %>% 
+  add_owners(my_countries_B_renwables_owners) %>% 
   add_column(node = my_countries_B_node)
 
 
 if(show_debug){
-  plants[["renewables_final_countries_A"]] %>% 
+  plants_and_owners[["renewables_countries_A"]] %>% 
     group_by(technology,node) %>% 
-    count()
+    count() %>% 
+    print()
   
-  plants[["renewables_final_countries_B"]] %>% 
+  plants_and_owners[["renewables_countries_B"]] %>% 
     group_by(technology,node) %>% 
-    count() 
+    count() %>% 
+    print()
 }
-
 
 # Conventional A countries like DE -----------------------------------------------------------------
 
@@ -218,7 +229,14 @@ if("DE" %in% my_countries_A){
       technology,
       age,
       capacity = capacity_net_bnetza,
-      efficiency_estimate = efficiency_estimate)
+      efficiency_estimate = efficiency_estimate) %>% 
+    add_age_and_efficiencies() %>% 
+    mutate(
+      final_efficiency = ifelse(is.na(efficiency_estimate), efficiency, efficiency_estimate)) %>% 
+    select(-efficiency_estimate, -efficiency) %>% 
+    rename(efficiency = final_efficiency) %>% 
+    add_column(country = "DE")
+    
 }
 
 # Conventional B countries like FR, NL, BE ----------------------------------------------------------------------
@@ -265,29 +283,29 @@ if("BE" %in% my_countries_B){
   
 }
 
+plants[["conventional_countries_B_raw"]] <- plants[["conventional_countries_B_raw"]] %>% 
+  add_age_and_efficiencies()
+  
+
 # All Conventional (add missing data) --------------------------------------------------------
 
 # A country
-plants[["conventional_DE"]] <- plants[["conventional_countries_A_raw"]] %>% 
-  add_column(country = "DE") %>% 
-  add_owners_and_age(owners$countries_A_conventional) %>% 
-  mutate(
-    final_efficiency = ifelse(is.na(efficiency_estimate), efficiency, efficiency_estimate)) %>% 
-  select(-efficiency_estimate, -efficiency) %>% 
-  rename(efficiency = final_efficiency)
+plants_and_owners[["conventional_DE"]] <- plants[["conventional_countries_A_raw"]] %>% 
+  add_owners(owners$countries_A_conventional)
 
-plants[["conventional_DE_scaled"]] <- calculate_difference_in_capacities(
-  plants[["conventional_DE"]], countries = c("DE"), scale = TRUE) %>% 
+  
+plants_and_owners[["conventional_DE_scaled"]] <- calculate_difference_in_capacities(
+  plants_and_owners[["conventional_DE"]], countries = c("DE"), scale = TRUE) %>% 
   select(-capacity, difference) %>% 
   rename(capacity = capacity_scaled) %>% 
   add_column(node = "deNode")
 
 # B country
-plants[["conventional_countries_B"]] <- plants[["conventional_countries_B_raw"]] %>%
-  add_owners_and_age(owners$countries_B_conventional) 
+plants_and_owners[["conventional_countries_B"]] <- plants[["conventional_countries_B_raw"]] %>%
+  add_owners(owners$countries_B_conventional) 
 
-plants[["conventional_countries_B_scaled"]] <- calculate_difference_in_capacities(
-  plants[["conventional_countries_B"]], countries = my_countries_B, scale = TRUE) %>% 
+plants_and_owners[["conventional_countries_B_scaled"]] <- calculate_difference_in_capacities(
+  plants_and_owners[["conventional_countries_B"]], countries = my_countries_B, scale = TRUE) %>% 
   select(-capacity, difference) %>% 
   rename(capacity = capacity_scaled) %>% 
   add_column(node = my_countries_B_node)
@@ -295,36 +313,37 @@ plants[["conventional_countries_B_scaled"]] <- calculate_difference_in_capacitie
 
 
 if(show_debug){
-  plants[["conventional_DE_scaled"]] %>% 
+  plants_and_owners[["conventional_DE_scaled"]] %>% 
     group_by(technology,node) %>% 
-    count()
+    count() %>% 
+    print()
   
-  plants[["conventional_countries_B_scaled"]] %>% 
+  plants_and_owners[["conventional_countries_B_scaled"]] %>% 
     group_by(technology,node) %>% 
-    count() 
+    count() %>% 
+    print()
 }
 
 # Combine data --------------------------------------------------------
 
 # And Remove double counting of power plants such as hydro and Biomass
 
-plants[["all"]] <- bind_rows(
-  plants[["conventional_DE_scaled"]],
-  plants[["renewables_final_countries_A"]] %>% filter(!technology %in% c("Biomass CHP", "Hydroelectric")),
-  plants[["conventional_countries_B_scaled"]], 
-  plants[["renewables_final_countries_B"]] %>% filter(!technology %in% c("Biomass CHP"))
+plants_and_owners[["all"]] <- bind_rows(
+  plants_and_owners[["conventional_DE_scaled"]],
+  plants_and_owners[["renewables_countries_A"]],
+  plants_and_owners[["conventional_countries_B_scaled"]], 
+  plants_and_owners[["renewables_countries_B"]]
   ) %>% 
   select(-commissioned, -difference)
 
 if(save){
   #format for emlab: # Name, Technology, Location, Age, Owner, Capacity, Efficiency
-  plants[["all"]]  %>%
+  plants_and_owners[["all"]]  %>%
     select(Name = name, Technology = technology, Location = node, Age = age, Owner, Capacity = capacity, Efficiency = efficiency) %>% 
-    write_csv(path = file.path(output_folder, "final_plants.csv"))
+    write_csv(path = file.path(output_folder, paste(prefix_for_result, "final_plants.csv", sep = "_")))
 } else {
   warning("Not saved. Output is here:")
 }
-
 
 
 
@@ -338,7 +357,7 @@ if(save){
 #   coord_flip() +
 #   facet_wrap(country ~ Owner)
 
-plants[["all"]] %>% 
+plants_and_owners[["all"]] %>% 
   ggplot(mapping = aes(x = technology, y = capacity)) +
   geom_col() + 
   coord_flip() +
@@ -350,7 +369,7 @@ plants[["all"]] %>%
 validation_stats_df <- national_generation_capacity_data %>% 
   select(technology, country, capacity_stats = capacity)
 
-validation_calc_df <- plants[["all"]] %>%
+validation_calc_df <- plants_and_owners[["all"]] %>%
   group_by(technology, country) %>% 
   summarise(capacity_calculated = sum(capacity, na.rm = TRUE)) %>%  ungroup()
 

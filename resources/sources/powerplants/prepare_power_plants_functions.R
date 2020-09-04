@@ -10,7 +10,40 @@ normalise_technology_names <- function(technologies_vector, from, to = "emlab_na
   
 }
 
-add_owners_and_age <- function(plants_df, owners_vector, seed = random_seed){
+#' Add randmon age if missing (or keep).
+#' Also adds typical efficiencies and typical age of plants
+#'
+#' @param plants_df dataframe with columns technology and age
+#' @param max_age maximal age
+#' @param seed 
+#'
+#' @return df
+add_age_and_efficiencies <- function(plants_df, max_age = 30, seed = random_seed){
+
+  n <- nrow(plants_df)
+
+  set.seed(seed)
+
+  random_ages <- sample(1:max_age, n , replace = T) # TODO: actually use typical age
+  
+  plants_df %>% 
+    left_join(typical_efficiencies, by = "technology") %>% 
+    left_join(typical_age_for_plants, by = "technology") %>% 
+    mutate(
+      random_age = random_ages,
+      final_age = ifelse(is.na(age), random_age, age)) %>%
+    select(-age, -typical_age, -random_age) %>% 
+    rename(age = final_age)
+  
+}
+
+#' Add randmon owners from list to power plants df
+#'
+#' @param plants_df dataframe with plants
+#' @param seed 
+#'
+#' @return df
+add_owners <- function(plants_df, owners_vector, seed = random_seed){
   # adding Age and Owners randomly
   # expects:  technology age
   
@@ -20,22 +53,10 @@ add_owners_and_age <- function(plants_df, owners_vector, seed = random_seed){
   
   set.seed(seed)
   random_owners <- sample_n(owners_df, size = n, replace = TRUE) %>% pull(Owner)
+
   
-  set.seed(seed)
-  random_ages <- sample(1:30, n , replace = T) # TODO: actually use typical age
-  
-  
-  plants <- plants_df %>% 
-    left_join(typical_efficiencies, by = "technology") %>% 
-    left_join(typical_age_for_plants, by = "technology") %>% 
-    mutate(
-      random_age = random_ages,
-      final_age = ifelse(is.na(age), random_age, age)) %>%
-    select(-age, -typical_age, -random_age) %>% 
-    rename(age = final_age) %>%
+  plants_df %>% 
     add_column(Owner = random_owners)
-  
-  plants
   
 }
 

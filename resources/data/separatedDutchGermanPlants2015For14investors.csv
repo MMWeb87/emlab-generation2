@@ -1,0 +1,845 @@
+Name,Technology,Location,Age,Owner,Capacity,Efficiency
+Werkskraftwerk Sappi Alfeld,Biomass CHP,deNode,12,Energy Producer DE B,101.20855283545089,0.38
+HKW Altenstadt,Biomass CHP,deNode,16,Energy Producer DE A,76.29567829133991,0.38
+Zellstoff Stendal GmbH,Biomass CHP,deNode,11,Energy Producer DE C,1081.3744606803177,0.38
+Blockheizkraftwerk 1,Biomass CHP,deNode,10,Energy Producer DE C,8.563800624538153,0.38
+Blockheizkraftwerk 2,Biomass CHP,deNode,5,Energy Producer DE C,6.228218636027748,0.38
+UTB,Biomass CHP,deNode,13,Energy Producer DE A,124.56437272055494,0.38
+BHW Beeskow,Biomass CHP,deNode,14,Energy Producer DE C,142.47050129913472,0.38
+BMKW Bergkamen,Biomass CHP,deNode,10,Energy Producer DE B,137.7993373221139,0.38
+HHKW Berlin-Neukölln,Biomass CHP,deNode,11,Energy Producer DE C,128.45700936807228,0.38
+ENERTRAG Netz GmbH  (UW Bertikow),Biomass CHP,deNode,9,Energy Producer DE C,155.70546590069367,0.38
+Biomassekraftwerk Bischofferode,Biomass CHP,deNode,10,Energy Producer DE B,140.9134466401278,0.38
+Egger Kraftwerk Brilon,Biomass CHP,deNode,24,Energy Producer DE C,140.1349193106243,0.38
+Werkskraftwerk Sappi Ehingen,Biomass CHP,deNode,25,Energy Producer DE C,102.76560749445783,0.38
+Werkskraftwerk Sappi Ehingen,Biomass CHP,deNode,54,Energy Producer DE B,62.28218636027747,0.38
+Emden Biomasse,Biomass CHP,deNode,10,Energy Producer DE C,171.27601249076304,0.38
+Biomasse-HKW,Biomass CHP,deNode,2,Energy Producer DE B,82.52389692736764,0.38
+BMKW Flörsheim Wicker,Biomass CHP,deNode,12,Energy Producer DE A,98.09444351743701,0.38
+BKF,Biomass CHP,deNode,11,Energy Producer DE A,96.53738885843008,0.38
+KWK Gütersloh,Biomass CHP,deNode,15,Energy Producer DE B,94.20180686991968,0.38
+Biomasse-Verstromungs-Anlage,Biomass CHP,deNode,11,Energy Producer DE C,155.70546590069367,0.38
+Müllverwertung Borsigstraße MVB,Biomass CHP,deNode,10,Energy Producer DE A,155.70546590069367,0.38
+Enertec Hameln,Biomass CHP,deNode,13,Energy Producer DE B,112.88646277800292,0.38
+Energieanlage 3,Biomass CHP,deNode,13,Energy Producer DE B,144.80608328764512,0.38
+Bio HKW Herbrechtingen,Biomass CHP,deNode,11,Energy Producer DE B,108.99382613048557,0.38
+Stora Enso Maxau,Biomass CHP,deNode,5,Energy Producer DE C,607.2513170127054,0.38
+BMKW Königs Wusterhausen,Biomass CHP,deNode,12,Energy Producer DE C,133.1281733450931,0.38
+BMHKW-BinderHolz,Biomass CHP,deNode,8,Energy Producer DE C,117.55762675502372,0.38
+BioEnergie Park Klarsee,Biomass CHP,deNode,9,Energy Producer DE A,138.57786465161738,0.38
+Landesbergen Biomasse,Biomass CHP,deNode,10,Energy Producer DE B,171.27601249076304,0.38
+BMK Lünen,Biomass CHP,deNode,9,Energy Producer DE A,155.70546590069367,0.38
+Biomasse-Heizkraftwerk Malchin,Biomass CHP,deNode,12,Energy Producer DE C,76.29567829133991,0.38
+BMKW Mannheim,Biomass CHP,deNode,12,Energy Producer DE A,139.35639198112082,0.38
+SCA Mannheim,Biomass CHP,deNode,12,Energy Producer DE A,311.41093180138733,0.38
+KWK Neumarkt,Biomass CHP,deNode,18,Energy Producer DE A,121.45026340254107,0.38
+Biomasse-HKW,Biomass CHP,deNode,12,Energy Producer DE C,155.70546590069367,0.38
+Heizkraftwerk Pforzheim GmbH,Biomass CHP,deNode,11,Energy Producer DE C,95.75886152892662,0.38
+BMHKW-RE Recklinghausen,Biomass CHP,deNode,11,Energy Producer DE B,116.77909942552026,0.38
+Heizkraftwerk der Sappi Stockstadt GmbH,Biomass CHP,deNode,12,Energy Producer DE A,108.99382613048557,0.38
+BioHKW I,Biomass CHP,deNode,11,Energy Producer DE B,67.73187766680175,0.38
+BioHKW II,Biomass CHP,deNode,3,Energy Producer DE A,35.033729827656074,0.38
+PKV Kraftwerk,Biomass CHP,deNode,9,Energy Producer DE A,14.947724726466593,0.4504
+Wi-Biebrich,Biomass CHP,deNode,12,Energy Producer DE B,52.16133107673238,0.38
+Biomasseheizkraftwerk Piesteritz,Biomass CHP,deNode,6,Energy Producer DE B,140.9134466401278,0.38
+Zolling,Biomass CHP,deNode,12,Energy Producer DE B,142.47050129913472,0.38
+Heizkraftwerk Altbach/Deizisau,Coal PSC,deNode,18,Energy Producer DE B,374.83514195145654,0.44
+Heizkraftwerk Altbach/Deizisau,Coal PSC,deNode,30,Energy Producer DE A,483.04647757434725,0.455
+Reno De Medici,Coal PSC,deNode,92,Energy Producer DE A,21.463774199839357,0.2325
+Bergkamen,Coal PSC,deNode,34,Energy Producer DE C,799.8714189856975,0.3775
+Reuter,Coal PSC,deNode,46,Energy Producer DE C,138.33201667256134,0.3475
+Moabit,Coal PSC,deNode,26,Energy Producer DE A,99.28668938595129,0.4
+Reuter West,Coal PSC,deNode,28,Energy Producer DE C,314.5937798521153,0.3925
+Reuter West,Coal PSC,deNode,27,Energy Producer DE B,314.5937798521153,0.395
+Kraftwerk Bexbach,Coal PSC,deNode,32,Energy Producer DE C,809.9116460022543,0.3825
+HKW-Mitte,Coal PSC,deNode,31,Energy Producer DE A,48.30464775743472,0.468
+KW Hastedt,Coal PSC,deNode,1,Energy Producer DE B,132.75411277447418,0.46
+KW Hafen,Coal PSC,deNode,36,Energy Producer DE C,338.0209762240813,0.3725
+Farge,Coal PSC,deNode,46,Energy Producer DE C,390.4532728661006,0.4425
+KW Walsum,Coal PSC,deNode,27,Energy Producer DE C,412.76488845844915,0.395
+KW Walsum,Coal PSC,deNode,2,Energy Producer DE A,808.7960652226369,0.4575
+HKW Erlangen,Coal PSC,deNode,33,Energy Producer DE A,19.411105565343284,0.38
+Heizkraftwerk FL,Coal PSC,deNode,23,Energy Producer DE A,34.583004168140334,0.504
+Heizkraftwerk FL,Coal PSC,deNode,26,Energy Producer DE C,36.8141657273752,0.4905
+Heizkraftwerk FL,Coal PSC,deNode,30,Energy Producer DE B,36.8141657273752,0.4725
+HKW West,Coal PSC,deNode,27,Energy Producer DE B,68.60821794647195,0.395
+HKW West,Coal PSC,deNode,26,Energy Producer DE B,68.60821794647195,0.3975
+Scholven,Coal PSC,deNode,46,Energy Producer DE A,384.8753689680134,0.3475
+Scholven,Coal PSC,deNode,47,Energy Producer DE C,384.8753689680134,0.345
+FWK Buer,Coal PSC,deNode,30,Energy Producer DE B,78.0906545732201,0.3875
+Staudinger,Coal PSC,deNode,23,Energy Producer DE C,568.9461976048894,0.405
+Moorburg A,Coal PSC,deNode,0,Energy Producer DE C,892.4646236939442,0.4625
+Tiefstack,Coal PSC,deNode,22,Energy Producer DE C,216.42267124578146,0.4075
+Moorburg B,Coal PSC,deNode,0,Energy Producer DE C,892.4646236939442,0.4625
+Westfalen,Coal PSC,deNode,1,Energy Producer DE B,851.9690413938315,0.46
+GKH,Coal PSC,deNode,26,Energy Producer DE C,151.71898602797052,0.3975
+GKH,Coal PSC,deNode,26,Energy Producer DE A,151.71898602797052,0.3975
+Heizkraftwerk Heilbronn,Coal PSC,deNode,50,Energy Producer DE C,139.44759745217877,0.45
+Heizkraftwerk Heilbronn,Coal PSC,deNode,49,Energy Producer DE A,139.44759745217877,0.45
+Heizkraftwerk Heilbronn,Coal PSC,deNode,30,Energy Producer DE C,867.9218465423606,0.4475
+KW Herne,Coal PSC,deNode,26,Energy Producer DE C,500.89577004822615,0.4575
+KWM,Coal PSC,deNode,36,Energy Producer DE A,769.7507379360268,0.4325
+Ibbenbüren,Coal PSC,deNode,30,Energy Producer DE A,885.7711390162395,0.4475
+Heizkraftwerk,Coal PSC,deNode,26,Energy Producer DE C,73.6283314547504,0.4905
+HKW Karcherstr.,Coal PSC,deNode,19,Energy Producer DE B,14.948782446873565,0.415
+Rheinhafen-Dampfkraftwerk,Coal PSC,deNode,30,Energy Producer DE B,576.7552630622114,0.4375
+Rheinhafen-Dampfkraftwerk,Coal PSC,deNode,1,Energy Producer DE A,930.3943702009368,0.46
+Gemeinschaftskraftwerk Kiel,Coal PSC,deNode,45,Energy Producer DE C,360.33259181642995,0.405
+Kraftwerk L 57,Coal PSC,deNode,58,Energy Producer DE B,29.005100270053184,0.3175
+Kraftwerk N 230,Coal PSC,deNode,44,Energy Producer DE B,122.71388575791732,0.3525
+G-Kraftwerk,Coal PSC,deNode,53,Energy Producer DE A,114.9048203005953,0.33
+KW Lünen,Coal PSC,deNode,53,Energy Producer DE C,166.2215361629971,0.415
+KW Lünen,Coal PSC,deNode,45,Energy Producer DE C,361.44817259604736,0.4175
+Trianel Kohlekraftwerk Lünen,Coal PSC,deNode,2,Energy Producer DE A,819.9518730188112,0.4575
+GKM,Coal PSC,deNode,10,Energy Producer DE C,284.4730988024447,0.4375
+GKM,Coal PSC,deNode,33,Energy Producer DE A,474.12183133740785,0.38
+GKM,Coal PSC,deNode,22,Energy Producer DE C,485.2776391335821,0.4075
+GKM,Coal PSC,deNode,0,Energy Producer DE C,940.4345972174937,0.4625
+Kraftwerk I,Coal PSC,deNode,75,Energy Producer DE A,188.86782598923094,0.27
+Kraftwerk I,Coal PSC,deNode,44,Energy Producer DE B,62.02629134672912,0.4095
+Kraftwerk I,Coal PSC,deNode,32,Energy Producer DE A,76.30572532583223,0.4635
+Heizkraftwerk Offenbach,Coal PSC,deNode,25,Energy Producer DE A,60.24136209934123,0.4
+Heyden,Coal PSC,deNode,28,Energy Producer DE A,976.1331821652514,0.3925
+Heizkraftwerk Pforzheim GmbH,Coal PSC,deNode,25,Energy Producer DE C,30.00912297170887,0.4
+Weiher,Coal PSC,deNode,39,Energy Producer DE B,731.3747591171873,0.365
+KNG Kraftwerk Rostock,Coal PSC,deNode,21,Energy Producer DE A,573.4085207233591,0.41
+HKW Römerbrücke,Coal PSC,deNode,26,Energy Producer DE C,55.77903898087151,0.4375
+Heizkraftwerk der Sappi Stockstadt GmbH,Coal PSC,deNode,45,Energy Producer DE B,27.66640333451227,0.35
+Heizkraftwerk Stuttgart-Gaisburg,Coal PSC,deNode,6,Energy Producer DE B,25.212125619353923,0.4475
+Restmüll-Heizkraftwerk Stuttgart-Münster,Coal PSC,deNode,33,Energy Producer DE A,50.20113508278436,0.38
+Restmüll-Heizkraftwerk Stuttgart-Münster,Coal PSC,deNode,31,Energy Producer DE C,50.20113508278436,0.385
+Heizkraftwerk Magirusstraße,Coal PSC,deNode,23,Energy Producer DE C,23.092522138080803,0.405
+Nord 2,Coal PSC,deNode,24,Energy Producer DE A,371.153725378719,0.4025
+Modellkraftwerk,Coal PSC,deNode,33,Energy Producer DE B,199.68895955152001,0.38
+Heizkraftwerk,Coal PSC,deNode,26,Energy Producer DE B,235.38754449927777,0.3975
+Kraftwerk Walheim,Coal PSC,deNode,51,Energy Producer DE B,107.0957548432733,0.4525
+Kraftwerk Walheim,Coal PSC,deNode,48,Energy Producer DE B,165.10595538337967,0.4525
+Wedel,Coal PSC,deNode,53,Energy Producer DE B,137.2164358929439,0.4075
+Wedel,Coal PSC,deNode,54,Energy Producer DE C,152.83456680758795,0.4075
+Gersteinwerk,Coal PSC,deNode,31,Energy Producer DE A,684.9665986851021,0.385
+Wilhelmshaven,Coal PSC,deNode,39,Energy Producer DE B,844.4946501703946,0.365
+Kraftwerk Wilhelmshaven,Coal PSC,deNode,0,Energy Producer DE A,815.4895499003414,0.4625
+HKW Nord,Coal PSC,deNode,15,Energy Producer DE A,68.60821794647195,0.425
+HKW Nord,Coal PSC,deNode,15,Energy Producer DE B,68.60821794647195,0.425
+HKW West,Coal PSC,deNode,30,Energy Producer DE C,154.50793797701408,0.3875
+HKW West,Coal PSC,deNode,30,Energy Producer DE A,154.50793797701408,0.3875
+Zolling,Coal PSC,deNode,30,Energy Producer DE C,526.554127979427,0.4525
+RADAG,Hydroelectric,deNode,81,Energy Producer DE B,62.20390837125703,0.8
+Werkskraftwerk Sappi Alfeld,Hydroelectric,deNode,103,Energy Producer DE B,0.07824390990095224,0.8
+KW Amlach,Hydroelectric,deNode,26,Energy Producer DE C,46.94634594057134,0.8
+Bigge,Hydroelectric,deNode,50,Energy Producer DE B,11.736586485142835,0.9
+Egglfing,Hydroelectric,deNode,71,Energy Producer DE A,31.6105395999847,0.8
+Rheinkraftwerk Säckingen,Hydroelectric,deNode,49,Energy Producer DE C,28.79375884355042,0.8
+Säckingen,Hydroelectric,deNode,49,Energy Producer DE B,281.67807564342803,0.75
+Bergheim,Hydroelectric,deNode,45,Energy Producer DE C,18.54380664652568,0.8
+Weserkraftwerk Bremen,Hydroelectric,deNode,4,Energy Producer DE A,7.746147080194271,0.8
+Dessau,Hydroelectric,deNode,48,Energy Producer DE C,8.059122719798081,0.8
+Alzwerke,Hydroelectric,deNode,93,Energy Producer DE C,35.209759455428504,0.8
+Dettingen,Hydroelectric,deNode,88,Energy Producer DE B,8.606830089104745,0.8
+Dingolfing,Hydroelectric,deNode,58,Energy Producer DE B,11.736586485142835,0.8
+WKW,Hydroelectric,deNode,6,Energy Producer DE B,18.778538376228536,0.8
+Waldeck1/Bringhausen,Hydroelectric,deNode,84,Energy Producer DE B,113.45366935638074,0.75
+Waldeck 2,Hydroelectric,deNode,41,Energy Producer DE A,375.5707675245707,0.75
+Hemfurth,Hydroelectric,deNode,100,Energy Producer DE C,15.648781980190448,0.9
+Eitting,Hydroelectric,deNode,90,Energy Producer DE A,20.34341657424758,0.8
+Fankel,Hydroelectric,deNode,52,Energy Producer DE A,12.832001223756166,0.8
+Ellgau,Hydroelectric,deNode,63,Energy Producer DE B,7.5896592603923665,0.8
+Enkirch,Hydroelectric,deNode,49,Energy Producer DE A,14.39687942177521,0.8
+Ering,Hydroelectric,deNode,73,Energy Producer DE B,28.559027113847566,0.8
+Altheim,Hydroelectric,deNode,64,Energy Producer DE C,13.927415962369498,0.8
+Pumpspeicherwerk Rönkhausen,Hydroelectric,deNode,46,Energy Producer DE C,107.97659566331409,0.75
+Rudolf-Fettweis-Werk,Hydroelectric,deNode,97,Energy Producer DE A,17.21366017820949,0.8
+Rudolf-Fettweis-Werk,Hydroelectric,deNode,89,Energy Producer DE C,33.64488125740946,0.75
+Serrig,Hydroelectric,deNode,30,Energy Producer DE C,9.46751309801522,0.8
+Gars,Hydroelectric,deNode,77,Energy Producer DE C,19.560977475238058,0.8
+Geesthacht,Hydroelectric,deNode,57,Energy Producer DE A,93.18849669203411,0.75
+PSW Langenprozelten,Hydroelectric,deNode,41,Energy Producer DE C,128.32001223756166,0.75
+Goldisthal,Hydroelectric,deNode,11,Energy Producer DE C,823.1259321580175,0.75
+KW Wyhlen,Hydroelectric,deNode,103,Energy Producer DE C,29.654441852460895,0.8
+Jochenstein,Hydroelectric,deNode,60,Energy Producer DE B,51.640980534628476,0.8
+Häusern,Hydroelectric,deNode,84,Energy Producer DE B,78.24390990095223,0.75
+Schwammenauel,Hydroelectric,deNode,77,Energy Producer DE B,10.954147386133313,0.8
+Heimbach,Hydroelectric,deNode,110,Energy Producer DE B,12.519025584152358,0.8
+Koepchenwerk,Hydroelectric,deNode,26,Energy Producer DE B,129.1024513365712,0.75
+Höchstädt,Hydroelectric,deNode,33,Energy Producer DE A,7.824390990095224,0.8
+Hohenwarte 1,Hydroelectric,deNode,56,Energy Producer DE B,46.78985812076944,0.75
+Hohenwarte 2,Hydroelectric,deNode,50,Energy Producer DE A,248.65914566522622,0.75
+Rheinkraftwerk Iffezheim,Hydroelectric,deNode,37,Energy Producer DE C,115.80098665340931,0.8
+KW Imst,Hydroelectric,deNode,59,Energy Producer DE A,69.63707981184749,0.8
+Ingolstadt,Hydroelectric,deNode,44,Energy Producer DE A,15.492294160388543,0.8
+KW Jenbach,Hydroelectric,deNode,88,Energy Producer DE C,61.81268882175227,0.9
+Kaufering,Hydroelectric,deNode,40,Energy Producer DE A,13.066732953459022,0.8
+Braunau-Simbach,Hydroelectric,deNode,62,Energy Producer DE C,39.121954950476116,0.8
+Unteropfingen,Hydroelectric,deNode,91,Energy Producer DE C,11.345366935638074,0.8
+Koblenz,Hydroelectric,deNode,64,Energy Producer DE A,12.519025584152358,0.8
+Walchensee,Hydroelectric,deNode,91,Energy Producer DE A,97.02244827718077,0.8
+Erzhausen,Hydroelectric,deNode,51,Energy Producer DE B,172.1366017820949,0.75
+KW Kühtai,Hydroelectric,deNode,34,Energy Producer DE C,113.06244980687597,0.75
+KW Kühtai,Hydroelectric,deNode,34,Energy Producer DE C,113.06244980687597,0.75
+Rheinkraftwerk Reckingen,Hydroelectric,deNode,73,Energy Producer DE B,14.866342881180925,0.8
+Laufenburg,Hydroelectric,deNode,101,Energy Producer DE B,81.68664193659414,0.8
+Faimingen,Hydroelectric,deNode,50,Energy Producer DE B,7.902634899996175,0.8
+Urspring,Hydroelectric,deNode,49,Energy Producer DE B,7.902634899996175,0.8
+Prem,Hydroelectric,deNode,44,Energy Producer DE C,15.022830700982828,0.8
+Lehmen,Hydroelectric,deNode,53,Energy Producer DE A,15.648781980190448,0.8
+Markersbach,Hydroelectric,deNode,36,Energy Producer DE C,817.8053462847528,0.75
+Meitingen,Hydroelectric,deNode,93,Energy Producer DE C,8.8415618188076035,0.8
+Merching,Hydroelectric,deNode,37,Energy Producer DE A,9.389269188114268,0.8
+Pumpspeicherkraftwerk Glems,Hydroelectric,deNode,51,Energy Producer DE B,70.41951891085701,0.75
+Pfrombach,Hydroelectric,deNode,86,Energy Producer DE C,17.44839190791235,0.8
+Müden,Hydroelectric,deNode,50,Energy Producer DE B,12.832001223756166,0.8
+Neef,Hydroelectric,deNode,49,Energy Producer DE A,12.832001223756166,0.8
+Walgauwerk,Hydroelectric,deNode,31,Energy Producer DE A,67.28976251481892,0.9
+Bittenbrunn,Hydroelectric,deNode,46,Energy Producer DE A,15.80526979999235,0.8
+Neuötting,Hydroelectric,deNode,64,Energy Producer DE B,20.421660484148536,0.8
+Niederaichbach,Hydroelectric,deNode,64,Energy Producer DE B,12.67551340395426,0.8
+Gummering,Hydroelectric,deNode,58,Energy Producer DE A,11.580098665340932,0.8
+Niederwartha,Hydroelectric,deNode,57,Energy Producer DE A,31.14107614057899,0.75
+Nußdorf,Hydroelectric,deNode,33,Energy Producer DE B,28.637271023748518,0.8
+Oberaudorf-Ebbs,Hydroelectric,deNode,23,Energy Producer DE A,23.47317297028567,0.8
+Aufkirchen,Hydroelectric,deNode,91,Energy Producer DE B,21.125855673257103,0.8
+Oberpeiching,Hydroelectric,deNode,61,Energy Producer DE B,9.311025278213316,0.8
+Kopswerk I,Hydroelectric,deNode,46,Energy Producer DE A,193.26245745535203,0.75
+Kopswerk II,Hydroelectric,deNode,7,Energy Producer DE C,410.78052697999925,0.75
+Obervermuntwerk 1,Hydroelectric,deNode,72,Energy Producer DE B,22.690733871276148,0.9
+Vermuntwerk,Hydroelectric,deNode,85,Energy Producer DE B,123.62537764350454,0.9
+Kachlet,Hydroelectric,deNode,88,Energy Producer DE B,42.016979616811355,0.8
+Passau-Ingling,Hydroelectric,deNode,50,Energy Producer DE B,33.80136907721137,0.8
+Perach,Hydroelectric,deNode,38,Energy Producer DE C,15.179318520784733,0.8
+Geisling,Hydroelectric,deNode,30,Energy Producer DE A,19.560977475238058,0.8
+Landau,Hydroelectric,deNode,31,Energy Producer DE A,9.85873264751998,0.8
+Pielweichs,Hydroelectric,deNode,21,Energy Producer DE B,9.85873264751998,0.8
+Prittriching,Hydroelectric,deNode,31,Energy Producer DE B,9.46751309801522,0.8
+KW Kaunertal,Hydroelectric,deNode,51,Energy Producer DE C,306.71612681173275,0.9
+Rain,Hydroelectric,deNode,59,Energy Producer DE B,8.528586179203794,0.8
+Bertoldsheim,Hydroelectric,deNode,47,Energy Producer DE C,14.788098971279972,0.8
+KW Rheinfelden,Hydroelectric,deNode,5,Energy Producer DE C,36.5399059237447,0.8
+Rheinkraftwerk Ryburg-Schwörstadt,Hydroelectric,deNode,85,Energy Producer DE B,23.47317297028567,0.8
+Rosenheim,Hydroelectric,deNode,55,Energy Producer DE B,27.463612375234234,0.8
+Roßhaupten,Hydroelectric,deNode,61,Energy Producer DE B,35.600979004933265,0.9
+Feldkirchen,Hydroelectric,deNode,45,Energy Producer DE B,29.889173582163757,0.8
+Schwabstadl,Hydroelectric,deNode,34,Energy Producer DE B,9.389269188114268,0.8
+Scheuring,Hydroelectric,deNode,35,Energy Producer DE B,9.545757007916173,0.8
+Detzem,Hydroelectric,deNode,53,Energy Producer DE C,18.778538376228536,0.8
+Bleiloch,Hydroelectric,deNode,83,Energy Producer DE C,62.43864010095988,0.75
+Unterbergen,Hydroelectric,deNode,32,Energy Producer DE C,9.624000917817126,0.8
+UPM Schongau,Hydroelectric,deNode,56,Energy Producer DE C,8.215610539599984,0.8
+Dornau,Hydroelectric,deNode,55,Energy Producer DE A,12.988489043558072,0.8
+KW Silz,Hydroelectric,deNode,34,Energy Producer DE A,391.2195495047612,0.9
+Teufelsbruck,Hydroelectric,deNode,77,Energy Producer DE B,19.560977475238058,0.8
+Schärding-Neuhaus,Hydroelectric,deNode,54,Energy Producer DE B,37.55707675245707,0.8
+Stammham,Hydroelectric,deNode,60,Energy Producer DE A,18.15258709702092,0.8
+Mühltal,Hydroelectric,deNode,91,Energy Producer DE B,8.76331790890665,0.8
+Straubing,Hydroelectric,deNode,21,Energy Producer DE B,16.82244062870473,0.8
+Tannheim,Hydroelectric,deNode,95,Energy Producer DE C,9.624000917817126,0.8
+Uppenborn 2,Hydroelectric,deNode,64,Energy Producer DE B,14.083903782171403,0.8
+Töging,Hydroelectric,deNode,91,Energy Producer DE B,66.74205514551225,0.8
+Kraftwerksgruppe Pfreimd,Hydroelectric,deNode,60,Energy Producer DE B,2.582049026731424,0.8
+Kraftwerksgruppe Pfreimd,Hydroelectric,deNode,63,Energy Producer DE A,1.4083903782171403,0.8
+Kraftwerksgruppe Pfreimd,Hydroelectric,deNode,57,Energy Producer DE A,21.908294772266625,0.75
+Kraftwerksgruppe Pfreimd,Hydroelectric,deNode,60,Energy Producer DE B,77.46147080194271,0.75
+Trier,Hydroelectric,deNode,53,Energy Producer DE A,14.70985506137902,0.8
+Lünerseewerk,Hydroelectric,deNode,58,Energy Producer DE B,186.22050556426632,0.75
+Kraftwerk 3,Hydroelectric,deNode,95,Energy Producer DE C,14.475123331676164,0.8
+Leitzach 1,Hydroelectric,deNode,32,Energy Producer DE A,37.55707675245707,0.75
+Leitzach 2,Hydroelectric,deNode,55,Energy Producer DE B,34.42732035641898,0.75
+Rodundwerk I,Hydroelectric,deNode,72,Energy Producer DE B,154.92294160388542,0.75
+Rodundwerk II,Hydroelectric,deNode,4,Energy Producer DE C,230.81953420780908,0.75
+PSW Vianden,Hydroelectric,deNode,0,Energy Producer DE A,152.57562430685687,0.75
+PSW Vianden,Hydroelectric,deNode,53,Energy Producer DE C,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,53,Energy Producer DE A,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,52,Energy Producer DE B,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,52,Energy Producer DE A,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,52,Energy Producer DE B,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,51,Energy Producer DE B,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,51,Energy Producer DE A,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,52,Energy Producer DE C,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,51,Energy Producer DE A,78.24390990095223,0.75
+PSW Vianden,Hydroelectric,deNode,40,Energy Producer DE A,153.35806340586637,0.75
+Vohburg,Hydroelectric,deNode,23,Energy Producer DE B,18.23083100692187,0.8
+Obernach,Hydroelectric,deNode,60,Energy Producer DE A,10.015220467321887,0.8
+Kraftwerk Waldshut,Hydroelectric,deNode,64,Energy Producer DE C,117.36586485142836,0.75
+Ettling,Hydroelectric,deNode,27,Energy Producer DE C,9.85873264751998,0.8
+Uppenborn 1,Hydroelectric,deNode,85,Energy Producer DE A,19.560977475238058,0.8
+Wasserburg,Hydroelectric,deNode,77,Energy Producer DE A,18.85678228612949,0.8
+Wehr,Hydroelectric,deNode,40,Energy Producer DE A,712.0195800986653,0.75
+Wendefurth,Hydroelectric,deNode,48,Energy Producer DE C,62.36039619105893,0.75
+Wintrich,Hydroelectric,deNode,50,Energy Producer DE C,15.648781980190448,0.8
+Witznau,Hydroelectric,deNode,72,Energy Producer DE C,172.1366017820949,0.75
+Zeltingen,Hydroelectric,deNode,51,Energy Producer DE B,10.641171746529503,0.8
+Niederaußem,Lignite PSC,deNode,47,Energy Producer DE A,326.85714285714283,0.3232
+Niederaußem,Lignite PSC,deNode,41,Energy Producer DE B,713.1428571428571,0.4216
+Niederaußem,Lignite PSC,deNode,41,Energy Producer DE C,691.1322751322751,0.4192
+Niederaußem,Lignite PSC,deNode,13,Energy Producer DE C,1038.8994708994708,0.4048
+Niederaußem,Lignite PSC,deNode,50,Energy Producer DE B,324.65608465608466,0.316
+Fortuna Nord,Lignite PSC,deNode,76,Energy Producer DE A,16.507936507936506,0.2536
+Kraftwerk,Lignite PSC,deNode,20,Energy Producer DE C,11.005291005291005,0.388
+Kraftwerk,Lignite PSC,deNode,20,Energy Producer DE B,11.005291005291005,0.388
+Lippendorf,Lignite PSC,deNode,15,Energy Producer DE C,962.9629629629629,0.4
+Braunkohlekraftwerk Lippendorf,Lignite PSC,deNode,16,Energy Producer DE C,962.9629629629629,0.3976
+Boxberg,Lignite PSC,deNode,36,Energy Producer DE C,511.7460317460317,0.3832
+Boxberg,Lignite PSC,deNode,35,Energy Producer DE C,511.7460317460317,0.3856
+Boxberg,Lignite PSC,deNode,15,Energy Producer DE B,943.1534391534391,0.4
+Boxberg,Lignite PSC,deNode,3,Energy Producer DE B,704.3386243386243,0.4288
+HKW Chemnitz  Nord II,Lignite PSC,deNode,27,Energy Producer DE A,62.510052910052906,0.3712
+HKW Chemnitz  Nord II,Lignite PSC,deNode,25,Energy Producer DE A,99.92804232804232,0.424
+HKW Cottbus,Lignite PSC,deNode,16,Energy Producer DE A,81.43915343915343,0.3976
+Kraftwerk Dessau,Lignite PSC,deNode,19,Energy Producer DE C,53.925925925925924,0.3904
+HKW Sachtleben,Lignite PSC,deNode,51,Energy Producer DE A,30.264550264550262,0.3136
+Kessel 4,Lignite PSC,deNode,32,Energy Producer DE C,10.234920634920636,0.3592
+Weisweiler,Lignite PSC,deNode,50,Energy Producer DE A,353.26984126984127,0.316
+Weisweiler,Lignite PSC,deNode,48,Energy Producer DE C,353.26984126984127,0.3208
+Weisweiler,Lignite PSC,deNode,41,Energy Producer DE B,729.6507936507936,0.3376
+Weisweiler,Lignite PSC,deNode,40,Energy Producer DE B,721.9470899470899,0.34
+P&L Werk Euskirchen,Lignite PSC,deNode,24,Energy Producer DE C,15.957671957671957,0.3784
+Heizkraftwerk FFO,Lignite PSC,deNode,18,Energy Producer DE A,49.52380952380952,0.3928
+Frechen/Wachtberg,Lignite PSC,deNode,56,Energy Producer DE B,193.69312169312167,0.3712
+BoA 2,Lignite PSC,deNode,3,Energy Producer DE C,1166.5608465608466,0.4288
+BoA 3,Lignite PSC,deNode,3,Energy Producer DE C,1166.5608465608466,0.4288
+Neurath,Lignite PSC,deNode,42,Energy Producer DE B,321.3544973544973,0.3352
+Neurath,Lignite PSC,deNode,43,Energy Producer DE A,323.55555555555554,0.3328
+Neurath,Lignite PSC,deNode,43,Energy Producer DE B,323.55555555555554,0.3328
+Neurath,Lignite PSC,deNode,40,Energy Producer DE C,668.0211640211639,0.34
+Neurath,Lignite PSC,deNode,39,Energy Producer DE A,664.7195767195767,0.3424
+Ville/Berrenrath,Lignite PSC,deNode,98,Energy Producer DE A,107.85185185185185,0.2008
+P&L Werk Jülich,Lignite PSC,deNode,2,Energy Producer DE A,25.53227513227513,0.43120000000000003
+FKK,Lignite PSC,deNode,26,Energy Producer DE B,36.86772486772487,0.3736
+HKW Merkenich,Lignite PSC,deNode,5,Energy Producer DE A,82.86984126984126,0.424
+P&L Werk Könnern,Lignite PSC,deNode,1,Energy Producer DE A,22.340740740740742,0.4336
+KW Jänschwalde,Lignite PSC,deNode,34,Energy Producer DE A,511.7460317460317,0.3904
+KW Jänschwalde,Lignite PSC,deNode,33,Energy Producer DE A,511.7460317460317,0.3904
+KW Jänschwalde,Lignite PSC,deNode,31,Energy Producer DE C,511.7460317460317,0.3904
+KW Jänschwalde,Lignite PSC,deNode,30,Energy Producer DE A,511.7460317460317,0.3904
+KW Jänschwalde,Lignite PSC,deNode,28,Energy Producer DE B,511.7460317460317,0.3904
+Schkopau,Lignite PSC,deNode,19,Energy Producer DE A,495.2380952380952,0.3904
+Schkopau,Lignite PSC,deNode,19,Energy Producer DE A,495.2380952380952,0.3904
+Grubenheizkraftwerk,Lignite PSC,deNode,36,Energy Producer DE B,49.52380952380952,0.3496
+Schwarze Pumpe,Lignite PSC,deNode,18,Energy Producer DE B,825.3968253968253,0.3928
+Schwarze Pumpe,Lignite PSC,deNode,17,Energy Producer DE C,825.3968253968253,0.3952
+Deuben,Lignite PSC,deNode,79,Energy Producer DE A,73.73544973544973,0.2464
+Wählitz,Lignite PSC,deNode,21,Energy Producer DE A,34.116402116402114,0.3856
+EZ1,Lignite PSC,deNode,22,Energy Producer DE B,25.642328042328042,0.3832
+Kohlekraftwerk,Lignite PSC,deNode,51,Energy Producer DE C,21.46031746031746,0.3136
+Werkskraftwerk Sappi Alfeld,CCGT,deNode,68,Energy Producer DE C,13.330410356054033,0.3267
+Heizkraftwerk Altbach/Deizisau,CCGT,deNode,18,Energy Producer DE C,78.7706066494102,0.3722
+Heizkraftwerk Altbach/Deizisau,CCGT,deNode,44,Energy Producer DE A,60.59277434570015,0.3046
+Heizkraftwerk Altbach/Deizisau,CCGT,deNode,42,Energy Producer DE A,69.07576275409818,0.3098
+Heizkraftwerk Altbach/Deizisau,CCGT,deNode,40,Energy Producer DE A,98.16029444003425,0.315
+Kesselhaus Zuckerfabrik,CCGT,deNode,22,Energy Producer DE B,18.299017852401445,0.3773
+GuD-Anlage,CCGT,deNode,2,Energy Producer DE A,56.957207884958144,0.5985
+Gasturbine,CCGT,deNode,11,Energy Producer DE A,37.20396344825989,0.3904
+Heizkraftwerk,CCGT,deNode,39,Energy Producer DE C,24.72185193304566,0.3586
+HKW Bad Salzungen,CCGT,deNode,21,Energy Producer DE A,11.754998223065828,0.3784
+KWK-Anlage Barby,CCGT,deNode,21,Energy Producer DE C,21.571027667069256,0.3784
+"GuD Baunatal, VW Werksgelände",CCGT,deNode,4,Energy Producer DE C,94.52472797929224,0.5895
+Kraftwerk,CCGT,deNode,20,Energy Producer DE B,3.635566460742009,0.3795
+Klingenberg,CCGT,deNode,34,Energy Producer DE B,198.7442998538965,0.4037
+Mitte,CCGT,deNode,19,Energy Producer DE A,538.0638361898174,0.522
+Charlottenburg,CCGT,deNode,40,Energy Producer DE B,174.50719011561642,0.38
+Lichterfelde,CCGT,deNode,43,Energy Producer DE B,174.50719011561642,0.3828
+Energieversogung Wedding,CCGT,deNode,43,Energy Producer DE A,18.177832303710044,0.3542
+Industriekraftwerk Bernburg (IKB),CCGT,deNode,21,Energy Producer DE B,170.26569591141742,0.513
+GuD Kraftwerk Hillegossen,CCGT,deNode,10,Energy Producer DE B,45.44458075927511,0.5625
+GuD Bitterfeld,CCGT,deNode,15,Energy Producer DE A,128.45668161288432,0.54
+Bochum,CCGT,deNode,11,Energy Producer DE C,25.08540857911986,0.3894
+HKW Hiltrop,CCGT,deNode,2,Energy Producer DE B,53.32164142421613,0.3993
+Heizkraftwerk Bomlitz,CCGT,deNode,46,Energy Producer DE B,26.78200626079947,0.3509
+Heizkraftwerk Karlstraße,CCGT,deNode,2,Energy Producer DE B,115.1262712568303,0.3993
+HKW,CCGT,deNode,18,Energy Producer DE A,43.626797528904106,0.3817
+Kirchmöser,CCGT,deNode,21,Energy Producer DE A,193.8968779062405,0.513
+HKW-Mitte,CCGT,deNode,44,Energy Producer DE A,24.23710973828006,0.4095
+HKW-Mitte,CCGT,deNode,5,Energy Producer DE B,89.67730603163622,0.585
+HKW-Nord,CCGT,deNode,50,Energy Producer DE C,30.296387172850075,0.289
+KWK-Anlage,CCGT,deNode,13,Energy Producer DE B,17.935461206327247,0.549
+Industriekraftwerk Breuberg,CCGT,deNode,16,Energy Producer DE B,13.815152550819635,0.3839
+Egger Kraftwerk Brilon,CCGT,deNode,19,Energy Producer DE C,16.36004907333904,0.3696
+Burghausen 01 - GT,CCGT,deNode,14,Energy Producer DE A,145.42265842968035,0.5445
+Burghausen 01 - DT,CCGT,deNode,36,Energy Producer DE A,60.59277434570015,0.3619
+Industriepark Werk Gendorf,CCGT,deNode,13,Energy Producer DE A,88.58663609341362,0.3872
+Energiezentrale,CCGT,deNode,10,Energy Producer DE B,1.0906699382226028,0.3905
+Energiezentrale,CCGT,deNode,24,Energy Producer DE A,12.36092596652283,0.3566
+GTKW Darmstadt,CCGT,deNode,2,Energy Producer DE B,114.64152906206468,0.4138
+Heizkraftwerk,CCGT,deNode,16,Energy Producer DE A,12.11855486914003,0.3774
+Dormagen,CCGT,deNode,15,Energy Producer DE B,710.1473153316058,0.54
+Dortmund,CCGT,deNode,11,Energy Producer DE A,31.50824265976408,0.3894
+HKW Dresden-Nossener Brücke,CCGT,deNode,20,Energy Producer DE A,315.0824265976408,0.5175
+HKW III/A,CCGT,deNode,13,Energy Producer DE B,48.47421947656012,0.3872
+HKW III/B,CCGT,deNode,10,Energy Producer DE C,283.5741839378767,0.5625
+"MT, Düren",CCGT,deNode,75,Energy Producer DE B,16.965976816796044,0.319
+GuD,CCGT,deNode,15,Energy Producer DE A,121.1855486914003,0.54
+Gasblock,CCGT,deNode,38,Energy Producer DE A,355.0736576658029,0.3597
+GT,CCGT,deNode,40,Energy Producer DE B,78.407050003336,0.315
+GT,CCGT,deNode,41,Energy Producer DE C,80.830760977164,0.3124
+Holthausen,CCGT,deNode,67,Energy Producer DE C,101.79586090077625,0.3278
+BHKW H.120,CCGT,deNode,3,Energy Producer DE A,25.570150773885466,0.3982
+Werkskraftwerk Sappi Ehingen,CCGT,deNode,38,Energy Producer DE C,4.847421947656012,0.3597
+Kombikraftwerk,CCGT,deNode,22,Energy Producer DE C,56.47246569019254,0.3773
+HKW Wiesengrund,CCGT,deNode,22,Energy Producer DE A,26.78200626079947,0.3773
+Huntorf,CCGT,deNode,37,Energy Producer DE C,389.00561129939496,0.3956
+HKW Eltmann,CCGT,deNode,8,Energy Producer DE A,69.07576275409818,0.3927
+Emden Gas,CCGT,deNode,42,Energy Producer DE C,63.01648531952816,0.3098
+HKW Iderhoffstraße,CCGT,deNode,19,Energy Producer DE C,13.330410356054033,0.3806
+HKW Erfurt-Ost,CCGT,deNode,16,Energy Producer DE A,92.70694474892123,0.5355
+HKW Erfurt-Ost,CCGT,deNode,1,Energy Producer DE C,39.5064888733965,0.603
+BHKW an Klinkerweg,CCGT,deNode,15,Energy Producer DE C,12.36092596652283,0.385
+HKW Erlangen,CCGT,deNode,10,Energy Producer DE C,26.176078517342468,0.5625
+HKW Erlangen,CCGT,deNode,1,Energy Producer DE B,8.11943176232382,0.603
+Weisweiler,CCGT,deNode,9,Energy Producer DE B,242.3710973828006,0.3956
+Weisweiler,CCGT,deNode,9,Energy Producer DE A,242.3710973828006,0.3956
+HKW Niederrad,CCGT,deNode,11,Energy Producer DE B,84.82988408398022,0.3894
+HKW West,CCGT,deNode,21,Energy Producer DE C,119.9736932044863,0.3784
+HKW Freiberg,CCGT,deNode,2,Energy Producer DE C,16.23886352464764,0.3993
+GuD Anlage WVK,CCGT,deNode,17,Energy Producer DE A,48.47421947656012,0.531
+HKW,CCGT,deNode,14,Energy Producer DE B,32.72009814667808,0.3861
+Kraftwerk 3,CCGT,deNode,3,Energy Producer DE B,31.75061375714688,0.3982
+Kraftwerk 2,CCGT,deNode,33,Energy Producer DE A,9.088916151855022,0.3652
+Heizkraftwerk Gera-Nord,CCGT,deNode,19,Energy Producer DE C,89.67730603163622,0.3806
+HKW Göttingen,CCGT,deNode,17,Energy Producer DE C,22.782883153983256,0.3828
+"HKW ""Helmshäger Berg""",CCGT,deNode,19,Energy Producer DE C,17.814275657635843,0.3696
+Staudinger,CCGT,deNode,38,Energy Producer DE A,693.1813385148097,0.3597
+Energiezentrum Mohn Media,CCGT,deNode,21,Energy Producer DE B,30.296387172850075,0.3784
+HKW Halle Trotha,CCGT,deNode,10,Energy Producer DE B,117.54998223065829,0.3905
+HKW Halle Trotha,CCGT,deNode,2,Energy Producer DE C,67.98509281587557,0.5985
+GuD Tiefstack,CCGT,deNode,6,Energy Producer DE B,153.90564683807838,0.5805
+Heizkraftwerk,CCGT,deNode,22,Energy Producer DE B,27.266748455565068,0.3773
+Trianel Gaskraftwerk,CCGT,deNode,7,Energy Producer DE B,505.4649235918307,0.576
+Trianel Gaskraftwerk,CCGT,deNode,7,Energy Producer DE A,510.06997444210384,0.576
+GKL,CCGT,deNode,17,Energy Producer DE A,278.7267619902207,0.5985
+KWKK Heidelberg,CCGT,deNode,14,Energy Producer DE C,16.36004907333904,0.3861
+IHKW Heidenheim,CCGT,deNode,1,Energy Producer DE C,22.904068702674657,0.4004
+Cuno Heizkraftwerk Herdecke,CCGT,deNode,8,Energy Producer DE B,505.34373804313924,0.5715
+Wintershall,CCGT,deNode,6,Energy Producer DE C,83.61802859706621,0.5805
+Knapsack Gas I,CCGT,deNode,9,Energy Producer DE C,969.4843895312024,0.567
+Knapsack Gas II,CCGT,deNode,2,Energy Producer DE A,521.0978593730213,0.5985
+Heizkraftwerk,CCGT,deNode,12,Energy Producer DE A,104.21957187460426,0.5535
+ADS-Anlage,CCGT,deNode,3,Energy Producer DE A,116.94405448720129,0.4112
+HKW Jena,CCGT,deNode,19,Energy Producer DE A,220.55769861834855,0.522
+HKW Karcherstr.,CCGT,deNode,26,Energy Producer DE C,14.057523648202435,0.3729
+P&L Werk Appeldorn,CCGT,deNode,13,Energy Producer DE B,13.815152550819635,0.3872
+Rheinhafen-Dampfkraftwerk,CCGT,deNode,17,Energy Producer DE B,427.7849868806431,0.531
+Heizkraftwerk West,CCGT,deNode,31,Energy Producer DE A,39.9912310681621,0.3674
+Kombi-HKW,CCGT,deNode,27,Energy Producer DE C,60.59277434570015,0.3718
+HKW Humboldtstr.,CCGT,deNode,10,Energy Producer DE A,26.054892968651064,0.3905
+KW Kirchlengern,CCGT,deNode,34,Energy Producer DE C,177.53682883290145,0.4545
+HKW Niehl 2,CCGT,deNode,10,Energy Producer DE C,500.4963160954832,0.576
+HKW Merkenich,CCGT,deNode,11,Energy Producer DE B,130.88039258671233,0.558
+HKW Merkenich,CCGT,deNode,5,Energy Producer DE C,18.783760047167046,0.396
+HKW Merheim,CCGT,deNode,14,Energy Producer DE B,19.147316693241248,0.5445
+KWK-Anlage Krefeld DT,CCGT,deNode,16,Energy Producer DE C,31.265871562381278,0.3839
+KWK-Anlage Krefeld VM,CCGT,deNode,16,Energy Producer DE C,16.965976816796044,0.4406
+Heizkraftwerk Krefeld,CCGT,deNode,4,Energy Producer DE C,15.269379135116438,0.3971
+K&N PFK AG EV,CCGT,deNode,22,Energy Producer DE A,15.887425433442578,0.5085
+GUD-Anlage DREWSEN,CCGT,deNode,15,Energy Producer DE B,15.75412132988204,0.54
+Landesbergen Gas,CCGT,deNode,42,Energy Producer DE A,67.86390726718417,0.3098
+Heizkraftwerk Leipzig-Nord,CCGT,deNode,19,Energy Producer DE C,202.3798663146385,0.585
+HKW-Mitte,CCGT,deNode,35,Energy Producer DE C,13.693967002128234,0.363
+HKW-West,CCGT,deNode,14,Energy Producer DE B,15.511750232499239,0.3861
+GuD Leuna,CCGT,deNode,17,Energy Producer DE C,47.26236398964612,0.531
+ILK-GuD,CCGT,deNode,21,Energy Producer DE B,42.41494204199011,0.513
+ILK-GuD,CCGT,deNode,21,Energy Producer DE C,42.41494204199011,0.513
+ILK-GuD,CCGT,deNode,21,Energy Producer DE B,44.83865301581811,0.513
+X-Kraftwerk,CCGT,deNode,34,Energy Producer DE B,32.72009814667808,0.3641
+Emsland,CCGT,deNode,41,Energy Producer DE C,140.57523648202434,0.423
+Emsland,CCGT,deNode,42,Energy Producer DE A,140.57523648202434,0.4185
+Emsland,CCGT,deNode,42,Energy Producer DE A,435.05611980212706,0.4185
+Emsland,CCGT,deNode,41,Energy Producer DE A,435.05611980212706,0.423
+Emsland,CCGT,deNode,5,Energy Producer DE C,1074.9158168927206,0.585
+BP Werk Lingen,CCGT,deNode,19,Energy Producer DE C,79.9824621363242,0.3806
+Industriekraftwerk Greifswald,CCGT,deNode,2,Energy Producer DE C,46.050508502732114,0.3993
+KW Mitte,CCGT,deNode,23,Energy Producer DE C,56.957207884958144,0.3592
+Kraftwerk Süd,CCGT,deNode,18,Energy Producer DE C,496.86074963474124,0.5265
+Kraftwerk Mitte,CCGT,deNode,10,Energy Producer DE A,602.8981047397165,0.5625
+BHKW Ludwigshafen,CCGT,deNode,7,Energy Producer DE C,15.148193586425037,0.3938
+Industriekraftwerk Ludwigshafen,CCGT,deNode,12,Energy Producer DE C,14.542265842968035,0.5535
+Kraftwerk Mainz,CCGT,deNode,15,Energy Producer DE C,526.1876524180601,0.54
+Kraftwerk Mainz,CCGT,deNode,39,Energy Producer DE C,405.971588116191,0.432
+Kraftwerk III,CCGT,deNode,42,Energy Producer DE B,74.04437025044558,0.5535
+Kraftwerk III,CCGT,deNode,41,Energy Producer DE A,94.03998578452662,0.5535
+Gemeinschaftskraftwerk Weig,CCGT,deNode,23,Energy Producer DE A,13.815152550819635,0.504
+Gemeinschaftskraftwerk Weig,CCGT,deNode,2,Energy Producer DE B,33.20484034144368,0.5985
+INEOS Kraftwerk,CCGT,deNode,20,Energy Producer DE B,29.08453168593607,0.3795
+EVC / GLOBALFOUNDRIES,CCGT,deNode,17,Energy Producer DE C,41.5666432011503,0.3828
+Süd DT1,CCGT,deNode,35,Energy Producer DE B,96.58488230704604,0.45
+Süd GT3,CCGT,deNode,35,Energy Producer DE C,118.6406521688809,0.45
+Süd GT2,CCGT,deNode,35,Energy Producer DE B,118.6406521688809,0.45
+Süd GT 61,CCGT,deNode,11,Energy Producer DE B,151.360750315559,0.558
+Süd GT 62,CCGT,deNode,11,Energy Producer DE B,150.14889482864498,0.558
+Süd DT60,CCGT,deNode,11,Energy Producer DE B,154.63276013022679,0.558
+Erweiterung Energiezentrale 2003,CCGT,deNode,12,Energy Producer DE B,9.016204822640184,0.3883
+Energiezentrale 2016,CCGT,deNode,1,Energy Producer DE C,20.35917218015525,0.4004
+Heizkraftwerk Hafen,CCGT,deNode,10,Energy Producer DE A,126.1541561877477,0.5625
+GuD-HKW Neubrandenburg,CCGT,deNode,18,Energy Producer DE C,90.88916151855022,0.5265
+FS-Karton,CCGT,deNode,23,Energy Producer DE C,22.904068702674657,0.3762
+Heizkraftwerk zur Papierfabrik,CCGT,deNode,19,Energy Producer DE A,21.934584313143457,0.3806
+Thyrow,CCGT,deNode,26,Energy Producer DE A,45.44458075927511,0.3514
+Thyrow,CCGT,deNode,28,Energy Producer DE A,44.23272527236111,0.3462
+Thyrow,CCGT,deNode,28,Energy Producer DE B,44.23272527236111,0.3462
+Thyrow,CCGT,deNode,28,Energy Producer DE B,44.23272527236111,0.3462
+Thyrow,CCGT,deNode,28,Energy Producer DE C,44.23272527236111,0.3462
+HKW Sandreuth,CCGT,deNode,10,Energy Producer DE A,90.88916151855022,0.5625
+HKW Sandreuth,CCGT,deNode,10,Energy Producer DE A,90.88916151855022,0.5625
+Franken 1,CCGT,deNode,42,Energy Producer DE C,464.14065148806316,0.4185
+Franken 1,CCGT,deNode,39,Energy Producer DE B,533.2164142421614,0.432
+GT1,CCGT,deNode,22,Energy Producer DE A,5.089793045038813,0.3618
+GT2,CCGT,deNode,22,Energy Producer DE B,5.089793045038813,0.3618
+GT3,CCGT,deNode,21,Energy Producer DE B,6.180462983261415,0.3644
+GT4,CCGT,deNode,20,Energy Producer DE B,6.180462983261415,0.367
+HKW 1,CCGT,deNode,44,Energy Producer DE B,27.99386174771347,0.3531
+HKW 2,CCGT,deNode,19,Energy Producer DE A,29.690459429393073,0.3806
+Obernburg,CCGT,deNode,95,Energy Producer DE B,43.626797528904106,0.18
+Obernburg,CCGT,deNode,20,Energy Producer DE C,77.5587511624962,0.5175
+HKW 1 Werk Offstein,CCGT,deNode,54,Energy Producer DE B,36.35566460742009,0.3421
+Heizkraftwerk Pforzheim GmbH,CCGT,deNode,35,Energy Producer DE B,49.92844606085693,0.45
+Hattorf,CCGT,deNode,2,Energy Producer DE C,42.41494204199011,0.3993
+Hattorf,CCGT,deNode,2,Energy Producer DE B,20.601543277538052,0.3993
+Kraftwerk Plattling,CCGT,deNode,5,Energy Producer DE C,143.60487519930936,0.585
+HKW Potsdam-Süd,CCGT,deNode,19,Energy Producer DE C,99.12977882956544,0.3806
+HBB,CCGT,deNode,14,Energy Producer DE A,29.08453168593607,0.3861
+Regensburg,CCGT,deNode,3,Energy Producer DE C,12.845668161288431,0.3982
+Kraftwerk Meggle,CCGT,deNode,15,Energy Producer DE B,18.299017852401445,0.385
+BHKW-Hauffstraße,CCGT,deNode,4,Energy Producer DE B,11.87618377175723,0.4574
+Solvay Kraftwerk Rheinberg,CCGT,deNode,40,Energy Producer DE C,95.73658346620624,0.3575
+Heizkraftwerk Evonik Rheinfelden,CCGT,deNode,36,Energy Producer DE B,19.026131144549847,0.3619
+Gasmotore,CCGT,deNode,4,Energy Producer DE A,11.87618377175723,0.4574
+Gasmotor 4,CCGT,deNode,2,Energy Producer DE A,11.149070479608827,0.4602
+Gasmotor 5,CCGT,deNode,3,Energy Producer DE A,5.210978593730212,0.4588
+GuD Marienehe,CCGT,deNode,19,Energy Producer DE A,130.88039258671233,0.522
+HKW Schwarza,CCGT,deNode,79,Energy Producer DE B,32.11417040322108,0.3146
+GuD-Anlage Rüsselsheim,CCGT,deNode,16,Energy Producer DE C,135.84900008305974,0.5355
+HKW Römerbrücke,CCGT,deNode,10,Energy Producer DE C,90.88916151855022,0.5625
+Gas- u. Dampfturbinenanlage Südraum,CCGT,deNode,3,Energy Producer DE A,46.77762179488052,0.3982
+UPM Schongau,CCGT,deNode,61,Energy Producer DE C,77.5587511624962,0.3344
+HKW3 UPM Schongau,CCGT,deNode,1,Energy Producer DE C,92.10101700546423,0.4004
+GuD Schwarzheide,CCGT,deNode,21,Energy Producer DE C,147.84636940350836,0.513
+HKW Schwerin Süd,CCGT,deNode,21,Energy Producer DE A,54.412311362438736,0.3784
+HKW Schwerin Lankow,CCGT,deNode,21,Energy Producer DE B,27.87267619902207,0.3784
+Heizkraftwerk Sindelfingen,CCGT,deNode,2,Energy Producer DE C,115.1262712568303,0.3993
+Gasturbinen-HKW St. Wendel,CCGT,deNode,1,Energy Producer DE B,23.63118199482306,0.4164
+Dow Stade,CCGT,deNode,0,Energy Producer DE B,190.26131144549848,0.6075
+KWK AOS GmbH,CCGT,deNode,3,Energy Producer DE B,37.20396344825989,0.4112
+GuD-Ikw Staßfurt,CCGT,deNode,0,Energy Producer DE B,121.1855486914003,0.6075
+Steinitz,CCGT,deNode,16,Energy Producer DE A,13.815152550819635,0.3839
+Heizkraftwerk Stendal,CCGT,deNode,21,Energy Producer DE C,26.660820712108066,0.3784
+HKW Pfaffenwald,CCGT,deNode,27,Energy Producer DE A,14.784636940350836,0.3718
+HKW Pfaffenwald,CCGT,deNode,46,Energy Producer DE C,13.693967002128234,0.3509
+HKW Pfaffenwald,CCGT,deNode,47,Energy Producer DE A,14.057523648202435,0.3498
+HKW Bohrhügel,CCGT,deNode,20,Energy Producer DE A,16.36004907333904,0.3795
+BHKW Obere Viehweide,CCGT,deNode,15,Energy Producer DE A,16.23886352464764,0.385
+Unterbreizbach,CCGT,deNode,20,Energy Producer DE B,24.23710973828006,0.3795
+PKV Kraftwerk,CCGT,deNode,26,Energy Producer DE C,70.40880378970358,0.3729
+PKV Kraftwerk,CCGT,deNode,47,Energy Producer DE B,0.5816906337187214,0.3498
+Gemeinschaftskraftwerk Irsching,CCGT,deNode,5,Energy Producer DE A,1025.2297419292465,0.585
+Ulrich Hartmann (Irsching),CCGT,deNode,4,Energy Producer DE B,679.8509281587557,0.5895
+STW,CCGT,deNode,18,Energy Producer DE B,23.14643980005746,0.3817
+Gersteinwerk,CCGT,deNode,42,Energy Producer DE C,66.65205178027017,0.3098
+Gersteinwerk,CCGT,deNode,42,Energy Producer DE C,66.65205178027017,0.4185
+Gersteinwerk,CCGT,deNode,42,Energy Producer DE A,66.65205178027017,0.4185
+Gersteinwerk,CCGT,deNode,42,Energy Producer DE A,430.2086978544711,0.4185
+Gersteinwerk,CCGT,deNode,31,Energy Producer DE A,135.72781453436835,0.3384
+Gasturbine,CCGT,deNode,19,Energy Producer DE C,62.89529977083676,0.522
+Wi-Biebrich,CCGT,deNode,9,Energy Producer DE A,30.296387172850075,0.3916
+BHKW,CCGT,deNode,2,Energy Producer DE B,15.75412132988204,0.3993
+Spitzenlastkraftwerk Wolfen,CCGT,deNode,18,Energy Producer DE B,48.47421947656012,0.3817
+BHKW Braunschweig,CCGT,deNode,1,Energy Producer DE C,12.603297063905632,0.4004
+Co-Generation,CCGT,deNode,24,Energy Producer DE C,13.936338099511035,0.3751
+HKW Wörth,CCGT,deNode,8,Energy Producer DE A,71.49947372792617,0.3927
+Sigmundshall,CCGT,deNode,41,Energy Producer DE C,13.330410356054033,0.3564
+HKW Barmen,CCGT,deNode,10,Energy Producer DE B,99.37214992694825,0.5625
+Heizkraftwerke an der Friedensbrücke,CCGT,deNode,44,Energy Producer DE B,27.87267619902207,0.4095
+Heizkraftwerke an der Friedensbrücke,CCGT,deNode,22,Energy Producer DE A,30.296387172850075,0.5085
+Heizkraftwerke an der Friedensbrücke,CCGT,deNode,6,Energy Producer DE C,35.749736863963086,0.5805
+Heizkraftwerke an der Friedensbrücke,CCGT,deNode,10,Energy Producer DE A,53.927569167673134,0.5625
+EZ1,CCGT,deNode,22,Energy Producer DE B,28.23623284509627,0.3773
+Zielitz,CCGT,deNode,19,Energy Producer DE B,32.72009814667808,0.3806
+Gaskraftwerk,CCGT,deNode,19,Energy Producer DE C,18.299017852401445,0.3806
+Brokdorf,Nuclear PGT,deNode,29,Energy Producer DE B,1600.2522068095839,0.33
+Grohnde,Nuclear PGT,deNode,30,Energy Producer DE A,1543.5056746532157,0.33
+Isar 2,Nuclear PGT,deNode,27,Energy Producer DE C,1600.2522068095839,0.33
+Kernkraft Gundremmingen,Nuclear PGT,deNode,31,Energy Producer DE B,1461.7906683480455,0.33
+Kernkraftwerk Emsland,Nuclear PGT,deNode,27,Energy Producer DE A,1516.267339218159,0.33
+Gemeinschaftskernkraftwerk Neckarwestheim II,Nuclear PGT,deNode,26,Energy Producer DE A,1486.7591424968475,0.33
+Kernkraftwerk Philippsburg 2,Nuclear PGT,deNode,30,Energy Producer DE C,1591.172761664565,0.33
+Notstromdiesel,Fuel oil PGT,deNode,24,Energy Producer DE C,0.5290000542564158,0.3751
+Kraftwerk,Fuel oil PGT,deNode,20,Energy Producer DE C,0.8464000868102654,0.3795
+Wilmersdorf,Fuel oil PGT,deNode,38,Energy Producer DE C,194.67201996636103,0.3597
+Moabit,Fuel oil PGT,deNode,44,Energy Producer DE B,35.97200368943628,0.3046
+KW Mittelsbüren,Fuel oil PGT,deNode,40,Energy Producer DE B,90.98800933210352,0.315
+GT,Fuel oil PGT,deNode,43,Energy Producer DE B,91.1996093538061,0.3072
+Kraftwerk Fulda,Fuel oil PGT,deNode,4,Energy Producer DE A,26.238402691118225,0.3971
+Spitzenlastkraftwerk Sermuth,Fuel oil PGT,deNode,20,Energy Producer DE C,17.98600184471814,0.3795
+Spitzenlastkraftwerk Großkayna,Fuel oil PGT,deNode,21,Energy Producer DE B,126.9600130215398,0.3644
+Ingolstadt,Fuel oil PGT,deNode,42,Energy Producer DE A,408.38804188595304,0.3553
+Ingolstadt,Fuel oil PGT,deNode,41,Energy Producer DE C,408.38804188595304,0.3564
+Kraftwerk Hausham,Fuel oil PGT,deNode,33,Energy Producer DE A,24.545602517497695,0.3332
+Kraftwerk Hausham,Fuel oil PGT,deNode,33,Energy Producer DE C,24.545602517497695,0.3332
+Kraftwerk Hausham,Fuel oil PGT,deNode,33,Energy Producer DE A,24.545602517497695,0.3332
+Kraftwerk Hausham,Fuel oil PGT,deNode,33,Energy Producer DE B,24.545602517497695,0.3332
+Kraftwerk Raffinerie Heide,Fuel oil PGT,deNode,53,Energy Producer DE B,47.08100482882101,0.3432
+Abfallentsorgungszentrum Asdonkshof,Fuel oil PGT,deNode,18,Energy Producer DE A,5.078400520861591,0.3817
+MiRO,Fuel oil PGT,deNode,20,Energy Producer DE C,47.61000488307742,0.3795
+MiRO,Fuel oil PGT,deNode,20,Energy Producer DE B,26.45000271282079,0.3795
+Raffineriekraftwerk Köln Godorf,Fuel oil PGT,deNode,11,Energy Producer DE B,121.03521241386795,0.38
+Raffineriekraftwerk,Fuel oil PGT,deNode,18,Energy Producer DE C,97.86501003743693,0.38
+Dampfkraftwerk Marbach am Neckar,Fuel oil PGT,deNode,44,Energy Producer DE C,81.88920839889317,0.3046
+Dampfkraftwerk Marbach am Neckar,Fuel oil PGT,deNode,40,Energy Producer DE A,89.93000922359069,0.38
+Dampfkraftwerk Marbach am Neckar,Fuel oil PGT,deNode,40,Energy Producer DE C,278.7830285931311,0.38
+DKW Nord,Fuel oil PGT,deNode,27,Energy Producer DE B,12.061201237046282,0.3718
+Itzehoe,Fuel oil PGT,deNode,43,Energy Producer DE A,93.10400954912919,0.3542
+Audorf,Fuel oil PGT,deNode,42,Energy Producer DE B,92.04600944061636,0.3553
+IKS PCK Schwedt,Fuel oil PGT,deNode,43,Energy Producer DE B,29.624003038359287,0.3542
+IKS PCK Schwedt,Fuel oil PGT,deNode,21,Energy Producer DE A,36.50100374369269,0.3784
+IKS PCK Schwedt,Fuel oil PGT,deNode,17,Energy Producer DE B,112.14801150236016,0.3828
+IKS PCK Schwedt,Fuel oil PGT,deNode,17,Energy Producer DE A,112.14801150236016,0.3828
+IKS PCK Schwedt,Fuel oil PGT,deNode,4,Energy Producer DE B,62.42200640225707,0.3971
+DKW Leinau,Fuel oil PGT,deNode,37,Energy Producer DE C,12.061201237046282,0.3608
+Restmüll-Heizkraftwerk Stuttgart-Münster,Fuel oil PGT,deNode,41,Energy Producer DE A,24.651402528348978,0.3124
+Restmüll-Heizkraftwerk Stuttgart-Münster,Fuel oil PGT,deNode,41,Energy Producer DE C,24.651402528348978,0.3124
+Restmüll-Heizkraftwerk Stuttgart-Münster,Fuel oil PGT,deNode,41,Energy Producer DE C,24.651402528348978,0.3124
+Irsching,Fuel oil PGT,deNode,41,Energy Producer DE A,439.07004503282513,0.3564
+Kraftwerk Walheim,Fuel oil PGT,deNode,34,Energy Producer DE C,143.8880147577451,0.3306
+SKW Gasturbine,Fuel oil PGT,deNode,27,Energy Producer DE B,25.39200260430796,0.3488
+SKW Diesel,Fuel oil PGT,deNode,37,Energy Producer DE A,11.109001139384732,0.3608
+Wedel,Fuel oil PGT,deNode,43,Energy Producer DE C,53.429005479898,0.3072
+Wedel,Fuel oil PGT,deNode,43,Energy Producer DE C,53.429005479898,0.3072
+Kraftwerk,Fuel oil PGT,deNode,53,Energy Producer DE B,70.14540719440073,0.38
+Wilhelmshaven,Fuel oil PGT,deNode,42,Energy Producer DE A,59.248006076718575,0.3098
+Spitzenlastanlage Barmen,Fuel oil PGT,deNode,7,Energy Producer DE C,63.4800065107699,0.38
+Zolling,Fuel oil PGT,deNode,39,Energy Producer DE A,48.66800499159026,0.3176
+Offshore wind PGT plant DE 1,Offshore wind PGT,deNode,24,Pref Investor Verylarge DE,600,1.02
+Offshore wind PGT plant DE 2,Offshore wind PGT,deNode,26,Pref Investor Medium DE,600,1.02
+Offshore wind PGT plant DE 3,Offshore wind PGT,deNode,5,Pref Investor Verylarge DE,600,1.02
+Offshore wind PGT plant DE 4,Offshore wind PGT,deNode,11,Pref Investor Small DE,600,1.02
+Offshore wind PGT plant DE 5,Offshore wind PGT,deNode,27,Pref Investor Large DE,600,1.02
+Offshore wind PGT plant DE 6,Offshore wind PGT,deNode,25,Pref Investor Large DE,600,1.02
+Last Offshore wind PGT plant DE,Offshore wind PGT,deNode,15,Pref Investor Verylarge DE,559,1.02
+Onshore wind PGT plant DE 1,Onshore wind PGT,deNode,26,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 2,Onshore wind PGT,deNode,27,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 3,Onshore wind PGT,deNode,27,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 4,Onshore wind PGT,deNode,28,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 5,Onshore wind PGT,deNode,12,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 6,Onshore wind PGT,deNode,22,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 7,Onshore wind PGT,deNode,27,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 8,Onshore wind PGT,deNode,23,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 9,Onshore wind PGT,deNode,26,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 10,Onshore wind PGT,deNode,3,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 11,Onshore wind PGT,deNode,4,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 12,Onshore wind PGT,deNode,6,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 13,Onshore wind PGT,deNode,9,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 14,Onshore wind PGT,deNode,17,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 15,Onshore wind PGT,deNode,26,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 16,Onshore wind PGT,deNode,19,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 17,Onshore wind PGT,deNode,16,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 18,Onshore wind PGT,deNode,4,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 19,Onshore wind PGT,deNode,1,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 20,Onshore wind PGT,deNode,30,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 21,Onshore wind PGT,deNode,24,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 22,Onshore wind PGT,deNode,10,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 23,Onshore wind PGT,deNode,20,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 24,Onshore wind PGT,deNode,18,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 25,Onshore wind PGT,deNode,11,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 26,Onshore wind PGT,deNode,27,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 27,Onshore wind PGT,deNode,15,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 28,Onshore wind PGT,deNode,21,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 29,Onshore wind PGT,deNode,4,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 30,Onshore wind PGT,deNode,6,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 31,Onshore wind PGT,deNode,17,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 32,Onshore wind PGT,deNode,19,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 33,Onshore wind PGT,deNode,9,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 34,Onshore wind PGT,deNode,29,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 35,Onshore wind PGT,deNode,25,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 36,Onshore wind PGT,deNode,15,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 37,Onshore wind PGT,deNode,6,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 38,Onshore wind PGT,deNode,24,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 39,Onshore wind PGT,deNode,16,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 40,Onshore wind PGT,deNode,8,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 41,Onshore wind PGT,deNode,21,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 42,Onshore wind PGT,deNode,26,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 43,Onshore wind PGT,deNode,25,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 44,Onshore wind PGT,deNode,25,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 45,Onshore wind PGT,deNode,26,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 46,Onshore wind PGT,deNode,22,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 47,Onshore wind PGT,deNode,30,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 48,Onshore wind PGT,deNode,8,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 49,Onshore wind PGT,deNode,12,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 50,Onshore wind PGT,deNode,22,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 51,Onshore wind PGT,deNode,21,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 52,Onshore wind PGT,deNode,16,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 53,Onshore wind PGT,deNode,25,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 54,Onshore wind PGT,deNode,4,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 55,Onshore wind PGT,deNode,20,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 56,Onshore wind PGT,deNode,4,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 57,Onshore wind PGT,deNode,7,Pref Investor Medium DE,600,1
+Onshore wind PGT plant DE 58,Onshore wind PGT,deNode,19,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 59,Onshore wind PGT,deNode,21,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 60,Onshore wind PGT,deNode,20,Pref Investor Small DE,600,1
+Onshore wind PGT plant DE 61,Onshore wind PGT,deNode,11,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 62,Onshore wind PGT,deNode,22,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 63,Onshore wind PGT,deNode,11,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 64,Onshore wind PGT,deNode,25,Pref Investor Verylarge DE,600,1
+Onshore wind PGT plant DE 65,Onshore wind PGT,deNode,20,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 66,Onshore wind PGT,deNode,4,Pref Investor Large DE,600,1
+Onshore wind PGT plant DE 67,Onshore wind PGT,deNode,26,Pref Investor Small DE,600,1
+Last Onshore wind PGT plant DE,Onshore wind PGT,deNode,7,Pref Investor Verylarge DE,99.58333333332848,1
+Photovoltaic PGT plant DE 1,Photovoltaic PGT,deNode,11,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 2,Photovoltaic PGT,deNode,12,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 3,Photovoltaic PGT,deNode,23,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 4,Photovoltaic PGT,deNode,24,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 5,Photovoltaic PGT,deNode,24,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 6,Photovoltaic PGT,deNode,21,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 7,Photovoltaic PGT,deNode,16,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 8,Photovoltaic PGT,deNode,17,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 9,Photovoltaic PGT,deNode,21,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 10,Photovoltaic PGT,deNode,7,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 11,Photovoltaic PGT,deNode,8,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 12,Photovoltaic PGT,deNode,6,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 13,Photovoltaic PGT,deNode,10,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 14,Photovoltaic PGT,deNode,6,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 15,Photovoltaic PGT,deNode,1,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 16,Photovoltaic PGT,deNode,10,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 17,Photovoltaic PGT,deNode,15,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 18,Photovoltaic PGT,deNode,3,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 19,Photovoltaic PGT,deNode,7,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 20,Photovoltaic PGT,deNode,19,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 21,Photovoltaic PGT,deNode,18,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 22,Photovoltaic PGT,deNode,9,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 23,Photovoltaic PGT,deNode,27,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 24,Photovoltaic PGT,deNode,1,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 25,Photovoltaic PGT,deNode,23,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 26,Photovoltaic PGT,deNode,3,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 27,Photovoltaic PGT,deNode,25,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 28,Photovoltaic PGT,deNode,25,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 29,Photovoltaic PGT,deNode,27,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 30,Photovoltaic PGT,deNode,10,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 31,Photovoltaic PGT,deNode,18,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 32,Photovoltaic PGT,deNode,1,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 33,Photovoltaic PGT,deNode,23,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 34,Photovoltaic PGT,deNode,26,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 35,Photovoltaic PGT,deNode,22,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 36,Photovoltaic PGT,deNode,13,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 37,Photovoltaic PGT,deNode,16,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 38,Photovoltaic PGT,deNode,27,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 39,Photovoltaic PGT,deNode,19,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 40,Photovoltaic PGT,deNode,5,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 41,Photovoltaic PGT,deNode,27,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 42,Photovoltaic PGT,deNode,13,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 43,Photovoltaic PGT,deNode,29,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 44,Photovoltaic PGT,deNode,26,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 45,Photovoltaic PGT,deNode,29,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 46,Photovoltaic PGT,deNode,17,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 47,Photovoltaic PGT,deNode,5,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 48,Photovoltaic PGT,deNode,3,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 49,Photovoltaic PGT,deNode,12,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 50,Photovoltaic PGT,deNode,2,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 51,Photovoltaic PGT,deNode,25,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 52,Photovoltaic PGT,deNode,11,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 53,Photovoltaic PGT,deNode,20,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 54,Photovoltaic PGT,deNode,30,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 55,Photovoltaic PGT,deNode,20,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 56,Photovoltaic PGT,deNode,10,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 57,Photovoltaic PGT,deNode,17,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 58,Photovoltaic PGT,deNode,7,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 59,Photovoltaic PGT,deNode,29,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 60,Photovoltaic PGT,deNode,22,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 61,Photovoltaic PGT,deNode,14,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 62,Photovoltaic PGT,deNode,12,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 63,Photovoltaic PGT,deNode,20,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 64,Photovoltaic PGT,deNode,8,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 65,Photovoltaic PGT,deNode,24,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 66,Photovoltaic PGT,deNode,24,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 67,Photovoltaic PGT,deNode,24,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 68,Photovoltaic PGT,deNode,26,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 69,Photovoltaic PGT,deNode,18,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 70,Photovoltaic PGT,deNode,26,Pref Investor Verylarge DE,500,1.1
+Photovoltaic PGT plant DE 71,Photovoltaic PGT,deNode,19,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 72,Photovoltaic PGT,deNode,13,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 73,Photovoltaic PGT,deNode,2,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 74,Photovoltaic PGT,deNode,28,Pref Investor Large DE,500,1.1
+Photovoltaic PGT plant DE 75,Photovoltaic PGT,deNode,21,Pref Investor Small DE,500,1.1
+Photovoltaic PGT plant DE 76,Photovoltaic PGT,deNode,29,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 77,Photovoltaic PGT,deNode,2,Pref Investor Medium DE,500,1.1
+Photovoltaic PGT plant DE 78,Photovoltaic PGT,deNode,8,Pref Investor Verylarge DE,500,1.1
+Last Photovoltaic PGT plant DE,Photovoltaic PGT,deNode,7,Pref Investor Verylarge DE,321.8333333333285,1.1
+AL-1,CCGT,nlNode,24,Energy Producer NL B,86.84687254832038,0.59
+AL-2,CCGT,nlNode,26,Energy Producer NL A,77.04158048641324,0.59
+Amercentrale (A8),Coal PSC,nlNode,5,Energy Producer NL C,910.1720269259536,0.44
+Amercentrale (A9),Coal PSC,nlNode,11,Energy Producer NL C,907.3497880827723,0.44
+Amylum,CCGT,nlNode,27,Energy Producer NL C,9.805292061907139,0.59
+Attero Noord B.V.,Biomass CHP,nlNode,25,Energy Producer NL A,397,0.35
+BOZ,CCGT,nlNode,15,Energy Producer NL C,46.224948291847944,0.59
+Borssele 30,Nuclear PGT,nlNode,26,Energy Producer NL B,486,0.33
+CUIJK,Coal PSC,nlNode,27,Energy Producer NL C,35.277985539765645,0.44
+Centrale Bergum (CB10),CCGT,nlNode,27,Energy Producer NL C,100.85443263675916,0.59
+Centrale Bergum (CB20),CCGT,nlNode,28,Energy Producer NL B,100.85443263675916,0.59
+Centrale Diemen (DM33),CCGT,nlNode,12,Energy Producer NL C,348.7882462021254,0.59
+Centrale Diemen (DM34),CCGT,nlNode,22,Energy Producer NL C,609.3288638470865,0.59
+Centrale Galileistraat (FG1),CCGT,nlNode,27,Energy Producer NL B,0,0.59
+Centrale Gelderland (CG13),Coal PSC,nlNode,23,Energy Producer NL C,0,0.44
+Centrale Harculo (HC60),CCGT,nlNode,26,Energy Producer NL B,0,0.59
+Centrale Hemweg (HW-7),CCGT,nlNode,3,Energy Producer NL A,819.442265173668,0.59
+Centrale Hemweg (HW-8),Coal PSC,nlNode,4,Energy Producer NL A,917.2276240339067,0.44
+Centrale Hemweg (HW-9),CCGT,nlNode,6,Energy Producer NL B,605.1265958205549,0.59
+Centrale Lage Weide,CCGT,nlNode,9,Energy Producer NL C,345.98673418443764,0.59
+Centrale Maasvlakte (MV1),Coal PSC,nlNode,17,Energy Producer NL A,0,0.44
+Centrale Maasvlakte (MV2),Coal PSC,nlNode,26,Energy Producer NL B,0,0.44
+Centrale Maasvlakte (MV3),Coal PSC,nlNode,19,Energy Producer NL B,1507.0755422587883,0.44
+Centrale Merwedekanaal,CCGT,nlNode,16,Energy Producer NL B,317.9716140075601,0.59
+Centrale RoCa (RoCa3),CCGT,nlNode,4,Energy Producer NL C,305.3648099279652,0.59
+Centrale Swentibold,CCGT,nlNode,1,Energy Producer NL C,315.17010198987236,0.59
+Centrale Velsen (VN24),CCGT,nlNode,30,Energy Producer NL C,642.9470080593396,0.59
+Centrale Velsen (VN25),CCGT,nlNode,24,Energy Producer NL A,525.2835033164539,0.59
+Clauscentrale (A),CCGT,nlNode,10,Energy Producer NL B,896.4838456600813,0.59
+Clauscentrale (C1),CCGT,nlNode,20,Energy Producer NL A,434.2343627416019,0.59
+Clauscentrale (C2),CCGT,nlNode,18,Energy Producer NL C,434.2343627416019,0.59
+Clauscentrale (C3),CCGT,nlNode,11,Energy Producer NL A,434.2343627416019,0.59
+Delesto (Del1),CCGT,nlNode,27,Energy Producer NL A,252.13608159189786,0.59
+Delesto (Del2),CCGT,nlNode,15,Energy Producer NL A,490.26460309535696,0.59
+Dongecentrale,CCGT,nlNode,21,Energy Producer NL C,0,0.59
+EDH,CCGT,nlNode,4,Energy Producer NL C,156.88467299051422,0.59
+EHV,CCGT,nlNode,6,Energy Producer NL B,0,0.59
+ELSTA,CCGT,nlNode,17,Energy Producer NL A,638.744740032808,0.59
+ENSCH,CCGT,nlNode,19,Energy Producer NL B,0,0.59
+ERICA,CCGT,nlNode,9,Energy Producer NL A,88.24762855716426,0.59
+Eemscentrale (EC20),CCGT,nlNode,29,Energy Producer NL A,183.4990371585479,0.59
+Eemscentrale (EC3),CCGT,nlNode,25,Energy Producer NL B,502.87140717495186,0.59
+Eemscentrale (EC4),CCGT,nlNode,15,Energy Producer NL B,502.87140717495186,0.59
+Eemscentrale (EC5),CCGT,nlNode,6,Energy Producer NL B,505.6729191926396,0.59
+Eemscentrale (EC6),CCGT,nlNode,24,Energy Producer NL B,502.87140717495186,0.59
+Eemscentrale (EC7),CCGT,nlNode,16,Energy Producer NL A,504.2721631837957,0.59
+HM12,CCGT,nlNode,8,Energy Producer NL A,0,0.59
+HTB,CCGT,nlNode,21,Energy Producer NL C,44.824192283004066,0.59
+KLAZI,CCGT,nlNode,26,Energy Producer NL C,88.24762855716426,0.59
+LD12,CCGT,nlNode,25,Energy Producer NL A,116.26274873404179,0.59
+LWE5,CCGT,nlNode,25,Energy Producer NL C,0,0.59
+MK11,CCGT,nlNode,26,Energy Producer NL B,144.27786891091935,0.59
+MVL380 Centrale Rotterdam 1,Coal PSC,nlNode,22,Energy Producer NL C,1031.5282971827473,0.44
+Magnum Centrale (10),CCGT,nlNode,30,Energy Producer NL A,612.1303758647742,0.59
+Magnum Centrale (20),CCGT,nlNode,8,Energy Producer NL B,612.1303758647742,0.59
+Magnum Centrale (30),CCGT,nlNode,12,Energy Producer NL C,612.1303758647742,0.59
+Maxima Centrale (FL30),CCGT,nlNode,22,Energy Producer NL C,0,0.59
+Maxima Centrale (FL4),CCGT,nlNode,21,Energy Producer NL C,609.3288638470865,0.59
+Maxima Centrale (FL5),CCGT,nlNode,16,Energy Producer NL A,612.1303758647742,0.59
+Moerdijk 1,CCGT,nlNode,25,Energy Producer NL A,487.4630910776692,0.59
+Moerdijk 2,CCGT,nlNode,4,Energy Producer NL A,596.7220597674916,0.59
+PU-1,CCGT,nlNode,20,Energy Producer NL C,93.85065259253976,0.59
+ROC1,CCGT,nlNode,4,Energy Producer NL B,33.61814421225305,0.59
+ROC2,CCGT,nlNode,7,Energy Producer NL B,33.61814421225305,0.59
+Rijnmond II,CCGT,nlNode,19,Energy Producer NL B,599.5235717851793,0.59
+Rijnmond1,CCGT,nlNode,21,Energy Producer NL A,1120.6048070751017,0.59
+SAL,CCGT,nlNode,20,Energy Producer NL C,84.04536053063262,0.59
+Sloecentrale (unit 10),CCGT,nlNode,11,Energy Producer NL B,605.1265958205549,0.59
+Sloecentrale (unit 20),CCGT,nlNode,22,Energy Producer NL C,605.1265958205549,0.59
+UCML,CCGT,nlNode,11,Energy Producer NL C,110.6597246986663,0.59
+Willem Alexander Centrale,Coal PSC,nlNode,25,Energy Producer NL C,351.3687359760658,0.44
+gresnigt,CCGT,nlNode,20,Energy Producer NL C,33.61814421225305,0.59
+Only Offshore wind PGT plant NL,Offshore wind PGT,nlNode,17,Pref Investor Verylarge NL,378,1.02
+Onshore wind PGT plant NL 1,Onshore wind PGT,nlNode,24,Pref Investor Medium NL,600,1
+Onshore wind PGT plant NL 2,Onshore wind PGT,nlNode,7,Pref Investor Verylarge NL,600,1
+Onshore wind PGT plant NL 3,Onshore wind PGT,nlNode,10,Pref Investor Small NL,600,1
+Onshore wind PGT plant NL 4,Onshore wind PGT,nlNode,30,Pref Investor Large NL,600,1
+Onshore wind PGT plant NL 5,Onshore wind PGT,nlNode,3,Pref Investor Large NL,600,1
+Last Onshore wind PGT plant NL,Onshore wind PGT,nlNode,6,Pref Investor Verylarge NL,65,1
+Photovoltaic PGT plant NL 1,Photovoltaic PGT,nlNode,21,Pref Investor Large NL,500,1.1
+Photovoltaic PGT plant NL 2,Photovoltaic PGT,nlNode,4,Pref Investor Verylarge NL,500,1.1
+Photovoltaic PGT plant NL 3,Photovoltaic PGT,nlNode,11,Pref Investor Small NL,500,1.1
+Photovoltaic PGT plant NL 4,Photovoltaic PGT,nlNode,6,Pref Investor Large NL,500,1.1
+Last Photovoltaic PGT plant NL,Photovoltaic PGT,nlNode,4,Pref Investor Medium NL,9.999999999999773,1.1
