@@ -867,7 +867,7 @@ public class Reps {
             Segment segment, long time,
             boolean forecast) {
 
-        Optional<PowerPlantDispatchPlan> plan = powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time).filter(p -> p.getPowerPlant().equals(plant)).filter(p -> p.getSegment().equals(segment)).filter(p -> p.isForecast() == forecast).findFirst();
+        Optional<PowerPlantDispatchPlan> plan = powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time && p.getPowerPlant().equals(plant) && p.getSegment().equals(segment) && p.isForecast() == forecast).findFirst();
         //return plan.get();
        // return plan.orElse(null);
         if (plan.isPresent()) {
@@ -878,13 +878,23 @@ public class Reps {
     }
 
     //TODO this is an expensive method!!
-    public List<PowerPlantDispatchPlan> findPowerPlantDispatchPlansForPowerPlantForTime(PowerPlant plant,
-            long time,
-            boolean forecast) {
+//    public List<PowerPlantDispatchPlan> findPowerPlantDispatchPlansForPowerPlantForTime(PowerPlant plant,
+//            long time,
+//            boolean forecast) {
+//
+//        return powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time).filter(p -> p.isForecast() == forecast).filter(p -> p.getPowerPlant().equals(plant)).collect(Collectors.toList());
+//    }
 
-        return powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time).filter(p -> p.isForecast() == forecast).filter(p -> p.getPowerPlant().equals(plant)).collect(Collectors.toList());
-    }
+//    //TODO EC sped up
+//    public long countPowerPlantDispatchPlansForPowerPlantForTime(PowerPlant plant,
+//            long time,
+//            Segment segment,
+//            boolean forecast) {
+//
+//        return powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time && p.isForecast() == forecast && p.getPowerPlant().equals(plant) && p.getSegment().equals(segment)).count();
+//    }
 
+    
     public List<PowerPlantDispatchPlan> findSortedPowerPlantDispatchPlansForSegmentForTime(Segment segment,
             long time, boolean forecast) {
         List<PowerPlantDispatchPlan> list = powerPlantDispatchPlans.stream().filter(p -> p.getTime() == time).filter(p -> p.getSegment() == segment).filter(p -> p.isForecast() == forecast).collect(Collectors.toList());
@@ -1374,7 +1384,7 @@ public class Reps {
     }
 
     public List<CashFlow> getCashFlowsForPowerPlant(PowerPlant plant, long tick) {
-        return cashFlows.stream().filter(p -> p.getTime() == tick).filter(p -> p.getRegardingPowerPlant() != null).filter(p -> p.getRegardingPowerPlant().equals(plant)).collect(Collectors.toList());
+        return cashFlows.stream().filter(p -> p.getTime() == tick && p.getRegardingPowerPlant() != null && p.getRegardingPowerPlant().equals(plant)).collect(Collectors.toList());
     }
 
     public double calculateFullLoadHoursOfPowerPlant(PowerPlant plant, long tick) {
@@ -1615,11 +1625,11 @@ public class Reps {
             double price, double bidWithoutCO2, double spotMarketCapacity,
             double longTermContractCapacity, int status, boolean forecast) {
         
-        //TODO Update if already exists!
-         long count = findPowerPlantDispatchPlansForPowerPlantForTime(plant, time, forecast).stream().filter(p -> (p.getSegment().equals(segment))).count();
-         if (count > 0) {
-             logger.warning("I found a plan already! ERROR should not create a new one");
-         }
+        //TODO Update if already exists! Seems not to go wrong but take much time, so I commented this out.
+//         long count = countPowerPlantDispatchPlansForPowerPlantForTime(plant, time, segment, forecast);
+//         if (count > 0) {
+//             logger.warning("I found a plan already! ERROR should not create a new one");
+//         }
 
         PowerPlantDispatchPlan plan = new PowerPlantDispatchPlan();
         plan.setPowerPlant(plant);
