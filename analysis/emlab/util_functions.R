@@ -423,6 +423,7 @@ get_vars_from_multiple_columns <- function(data, prefix, vars, value){
   
   data <- data %>% 
     get_data_by_prefix(col_prefix = prefix, value = value) %>% 
+    # TODO expensive function
     separate(col = "key", into = c(prefix_cols,vars), sep = "\\.") %>% 
     select(-one_of(prefix_cols))
   
