@@ -332,17 +332,25 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
 
 
 
-	public double determineExpectedMarginalFuelCost(PowerPlant powerPlant, Map<Substance, Double> expectedFuelPrices) {
-	      double fc = 0d;
-	      logger.finer("Fuel mix of plant: " + powerPlant + " of owner " + powerPlant.getOwner() + " is " + powerPlant.getFuelMix());
-	      for (SubstanceShareInFuelMix mix : powerPlant.getFuelMix()) {
-	          double amount = mix.getShare();
-	          logger.finer("amount of fuel: " + amount);
-	          logger.finer("fuel prices: " + expectedFuelPrices.size());
-	          double fuelPrice = expectedFuelPrices.get(mix.getSubstance());
-	          fc += amount * fuelPrice;
-	      }
-	      return fc;
+	public double determineExpectedMarginalFuelCost(PowerPlant powerPlant, Map<Substance, Double> expectedFuelPrices) {  
+		
+		double fc = 0d;
+		
+		if(powerPlant.getFuelMix() != null) {
+	    
+		
+			logger.finer("Fuel mix of plant: " + powerPlant + " of owner " + powerPlant.getOwner() + " is " + powerPlant.getFuelMix());
+		      
+		      
+		      for (SubstanceShareInFuelMix mix : powerPlant.getFuelMix()) {
+		          double amount = mix.getShare();
+		          logger.finer("amount of fuel: " + amount);
+		          logger.finer("fuel prices: " + expectedFuelPrices.size());
+		          double fuelPrice = expectedFuelPrices.get(mix.getSubstance());
+		          fc += amount * fuelPrice;
+		      }
+			}
+		return fc;
 	  }
 
 

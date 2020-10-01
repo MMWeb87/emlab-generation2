@@ -457,17 +457,19 @@ public class PowerPlant {
     }
 
     public double calculateEmissionIntensity() {
-
+ 
         double emission = 0d;
-        for (SubstanceShareInFuelMix sub : this.getFuelMix()) {
-            Substance substance = sub.getSubstance();
-            double fuelAmount = sub.getShare();
-            double co2density = substance.getCo2Density()
-                    * (1 - this.getTechnology().getCo2CaptureEffciency());
-
-            // determine the total cost per MWh production of this plant
-            double emissionForThisFuel = fuelAmount * co2density;
-            emission += emissionForThisFuel;
+        if(this.getFuelMix() != null) {
+	        for (SubstanceShareInFuelMix sub : this.getFuelMix()) {
+	            Substance substance = sub.getSubstance();
+	            double fuelAmount = sub.getShare();
+	            double co2density = substance.getCo2Density()
+	                    * (1 - this.getTechnology().getCo2CaptureEffciency());
+	
+	            // determine the total cost per MWh production of this plant
+	            double emissionForThisFuel = fuelAmount * co2density;
+	            emission += emissionForThisFuel;
+	        }
         }
 
         return emission;
