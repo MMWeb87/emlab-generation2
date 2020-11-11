@@ -13,7 +13,6 @@ import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.Government;
 import emlab.gen.domain.agent.NationalGovernment;
 import emlab.gen.domain.agent.Regulator;
-import emlab.gen.domain.agent.TargetInvestor;
 import emlab.gen.domain.factory.FuelFactory;
 import emlab.gen.domain.factory.LDCFactory;
 import emlab.gen.domain.factory.PowerPlantCSVFactory;
@@ -21,7 +20,6 @@ import emlab.gen.domain.gis.Zone;
 import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.market.electricity.SegmentLoad;
 import emlab.gen.domain.policy.EmpiricalMappingFunctionParameter;
-import emlab.gen.domain.policy.PowerGeneratingTechnologyTarget;
 import emlab.gen.domain.policy.renewablesupport.BiasFactor;
 import emlab.gen.domain.policy.renewablesupport.RenewablePotentialLimit;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportFipScheme;
@@ -35,12 +33,9 @@ import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
-import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesRole;
 import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole;
 import emlab.gen.role.investment.InvestInPowerGenerationTechnologiesWithTenderRole;
-import emlab.gen.role.investment.TargetInvestmentRole;
 import emlab.gen.trend.GeometricTrend;
-import emlab.gen.trend.HourlyCSVTimeSeries;
 import emlab.gen.trend.StepTrend;
 import emlab.gen.trend.TimeSeriesCSVReader;
 import emlab.gen.trend.TriangularTrend;
@@ -48,9 +43,7 @@ import emlab.gen.trend.TriangularTrend;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  *
@@ -74,6 +67,9 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 	@Override
 	public void build(Schedule schedule) {
+		
+		ScenarioPropertiesReader props = new ScenarioPropertiesReader();
+		props.loadProperties("00_auction_scenario");
 
 		Reps reps = schedule.reps;
 
@@ -89,8 +85,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		reps.emlabModel.setRealRenewableDataImplemented(true);
 		reps.emlabModel.setCo2TradingImplemented(true);
 		reps.emlabModel.setLongTermContractsImplemented(false);
-		//reps.emlabModel.setDismantleBehaviour("Loss");
-		reps.emlabModel.setDismantleBehaviour("Lifetime");
+		reps.emlabModel.setDismantleBehaviour("Lifetime"); // or LOSS
 		
 
 		reps.emlabModel.setName("EMLab Model");
@@ -168,7 +163,6 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 
 		// Load 
-
 		TimeSeriesCSVReader lcReaderNL = new TimeSeriesCSVReader();
 		lcReaderNL.setFilename("/data/ldcNLDE-hourly.csv");
 		lcReaderNL.setDelimiter(",");
@@ -250,7 +244,6 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		ElectricitySpotMarket netherlandsElectricitySpotMarket = reps.createElectricitySpotMarket("DutchMarket", 2000, 40, false, electricity, demandGrowthTrendNL, loadDurationCurveNL, nl);
 		ElectricitySpotMarket germanyElectricitySpotMarket = reps.createElectricitySpotMarket("GermanMarket", 2000, 40, false, electricity, demandGrowthTrendDE, loadDurationCurveDE, de);
 
-
 		reps.createCO2Auction("CO2Auction", 0, true, co2);      
 
 		EnergyConsumer energyConsumer = new EnergyConsumer();
@@ -284,7 +277,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.5);
+		minCo2PriceTrend.setIncrement(props.getAsDouble("minCo2PriceIncreament"));
 
 		
 		reps.government = new Government();
@@ -313,6 +306,8 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		// ——————————————————————————————————————————————————
 		// Technologies
 		// ——————————————————————————————————————————————————
+		
+		
 
 		GeometricTrend coalPSCInvestmentCostTimeSeries = new GeometricTrend();
 		coalPSCInvestmentCostTimeSeries.setStart(1365530);
@@ -376,7 +371,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		lignitePSC.setInvestmentCostTimeSeries(lignitePSCInvestmentCostTimeSeries);
 		Set<Substance> lignitePSCFuels = new HashSet<>();
 		lignitePSCFuels.add(ligniteCoal);
-		lignitePSC.setFuels(lignitePSCFuels);        
+		lignitePSC.setFuels(lignitePSCFuels);
 
 		GeometricTrend biomassCHPInvestmentCostTimeSeries = new GeometricTrend();
 		biomassCHPInvestmentCostTimeSeries.setStart(1703320);
@@ -537,15 +532,24 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		Set<Substance> nuclearPGTFuels = new HashSet<>();
 		nuclearPGTFuels.add(uranium);
 		nuclearPGT.setFuels(nuclearPGTFuels);
+		
+		TimeSeriesCSVReader pvInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+		pvInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvInvestmentCostTimeSeries.setDelimiter(",");
+		pvInvestmentCostTimeSeries.setStartingYear(-50);
+		pvInvestmentCostTimeSeries.setVariableName("PV_Inv");
 
-		GeometricTrend pvInvestmentCostTimeSeries = new GeometricTrend();
-		pvInvestmentCostTimeSeries.setStart(2048300);
-
-		GeometricTrend pvFixedOperatingCostTimeSeries = new GeometricTrend();
-		pvFixedOperatingCostTimeSeries.setStart(20480);
-
-		GeometricTrend pvEfficiencyTimeSeries = new GeometricTrend();
-		pvEfficiencyTimeSeries.setStart(1);
+		TimeSeriesCSVReader pvFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+		pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvFixedOperatingCostTimeSeries.setDelimiter(",");
+		pvFixedOperatingCostTimeSeries.setStartingYear(-50);
+		pvFixedOperatingCostTimeSeries.setVariableName("PV_OM");
+		
+		TimeSeriesCSVReader pvEfficiencyTimeSeries = new TimeSeriesCSVReader();
+		pvEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		pvEfficiencyTimeSeries.setDelimiter(",");
+		pvEfficiencyTimeSeries.setStartingYear(-50);
+		pvEfficiencyTimeSeries.setVariableName("PV_Eff");
 
 		PowerGeneratingTechnology pv = reps.createPowerGeneratingTechnology();
 		pv.setName("Photovoltaic PGT");
@@ -598,15 +602,26 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		hydro.setInvestmentCostTimeSeries(hydroInvestmentCostTimeSeries);
 		Set<Substance> hydroPGTFuels = new HashSet<>();
 		hydro.setFuels(hydroPGTFuels);
+		
+		
+		TimeSeriesCSVReader windOnshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+		windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreInvestmentCostTimeSeries.setDelimiter(",");
+		windOnshoreInvestmentCostTimeSeries.setStartingYear(-50);
+		windOnshoreInvestmentCostTimeSeries.setVariableName("Wind_Inv");
 
-		GeometricTrend windOnshoreInvestmentCostTimeSeries = new GeometricTrend();
-		windOnshoreInvestmentCostTimeSeries.setStart(1214600);
+		TimeSeriesCSVReader windOnshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+		windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreFixedOperatingCostTimeSeries.setDelimiter(",");
+		windOnshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
+		windOnshoreFixedOperatingCostTimeSeries.setVariableName("Wind_OM");
+		
+		TimeSeriesCSVReader windOnshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
+		windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreEfficiencyTimeSeries.setDelimiter(",");
+		windOnshoreEfficiencyTimeSeries.setStartingYear(-50);
+		windOnshoreEfficiencyTimeSeries.setVariableName("Wind_Eff");
 
-		GeometricTrend windOnshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-		windOnshoreFixedOperatingCostTimeSeries.setStart(18220);
-
-		GeometricTrend windOnshoreEfficiencyTimeSeries = new GeometricTrend();
-		windOnshoreEfficiencyTimeSeries.setStart(1);
 
 		PowerGeneratingTechnology windOnshore = reps.createPowerGeneratingTechnology();
 		windOnshore.setName("Onshore wind PGT");
@@ -629,15 +644,25 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		windOnshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries);        
 		Set<Substance> windOnshorePGTFuels = new HashSet<>();
 		windOnshore.setFuels(windOnshorePGTFuels);
+		
+		TimeSeriesCSVReader windOffshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
+		windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreInvestmentCostTimeSeries.setDelimiter(",");
+		windOffshoreInvestmentCostTimeSeries.setStartingYear(-50);
+		windOffshoreInvestmentCostTimeSeries.setVariableName("WindOffshore_Inv");
 
-		GeometricTrend windOffshoreInvestmentCostTimeSeries = new GeometricTrend();
-		windOffshoreInvestmentCostTimeSeries.setStart(2450770);
-
-		GeometricTrend windOffshoreFixedOperatingCostTimeSeries = new GeometricTrend();
-		windOffshoreFixedOperatingCostTimeSeries.setStart(73520);
-
-		GeometricTrend windOffshoreEfficiencyTimeSeries = new GeometricTrend();
-		windOffshoreEfficiencyTimeSeries.setStart(1);
+		TimeSeriesCSVReader windOffshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
+		windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreFixedOperatingCostTimeSeries.setDelimiter(",");
+		windOffshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
+		windOffshoreFixedOperatingCostTimeSeries.setVariableName("WindOffshore_OM");
+		
+		TimeSeriesCSVReader windOffshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
+		windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreEfficiencyTimeSeries.setDelimiter(",");
+		windOffshoreEfficiencyTimeSeries.setStartingYear(-50);
+		windOffshoreEfficiencyTimeSeries.setVariableName("WindOffshore_Eff");
+		
 
 		PowerGeneratingTechnology windOffshore = reps.createPowerGeneratingTechnology();
 		windOffshore.setName("Offshore wind PGT");
@@ -673,7 +698,6 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		conventionalPowerGeneratingTechnologies.add(coalPSC);
 
 
-
 		// Profiles for intermittent technologies
 		windProfileOnShoreNL.setIntermittentTechnology(windOnshore);
 		windProfileOffShoreNL.setIntermittentTechnology(windOffshore);
@@ -688,7 +712,7 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		// Producers with preferences 
 		// ——————————————————————————————————————————————————
 		
-		reps.emlabModel.setEmpiricalPreferenceActive(true);
+		reps.emlabModel.setEmpiricalPreferenceActive(props.getAsBoolean("empiricalPreferences"));
 	
 		// Must correspond to names used below in technology definition
 		String utilityLevelsTechnologyPV = "Photovoltaic PGT";
@@ -1212,49 +1236,54 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 		// ——————————————————————————————————————————————————
 		// Empirical mapping parameters
 		// ——————————————————————————————————————————————————
+  
+		
+		// Based on: 1602242918580-Scenario_NL_DE_intermittent_auction_pref-EMlabModelRole-DefaultReporter
 
+	    EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
+			empiricalMappingFunction1.setModelledRoeMin(0.0312290553665691);
+	    empiricalMappingFunction1.setModelledRoeMax(0.246137607641006);
+	    empiricalMappingFunction1.setIntercept(0.0350961652117127);
+	    empiricalMappingFunction1.setSlope(0.186125677999637);
+	    empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
+	    empiricalMappingFunction1.setTechnology(windOnshore); 
+	    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
+	    EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
+			empiricalMappingFunction2.setModelledRoeMin(0.049401491542954);
+	    empiricalMappingFunction2.setModelledRoeMax(0.576690417776646);
+	    empiricalMappingFunction2.setIntercept(0.0548899827404762);
+	    empiricalMappingFunction2.setSlope(0.0758597383899395);
+	    empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
+	    empiricalMappingFunction2.setTechnology(windOffshore); 
+	    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
+	    EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
+			empiricalMappingFunction3.setModelledRoeMin(0.122493330952725);
+	    empiricalMappingFunction3.setModelledRoeMax(0.221477708947399);
+	    empiricalMappingFunction3.setIntercept(-0.0160192329010469);
+	    empiricalMappingFunction3.setSlope(0.404104170883937);
+	    empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
+	    empiricalMappingFunction3.setTechnology(pv); 
+	    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
+	    EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
+			empiricalMappingFunction4.setModelledRoeMin(0.00554999316756439);
+	    empiricalMappingFunction4.setModelledRoeMax(0.0201800345922119);
+	    empiricalMappingFunction4.setIntercept(0.0405896165317145);
+	    empiricalMappingFunction4.setSlope(2.73410025569792);
+	    empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
+	    empiricalMappingFunction4.setTechnology(windOnshore); 
+	    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
+	    EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
+			empiricalMappingFunction5.setModelledRoeMin(0.00336285886775488);
+	    empiricalMappingFunction5.setModelledRoeMax(0.0500063884367621);
+	    empiricalMappingFunction5.setIntercept(0.0930530732173046);
+	    empiricalMappingFunction5.setSlope(0.857568035043781);
+	    empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
+	    empiricalMappingFunction5.setTechnology(windOffshore); 
+	    reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
+	    
 		// Based on: 1598437148250-Scenario_NL_DE_intermittent_auction_pref-EMlabModelRole-DefaultReporter
 
-		EmpiricalMappingFunctionParameter empiricalMappingFunction1 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction1.setModelledRoeMin(0.000760488946978429);
-		empiricalMappingFunction1.setModelledRoeMax(0.0430803891776251);
-		empiricalMappingFunction1.setIntercept(0.037136655664699);
-		empiricalMappingFunction1.setSlope(0.945181812386063);
-		empiricalMappingFunction1.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction1.setTechnology(windOnshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction1);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction2 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction2.setModelledRoeMin(0.000138081126685592);
-		empiricalMappingFunction2.setModelledRoeMax(0.0383461183452311);
-		empiricalMappingFunction2.setIntercept(0.0661408632244188);
-		empiricalMappingFunction2.setSlope(1.04690015274024);
-		empiricalMappingFunction2.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction2.setTechnology(windOffshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction2);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction3 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction3.setModelledRoeMin(0.000323307931090386);
-		empiricalMappingFunction3.setModelledRoeMax(0.0130897153524349);
-		empiricalMappingFunction3.setIntercept(0.0317982179369931);
-		empiricalMappingFunction3.setSlope(3.13322289347611);
-		empiricalMappingFunction3.setMarket(germanyElectricitySpotMarket);
-		empiricalMappingFunction3.setTechnology(pv); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction3);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction4 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction4.setModelledRoeMin(0.000327027643665566);
-		empiricalMappingFunction4.setModelledRoeMax(0.0176105224382806);
-		empiricalMappingFunction4.setIntercept(0.0525722335651492);
-		empiricalMappingFunction4.setSlope(2.31434674962049);
-		empiricalMappingFunction4.setMarket(netherlandsElectricitySpotMarket);
-		empiricalMappingFunction4.setTechnology(windOnshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction4);
-		EmpiricalMappingFunctionParameter empiricalMappingFunction5 = new EmpiricalMappingFunctionParameter();
-		empiricalMappingFunction5.setModelledRoeMin(1.49805965180911e-06);
-		empiricalMappingFunction5.setModelledRoeMax(0.011395894168865);
-		empiricalMappingFunction5.setIntercept(0.0925446113267664);
-		empiricalMappingFunction5.setSlope(3.51049758290018);
-		empiricalMappingFunction5.setMarket(netherlandsElectricitySpotMarket);
-		empiricalMappingFunction5.setTechnology(windOffshore); 
-		reps.empiricalMappingFunctionParameters.add(empiricalMappingFunction5);
+
 		EmpiricalMappingFunctionParameter empiricalMappingFunction6 = new EmpiricalMappingFunctionParameter();
 		empiricalMappingFunction6.setModelledRoeMin(0.00049285033968858);
 		empiricalMappingFunction6.setModelledRoeMax(0.0183891030478593);
@@ -1283,8 +1312,8 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// setups
 
-		reps.emlabModel.setFeedInPremiumImplemented(true);
-		reps.emlabModel.setRenewableTenderSchemeImplemented(true);
+		reps.emlabModel.setFeedInPremiumImplemented(props.getAsBoolean("policyFIPImplemented"));
+		reps.emlabModel.setRenewableTenderSchemeImplemented(props.getAsBoolean("policyTenderImplemented"));
 
 		Regulator regulatorNl = new Regulator();
 		regulatorNl.setName("regulatorNetherlands");
@@ -1355,22 +1384,54 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Renewable Tender Scheme
 		// ——————————————————————————————————————————————————
+				
+		long nlPhaseOutTick = 10;
+		long nlTenderDuration = 17;
 
-		RenewableSupportSchemeTender renewableSupportSchemeNL = new RenewableSupportSchemeTender();
-		renewableSupportSchemeNL.setName("MyTestOnshoreTender");
-		renewableSupportSchemeNL.setFutureTenderOperationStartTime(2);
-		renewableSupportSchemeNL.setSupportSchemeDuration(17);
-		renewableSupportSchemeNL.setTechnologySpecificityEnabled(true);
-		renewableSupportSchemeNL.setExpostRevenueCalculation(true);
-		renewableSupportSchemeNL.setRegulator(regulatorNl);
-
+		RenewableSupportSchemeTender renewableSupportSchemeNL1 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeNL1.setName("OnshoreTender");
+		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(props.getAsLong("tenderNlPhaseoutOnshore"));
+		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
+		renewableSupportSchemeNL1.setRegulator(regulatorNl);
 		// Define eligible technologies (for those, bias factors and data needs to be available down below)
 		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleNLTender = new HashSet<>();
 		powerGeneratingTechnologiesEligibleNLTender.add(windOnshore);
-		powerGeneratingTechnologiesEligibleNLTender.add(pv);
-		powerGeneratingTechnologiesEligibleNLTender.add(windOffshore);
-		renewableSupportSchemeNL.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleNLTender);
-		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeNL);
+		renewableSupportSchemeNL1.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleNLTender);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeNL1);		
+		
+		
+		RenewableSupportSchemeTender renewableSupportSchemeNL2 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeNL2.setName("OffshoreTender");
+		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(props.getAsLong("tenderNlPhaseoutOffshore"));
+		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
+		renewableSupportSchemeNL2.setRegulator(regulatorNl);
+		// Define eligible technologies (for those, bias factors and data needs to be available down below)
+		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleNLTender2 = new HashSet<>();
+		powerGeneratingTechnologiesEligibleNLTender2.add(windOffshore);
+		renewableSupportSchemeNL2.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleNLTender2);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeNL2);
+		
+		RenewableSupportSchemeTender renewableSupportSchemeNL3 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeNL3.setName("PVTender");
+		renewableSupportSchemeNL3.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeNL3.setSupportSchemeDuration(nlTenderDuration);
+		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(props.getAsLong("tenderNlPhaseoutPV"));
+		renewableSupportSchemeNL3.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeNL3.setExpostRevenueCalculation(true);
+		renewableSupportSchemeNL3.setRegulator(regulatorNl);
+		// Define eligible technologies (for those, bias factors and data needs to be available down below)
+		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleNLTender3 = new HashSet<>();
+		powerGeneratingTechnologiesEligibleNLTender3.add(pv);
+		renewableSupportSchemeNL3.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleNLTender3);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeNL3);
+		
+		
 
 
 		// Renewable Targets - Technology neutral
@@ -1541,22 +1602,57 @@ public class Scenario_NL_DE_intermittent_auction_pref implements Scenario {
 
 		// Renewable Tender Scheme
 		// ——————————————————————————————————————————————————
-
-		RenewableSupportSchemeTender renewableSupportSchemeDE = new RenewableSupportSchemeTender();
-		renewableSupportSchemeDE.setName("MyTestTender DE");
-		renewableSupportSchemeDE.setFutureTenderOperationStartTime(2);
-		renewableSupportSchemeDE.setSupportSchemeDuration(17);
-		renewableSupportSchemeDE.setTechnologySpecificityEnabled(true);
-		renewableSupportSchemeDE.setExpostRevenueCalculation(true);
-		renewableSupportSchemeDE.setRegulator(regulatorDe);
-
+		
+		
+		long dePhaseOutTick = 10;
+		long deTenderDuration = 17;		
+		
+		
+		RenewableSupportSchemeTender renewableSupportSchemeDE1 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeDE1.setName("OnshoreTender DE");
+		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(props.getAsLong("tenderDePhaseoutOnshore"));
+		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
+		renewableSupportSchemeDE1.setRegulator(regulatorDe);
 		// Define eligible technologies (for those, bias factors and data needs to be available down below)
-		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleDETender = new HashSet<>();
-		powerGeneratingTechnologiesEligibleDETender.add(windOnshore);
-		powerGeneratingTechnologiesEligibleDETender.add(pv);
-		powerGeneratingTechnologiesEligibleDETender.add(windOffshore);
-		renewableSupportSchemeDE.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleDETender);
-		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeDE);
+		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleDETender1 = new HashSet<>();
+		powerGeneratingTechnologiesEligibleDETender1.add(windOnshore);
+		renewableSupportSchemeDE1.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleDETender1);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeDE1);
+			
+		
+		RenewableSupportSchemeTender renewableSupportSchemeDE2 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeDE2.setName("OffshoreTender DE");
+		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(props.getAsLong("tenderDePhaseoutOffshore"));
+		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
+		renewableSupportSchemeDE2.setRegulator(regulatorDe);
+		// Define eligible technologies (for those, bias factors and data needs to be available down below)
+		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleDETender2 = new HashSet<>();
+		powerGeneratingTechnologiesEligibleDETender2.add(windOffshore);
+		renewableSupportSchemeDE2.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleDETender2);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeDE2);
+		
+		
+		RenewableSupportSchemeTender renewableSupportSchemeDE3 = new RenewableSupportSchemeTender();
+		renewableSupportSchemeDE3.setName("PVTender DE");
+		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
+		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(props.getAsLong("tenderDePhaseoutPV"));
+		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
+		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
+		renewableSupportSchemeDE3.setRegulator(regulatorDe);
+		// Define eligible technologies (for those, bias factors and data needs to be available down below)
+		Set<PowerGeneratingTechnology> powerGeneratingTechnologiesEligibleDETender3 = new HashSet<>();
+		powerGeneratingTechnologiesEligibleDETender3.add(pv);
+		renewableSupportSchemeDE3.setPowerGeneratingTechnologiesEligible(powerGeneratingTechnologiesEligibleDETender3);
+		reps.renewableSupportSchemeTenders.add(renewableSupportSchemeDE3);
+		
+		
 
 
 		// Renewable Targets - Technology neutral
