@@ -54,7 +54,8 @@ public class FinancialExpectationReportCSVConverter implements CSVEntryConverter
 		row.add(String.valueOf(report.getRunningHours()));
 		row.add(String.valueOf(report.getWacc()));
 		row.add(String.valueOf(report.getTotalUtility()));
-  
+		row.add(String.valueOf(report.getLCOE()));
+
 	    		
         return row.toArray(new String[row.size()]);
         

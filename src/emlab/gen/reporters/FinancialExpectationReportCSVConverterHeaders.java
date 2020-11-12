@@ -65,6 +65,8 @@ public class FinancialExpectationReportCSVConverterHeaders implements CSVEntryCo
         row.add("wacc");
         
         row.add("utility.total");
+        row.add("lcoe");
+
 
 
         return row.toArray(new String[row.size()]);

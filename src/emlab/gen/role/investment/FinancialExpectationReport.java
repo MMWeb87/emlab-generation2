@@ -45,6 +45,7 @@ public class FinancialExpectationReport {
     private double runningHours;
     private double wacc;
     private double totalUtility;
+    private double LCOE;
 
 	private int investmentRound;
    
@@ -243,6 +244,14 @@ public class FinancialExpectationReport {
 
 	public int getInvestmentRound() {
 		return investmentRound;
+	}
+
+	public double getLCOE() {
+		return LCOE;
+	}
+
+	public void setLCOE(double lCOE) {
+		LCOE = lCOE;
 	} 
 
 }

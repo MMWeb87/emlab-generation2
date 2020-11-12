@@ -198,7 +198,7 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
                         		report.setTotalUtility(totalUtility);
                         		
                         		
-	                        		// utilities
+                        		report.setLCOE(financialExpectation.getProjectCost() / financialExpectation.getDiscountedGeneration());
 
 
                         		getReps().financialExpectationReports.add(report);
