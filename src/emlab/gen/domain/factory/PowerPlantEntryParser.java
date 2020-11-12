@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.googlecode.jcsv.reader.CSVEntryParser;
 
+import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.contract.Loan;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
@@ -64,10 +65,11 @@ public class PowerPlantEntryParser implements CSVEntryParser<PowerPlant> {
      *
      */
     public PowerPlantEntryParser(List<EnergyProducer> producers, List<PowerGeneratingTechnology> technologies,
-            List<PowerGridNode> powerGridNodes) {
+            List<PowerGridNode> powerGridNodes, Reps reps) {
         this.producers = producers;
         this.technologies = technologies;
         this.powerGridNodes = powerGridNodes;
+        this.reps = reps;
 
     }
 
@@ -179,11 +181,11 @@ public class PowerPlantEntryParser implements CSVEntryParser<PowerPlant> {
         }
         plant.calculateAndSetActualFixedOperatingCosts(plant.getConstructionStartTime());
         plant.setDismantleTime(dismantleTime);
-        // BigBank bigbank = reps.genericRepository.findFirst(BigBank.class);
+        BigBank bigbank = reps.bigBank;
 
         Loan loan = new Loan();
         loan.setFrom(energyProducer);
-        loan.setTo(null);
+        loan.setTo(bigbank);
         double amountPerPayment = determineLoanAnnuities(
                 plant.getActualInvestedCapital() * energyProducer.getDebtRatioOfInvestments(), plant.getTechnology()
                 .getDepreciationTime(), energyProducer.getLoanInterestRate());

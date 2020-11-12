@@ -43,7 +43,6 @@ public class PowerPlantCSVFactory extends AbstractFactory {
 
     static final Logger logger = Logger.getGlobal();
 
-
     public PowerPlantCSVFactory(Reps reps) {
         super(reps);
     }
@@ -55,7 +54,7 @@ public class PowerPlantCSVFactory extends AbstractFactory {
 
         // TODO: error handling for InputStreamReader?
         CSVReader<PowerPlant> csvPersonReader = new CSVReaderBuilder<PowerPlant>(inputStreamReader).entryParser(
-                new PowerPlantEntryParser(getReps().energyProducers, getReps().powerGeneratingTechnologies, getReps().powerGridNodes))
+                new PowerPlantEntryParser(getReps().energyProducers, getReps().powerGeneratingTechnologies, getReps().powerGridNodes, this.reps))
                 .strategy(new CSVStrategy(',', '\"', '#', true, true))
                 .build();
         try {

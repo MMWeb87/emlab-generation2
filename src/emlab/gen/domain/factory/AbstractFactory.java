@@ -24,7 +24,7 @@ public class AbstractFactory {
 
     static final Logger logger = Logger.getGlobal();
     
-    private Reps reps;
+    protected Reps reps;
 
     public AbstractFactory(Reps reps) {
         this.reps = reps;
