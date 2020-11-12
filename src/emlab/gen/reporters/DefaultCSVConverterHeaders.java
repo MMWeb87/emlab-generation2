@@ -82,6 +82,8 @@ public class DefaultCSVConverterHeaders extends AbstractCSVConverter {
             row.add("market.average price." + market);
             row.add("market.volume." + market);
         }
+       	
+        	
         row.add("cashflow.ELECTRICITYSPOT");
         row.add("cashflow.COMMODITY");
         row.add("cashflow.FIXEDOMCOST");
@@ -90,6 +92,42 @@ public class DefaultCSVConverterHeaders extends AbstractCSVConverter {
         row.add("cashflow.CO2TAX");
         row.add("cashflow.NATIONALMINCO2");
         row.add("cashflow.FEED_IN_PREMIUM");
+        
+        for (EnergyProducer agent : reps.energyProducers) {
+            row.add("prodcashflow.to." + agent.getName() + ".UNCLASSIFIED");
+            row.add("prodcashflow.to." + agent.getName() + ".ELECTRICITY_SPOT");
+            row.add("prodcashflow.to." + agent.getName() + ".ELECTRICITY_LONGTERM");
+            row.add("prodcashflow.to." + agent.getName() + ".FIXEDOMCOST");
+            row.add("prodcashflow.to." + agent.getName() + ".COMMODITY");
+            row.add("prodcashflow.to." + agent.getName() + ".CO2TAX");
+            row.add("prodcashflow.to." + agent.getName() + ".CO2AUCTION");
+            row.add("prodcashflow.to." + agent.getName() + ".LOAN");
+            row.add("prodcashflow.to." + agent.getName() + ".DOWNPAYMENT");
+            row.add("prodcashflow.to." + agent.getName() + ".NATIONALMINCO2");
+            row.add("prodcashflow.to." + agent.getName() + ".STRRESPAYMENT");
+            row.add("prodcashflow.to." + agent.getName() + ".CAPMARKETPAYMENT");
+            row.add("prodcashflow.to." + agent.getName() + ".CO2HEDGING");
+            row.add("prodcashflow.to." + agent.getName() + ".FEED_IN_PREMIUM");
+            row.add("prodcashflow.to." + agent.getName() + ".TENDER_SUBSIDY");           
+
+            row.add("prodcashflow.from." + agent.getName() + ".UNCLASSIFIED");
+            row.add("prodcashflow.from." + agent.getName() + ".ELECTRICITY_SPOT");
+            row.add("prodcashflow.from." + agent.getName() + ".ELECTRICITY_LONGTERM");
+            row.add("prodcashflow.from." + agent.getName() + ".FIXEDOMCOST");
+            row.add("prodcashflow.from." + agent.getName() + ".COMMODITY");
+            row.add("prodcashflow.from." + agent.getName() + ".CO2TAX");
+            row.add("prodcashflow.from." + agent.getName() + ".CO2AUCTION");
+            row.add("prodcashflow.from." + agent.getName() + ".LOAN");
+            row.add("prodcashflow.from." + agent.getName() + ".DOWNPAYMENT");
+            row.add("prodcashflow.from." + agent.getName() + ".NATIONALMINCO2");
+            row.add("prodcashflow.from." + agent.getName() + ".STRRESPAYMENT");
+            row.add("prodcashflow.from." + agent.getName() + ".CAPMARKETPAYMENT");
+            row.add("prodcashflow.from." + agent.getName() + ".CO2HEDGING");
+            row.add("prodcashflow.from." + agent.getName() + ".FEED_IN_PREMIUM");
+            row.add("prodcashflow.from." + agent.getName() + ".TENDER_SUBSIDY");
+            
+        }
+
 
 
         return row.toArray(new String[row.size()]);
