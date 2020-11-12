@@ -70,12 +70,15 @@ public class RenewableSupportSchemeTender extends EMLabAgent implements Agent {
     private boolean revenueByAverageElectricityPrice;
 
     private long supportSchemeDuration;
+    
+    private long supportSchemePhaseOutTick;
 
     private long futureTenderOperationStartTime;
 
     private double yearlyTenderDemandTarget;
 
     private double expectedRenewableGeneration;
+   
 
     // private long time;
     //
@@ -170,7 +173,15 @@ public class RenewableSupportSchemeTender extends EMLabAgent implements Agent {
         this.supportSchemeDuration = supportSchemeDuration;
     }
 
-    public boolean isRevenueByAverageElectricityPrice() {
+    public long getSupportSchemePhaseOutTick() {
+		return supportSchemePhaseOutTick;
+	}
+
+	public void setSupportSchemePhaseOutTick(long supportSchemePhaseOutTick) {
+		this.supportSchemePhaseOutTick = supportSchemePhaseOutTick;
+	}
+
+	public boolean isRevenueByAverageElectricityPrice() {
         return revenueByAverageElectricityPrice;
     }
 

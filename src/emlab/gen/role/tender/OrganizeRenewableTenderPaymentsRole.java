@@ -45,6 +45,8 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
     public void act(RenewableSupportSchemeTender scheme) {
 
         double annualTenderRevenue = 0d;
+        double annualRevenue = 0d;
+
         
         Iterable<TenderBid> currentTenderBids = getReps().findAllTenderBidsThatShouldBePaidInTimeStep(scheme,
                 getCurrentTick());
@@ -53,23 +55,17 @@ public class OrganizeRenewableTenderPaymentsRole extends AbstractRole<RenewableS
 
             TenderClearingPoint tenderClearingPoint = getReps().findOneClearingPointForTimeAndRenewableSupportSchemeTender(currentTenderBid.getTime(), scheme);
 
-            annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
-            // logger.warn("Accepted Amount " +
-            // currentTenderBid.getAcceptedAmount() + "tenderClearingPoint"
-            // + tenderClearingPoint.getPrice());
-            // Is the accepted amount generated every year?
             double annualRevenueFromElectricityMarket = 0;
+
+            annualRevenueFromElectricityMarket = computeRevenueFromElectricityMarket(scheme, currentTenderBid);            
+            annualRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
+
             if (scheme.isExpostRevenueCalculation() == true) {
-                annualRevenueFromElectricityMarket = computeRevenueFromElectricityMarket(scheme, currentTenderBid);
-                annualTenderRevenue = annualTenderRevenue - annualRevenueFromElectricityMarket;
-                // if (annualTenderRevenue < 0)
-                // annualTenderRevenue = 0;
+                annualTenderRevenue = annualRevenue - annualRevenueFromElectricityMarket;
+                logger.finer("annual tender revenue needed:" + annualRevenue);
 
             } else {
-                double tenderClearingPrice = 0d;
-                tenderClearingPrice = (Double.isNaN(tenderClearingPoint.getPrice())) ? 0d
-                        : tenderClearingPoint.getPrice();
-                annualTenderRevenue = currentTenderBid.getAcceptedAmount() * tenderClearingPoint.getPrice();
+                annualTenderRevenue = annualRevenue;
             }
             
             PowerPlant plant = currentTenderBid.getPowerPlant();

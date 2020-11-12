@@ -1868,12 +1868,7 @@ public class Reps {
     
     
     /**
-     * This returns the accepted tender bids by scheme that needs to be paid out
-     * 
-     * Original Gremlin query: "g.v(scheme).in('TENDERBID_SUPPORTSCHEME')"
-     *       + ".propertyFilter('start', FilterPipe.Filter.LESS_THAN_EQUAL, tick)"
-     *       + ".propertyFilter('finish', FilterPipe.Filter.GREATER_THAN, tick)"
-     *       + ".propertyFilter('status', FilterPipe.Filter.GREATER_THAN_EQUAL, 2)"
+     * This returns the accepted tender bids by scheme that needs to be paid out in current timestep
      * 
      * @param renewableSupportSchemeTender
      * @param time
@@ -1884,8 +1879,8 @@ public class Reps {
     	
     	Iterable<TenderBid> tenderBidTempList = tenderBids.stream()
     			.filter(p -> p.getRenewableSupportSchemeTender().equals(scheme))
-    			//.filter(p -> p.getStart() <= time) // eg.g start <= 19 < finish
-    			//.filter(p -> p.getFinish() > time)
+    			.filter(p -> p.getStart() <= time)
+    			.filter(p -> p.getFinish() > time)
     			.filter(p -> p.getStatus() >= 2)
     			.collect(Collectors.toList());
     	

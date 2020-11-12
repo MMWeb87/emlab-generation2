@@ -72,7 +72,7 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
                             technology.getName())
                     .getValue(getCurrentTick() + scheme.getFutureTenderOperationStartTime());
 
-            logger.log(Level.INFO,"verification: technology potential =" + technologyPotential);
+            logger.log(Level.FINE,"verification: technology potential for " + technology + " = " + technologyPotential);
 
             expectedInstalledCapacityOfTechnologyInNode = getReps()
                     .calculateCapacityOfExpectedOperationalPowerPlantsInMarketAndTechnology(market, technology,
@@ -88,10 +88,10 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
             limit = technologyPotential
                     - (expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
             
-            logger.log(Level.FINER, "verification: expected generation is "
+            logger.log(Level.FINE, "verification: expected generation is "
                     + expectedInstalledCapacityOfTechnologyInNode * plant.getAnnualFullLoadHours());
 
-            logger.log(Level.FINER, "Limit for technology " + technology.getName() + "is " + limit);
+            logger.log(Level.FINE, "Limit for technology " + technology.getName() + "is " + limit);
 
             double sumAcceptedBid = 0d;
             for (TenderBid currentBid : sortedTenderBidsbyPriceTechnology) {
@@ -103,6 +103,9 @@ public class FilterTenderBidsByTechnologyPotentialRole extends AbstractRole<Rene
                     currentBid.setStatus(Bid.FAILED);
                 }
             }
+            
+            logger.fine("");
+
         }
 
         // if (cashAvailableForPlantDownpayment -

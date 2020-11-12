@@ -15,6 +15,7 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
@@ -57,7 +58,7 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
 			FutureFinancialExpectationWithBid financialExpectation = new FutureFinancialExpectationWithBid(plant);
 
 			financialExpectation.calculateDiscountedValues();
-			double projectValue = financialExpectation.getProjectValue();  // For Ex-Ante Calculations.
+			double projectValue = financialExpectation.getProjectValue();  // For Ex-Ante Calculations. (The project value considers income from future electricity prices)
             double projectCost = financialExpectation.getProjectCost();  // For Ex-Post Calculations.
             double projectValueFinal = (scheme.isExpostRevenueCalculation() == true) ? projectCost : projectValue;
            
@@ -122,106 +123,123 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
 
     @Override
     public void act(RenewableSupportSchemeTender scheme) {
+    	
+    	// only submit tenders if support schemes are not being phased out.
+    	// this would be the case if current tick is higher than a new variable. supportSchemePhaseOutTick (independent from duration): 
+    	
+    	if(getCurrentTick() < scheme.getSupportSchemePhaseOutTick()) {
 
-        Regulator regulator = scheme.getRegulator();
-        ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(regulator.getZone());
-
-        double tenderTarget = scheme.getAnnualRenewableTargetInMwh();
-        if (tenderTarget > 0) {
-
-            for (EnergyProducer agent : getReps().findEnergyProducersByMarketAtRandom(market)) {
-            	
-            	evaluateInvestment.initEvaluationForEnergyProducer(agent, market);            
-
-                Zone zone = agent.getInvestorMarket().getZone();
-
-                for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
-
-                    EMLabModel model = getReps().emlabModel;
-                    
-                    if (technology.isIntermittent() && model.isNoPrivateIntermittentRESInvestment())
-                        continue;
-
-                    for (PowerGridNode node : evaluateInvestment.findPossibleInstallationNodes(technology)) {
-                    	
-                        PowerPlant plant = evaluateInvestment.createPowerPlant(technology, node);
-
-                        // Calculate bid quantity. Number of plants to be bid -
-                        // as many as the node permits
-                        double cashNeededPerPlant = plant.getActualInvestedCapital()
-                                * (1 - agent.getDebtRatioOfInvestments()) / plant.getActualLeadtime();
-
-                        double noOfPlantsByTarget = scheme.getAnnualRenewableTargetInMwh()
-                                / (plant.getAnnualFullLoadHours() * plant.getActualNominalCapacity());
-
-                        // Target should equal node potential.
-                        long noOfPlants = (long) Math.ceil(noOfPlantsByTarget);
-                        logger.log(Level.FINER, "NUMBER OF PLANTS TO BE BID FOR" + noOfPlants);
-
-                        
-                        evaluateInvestment.setFuelMixForPlant(technology, plant);
-                        
-                        double bidPricePerMWh = evaluateInvestment.calculateBidPrice(plant, scheme);
-                        
-                        if(evaluateInvestment.isSubmitBid()) {
-
-                        
-                            // logger.warn("for scheme" + scheme.getName() +
-                            // "bidding for " + noOfPlants + "at price"
-                            // + bidPricePerMWh);
-                            for (long i = 1; i <= noOfPlants; i++) {
-
-                                long start = getCurrentTick() + plant.calculateActualLeadtime()
-                                        + plant.calculateActualPermittime();
-                                long finish = getCurrentTick() + plant.calculateActualLeadtime()
-                                        + plant.calculateActualPermittime() + scheme.getSupportSchemeDuration();
-
-                                String investor = agent.getName();
-                                
-                                // INFO plant is null as plant will be created in investment decision role 
-                                getReps().submitTenderBidToMarket(evaluateInvestment.getTotalAnnualExpectedGenerationOfPlant(), null, agent, zone, node,
-                                        start, finish, bidPricePerMWh, technology, getCurrentTick(), Bid.SUBMITTED,
-                                        scheme, cashNeededPerPlant, investor);
-                                
-                                 logger.log(Level.FINER, "SubmitBid to tender - Agent " +
-                                 agent + " ,generation "
-                                 + evaluateInvestment.getTotalAnnualExpectedGenerationOfPlant() +
-                                 " ,plant " + plant + " ,zone "
-                                 + zone + " ,node " + node + " ,start " +
-                                 start + " ,finish " + finish
-                                 + " ,bid price " + bidPricePerMWh +
-                                 " ,tech " + technology
-                                 + " ,current tick " + getCurrentTick() +
-                                 " ,status " + Bid.SUBMITTED
-                                 + " ,scheme " + scheme +
-                                 //", cash downpayment; "
-                                 //+ cashNeededForPlantDownpayments,
-                                 " ,investor " + investor);
-                                 
-                                 
-
-                            } // end for loop for tender bids
-
-                        } // end else calculate generation in MWh per year
-
-                        // } // end else calculate discounted tender return
-                        // factor
-                        // term
-                        plant = null;
-
-                    } // end for loop possible installation nodes
-
-                } // end 
-                
-                
-//                for (PowerGeneratingTechnology technology :
-//                   reps.genericRepository.findAll(PowerGeneratingTechnology.class))
-//                   logger.warn("Number of tender bids made" + noOfPlantsBid +
-//                   "by producer" + agent.getName()
-//                   + "for scheme " + scheme.getName());
-                
-            } // end For schemes
-        }
+    	Regulator regulator = scheme.getRegulator();
+	    	ElectricitySpotMarket market = getReps().findElectricitySpotMarketForZone(regulator.getZone());
+	
+	    	double tenderTarget = scheme.getAnnualRenewableTargetInMwh();
+	    	if (tenderTarget > 0) {
+	
+	    		for (EnergyProducer agent : getReps().findEnergyProducersByMarketAtRandom(market)) {
+	
+	    			evaluateInvestment.initEvaluationForEnergyProducer(agent, market);            
+	
+	    			Zone zone = agent.getInvestorMarket().getZone();
+	
+	    			for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
+	
+	    				// When an agent has limited choices for support, i.e. potentialPowerGenerating technologies is defined 
+	    				// only let agents participate if the current technology is a potential one of theirs
+	    				if(agent.getPotentialPowerGeneratingTechnologies() != null) {
+	    					if(!agent.getPotentialPowerGeneratingTechnologies().contains(technology) ) {
+	    						break;
+	    					}
+	    				}
+	
+	    				EMLabModel model = getReps().emlabModel;
+	
+	    				if (technology.isIntermittent() && model.isNoPrivateIntermittentRESInvestment())
+	    					continue;
+	
+	    				for (PowerGridNode node : evaluateInvestment.findPossibleInstallationNodes(technology)) {
+	
+	    					PowerPlant plant = evaluateInvestment.createPowerPlant(technology, node);
+	
+	    					// Calculate bid quantity. Number of plants to be bid -
+	    					// as many as the node permits
+	    					double cashNeededPerPlant = plant.getActualInvestedCapital()
+	    							* (1 - agent.getDebtRatioOfInvestments()) / plant.getActualLeadtime();
+	
+	    					double noOfPlantsByTarget = scheme.getAnnualRenewableTargetInMwh()
+	    							/ (plant.getAnnualFullLoadHours() * plant.getActualNominalCapacity());
+	
+	    					// Target should equal node potential.
+	    					long noOfPlants = (long) Math.ceil(noOfPlantsByTarget);
+	    					logger.log(Level.FINER, "NUMBER OF PLANTS TO BE BID FOR" + noOfPlants);
+	
+	
+	    					evaluateInvestment.setFuelMixForPlant(technology, plant);
+	
+	    					double bidPricePerMWh = evaluateInvestment.calculateBidPrice(plant, scheme);
+	
+	    					if(evaluateInvestment.isSubmitBid()) {
+	
+	
+	    						// logger.warn("for scheme" + scheme.getName() +
+	    						// "bidding for " + noOfPlants + "at price"
+	    						// + bidPricePerMWh);
+	    						for (long i = 1; i <= noOfPlants; i++) {
+	
+	    							long start = getCurrentTick() + plant.calculateActualLeadtime()
+	    							+ plant.calculateActualPermittime();
+	    							long finish = getCurrentTick() + plant.calculateActualLeadtime()
+	    							+ plant.calculateActualPermittime() + scheme.getSupportSchemeDuration();
+	
+	    							String investor = agent.getName();
+	
+	    							// INFO plant is null as plant will be created in investment decision role 
+	    							getReps().submitTenderBidToMarket(evaluateInvestment.getTotalAnnualExpectedGenerationOfPlant(), null, agent, zone, node,
+	    									start, finish, bidPricePerMWh, technology, getCurrentTick(), Bid.SUBMITTED,
+	    									scheme, cashNeededPerPlant, investor);
+	
+	    							logger.log(Level.FINE, "SubmitBid to tender - Agent " +
+	    									agent + " ,generation "
+	    									+ evaluateInvestment.getTotalAnnualExpectedGenerationOfPlant() +
+	    									" ,plant " + plant + " ,zone "
+	    									+ zone + " ,node " + node + " ,start " +
+	    									start + " ,finish " + finish
+	    									+ " ,bid price " + bidPricePerMWh +
+	    									" ,tech " + technology
+	    									+ " ,current tick " + getCurrentTick() +
+	    									" ,status " + Bid.SUBMITTED
+	    									+ " ,scheme " + scheme +
+	    									//", cash downpayment; "
+	    									//+ cashNeededForPlantDownpayments,
+	    									" ,investor " + investor);
+	
+	
+	
+	    						} // end for loop for tender bids
+	
+	    					} // end else calculate generation in MWh per year
+	
+	    					// } // end else calculate discounted tender return
+	    					// factor
+	    					// term
+	    					plant = null;
+	
+	    				} // end for loop possible installation nodes
+	
+	    			} // end 
+	
+	
+	
+	
+	    			//                for (PowerGeneratingTechnology technology :
+	    			//                   reps.genericRepository.findAll(PowerGeneratingTechnology.class))
+	    			//                   logger.warn("Number of tender bids made" + noOfPlantsBid +
+	    			//                   "by producer" + agent.getName()
+	    			//                   + "for scheme " + scheme.getName());
+	
+	    		} // end For schemes
+	    	}
+	    }
+    	
     }
 
  

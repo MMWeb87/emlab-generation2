@@ -30,6 +30,7 @@ import emlab.gen.repository.Reps;
 
 /**
  * @author rjjdejeu
+ * Technology neutral tender scheme.
  */
 public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchemeTender>
         implements Role<RenewableSupportSchemeTender> {

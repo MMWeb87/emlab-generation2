@@ -52,8 +52,10 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         		scheme.getPowerGeneratingTechnologiesEligible().iterator().next().getName());
 
         if (scheme.isTechnologySpecificityEnabled()) {
+        	
 
-            PowerGeneratingTechnology technology = scheme.getPowerGeneratingTechnologiesEligible().iterator().next();
+            // TODO MM; weired: only one technology per time?
+        	PowerGeneratingTechnology technology = scheme.getPowerGeneratingTechnologiesEligible().iterator().next();
             
             
             TimeSeriesCSVReader timeseries = getReps().findTechnologySpecificRenewableTargetTimeSeriesForTenderByScheme(scheme, technology.getName());
@@ -65,13 +67,10 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
             	logger.severe("Tender eligible technology without targets defined");
             }
             
-          
-            
-//            //            
-            
-            // TODO MM: debug!
+            // TODO check
             // targetFactorAchievementForecast =
             // getForecastedRenewableGeneration(scheme, technology);
+            
         } else {
             targetFactor = getReps().findTechnologyNeutralRenewableTargetForTenderByRegulator(scheme.getRegulator())
                     .getYearlyRenewableTargetTimeSeries()
@@ -91,17 +90,14 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         }
 
         scheme.setAnnualExpectedConsumption(totalExpectedConsumption);
-        // logger.warn("totalExpectedConsumption; " + totalExpectedConsumption);
+        logger.fine("totalExpectedConsumption; " + totalExpectedConsumption);
 
         // renewable target for tender operation start year in MWh is
 
         double renewableTargetInMwh = targetFactor * totalExpectedConsumption;
-        // logger.warn("Policy based (total ) renewableTargetInMwh; " +
-        // renewableTargetInMwh + "for scheme "
-        // + scheme.getName());
+        logger.fine("Policy based (total ) renewableTargetInMwh; " + renewableTargetInMwh + "for scheme " + scheme.getName());
 
-        // calculate expected generation, and subtract that from annual
-        // target.
+        // calculate expected generation, and subtract that from annual target.
         // will be ActualTarget
 
         double totalExpectedGenerationAvailable = 0d;
@@ -110,8 +106,7 @@ public class CalculateRenewableTargetForTenderRole extends AbstractRole<Renewabl
         for (PowerGeneratingTechnology technology : scheme.getPowerGeneratingTechnologiesEligible()) {
             expectedGenerationPerTechnologyAvailable = 0d;
 
-            // logger.warn("For PGT - technology; " + technology);
-            // logger.warn("For PGT - technology; " + technology);
+            logger.fine("For PGT - technology; " + technology);
             scheme.setCurrentTechnologyUnderConsideration(technology);
 
             // expectedGenerationPerTechnologyAvailable =

@@ -62,15 +62,13 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
 
         for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
 
-             logger.fine(
-             "current accepted bid: " + currentTenderBid + "for power plant" +
-             currentTenderBid.getPowerPlant()); // TODO Powerplant == NULL ok?
-
         	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
-        	EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);
-        	
+        	EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);      	
             PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
             		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
+            
+            getReps().createPowerPlantFromPlant(plant);        
+            
             currentTenderBid.setPowerPlant(plant);  
             
                     
@@ -87,9 +85,7 @@ public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<Rene
                     plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
 
             logger.fine("Loan amount is: " + amount);
-            logger.fine(
-            "current accepted bid: " + currentTenderBid + "for (new) power plant" +
-            currentTenderBid.getPowerPlant());
+            logger.fine("current accepted bid: " + currentTenderBid + " for (new) power plant " + currentTenderBid.getPowerPlant());
 
             Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
                     plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
