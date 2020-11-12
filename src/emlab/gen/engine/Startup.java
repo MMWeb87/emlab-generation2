@@ -39,7 +39,7 @@ public class Startup {
         String scenarioName = "DefaultScenario"; 
         String modelRole = "EMlabModelRole";
         String reporterClassName = "DefaultReporter";
-        String reporterDirectoryName = "results/";
+        String reporterDirectoryName = "../results/";
         
         boolean preRunForMapping = false;
         boolean logForApp = true;
