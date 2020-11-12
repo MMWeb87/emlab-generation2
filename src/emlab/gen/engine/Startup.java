@@ -20,6 +20,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 
 /**
  *
@@ -45,20 +46,24 @@ public class Startup {
         boolean logForApp = true;
         Logger.getGlobal().setLevel(Level.INFO);
         
+        OutputStream logStream = null;
         try {
-            FileHandler handler = new FileHandler(reporterDirectoryName + runID + "-log.txt");
+        	
+        	logStream = new FileOutputStream(reporterDirectoryName + runID + "-log.txt");
+        	StreamHandler handler;
             
             if(logForApp) {
-                handler.setFormatter(new CSVLogFormatter());
+            	handler = new StreamHandler(logStream, new CSVLogFormatter());
             } else {
-            	handler.setFormatter(new SimpleFormatter());	
+            	handler = new StreamHandler(logStream, new SimpleFormatter());
             }
             Logger.getGlobal().addHandler(handler);//.java.util.logging.FileHandler.pattern   = 
         } catch (IOException ex) {
-            Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, "Make sure that " + reporterDirectoryName +  " exists in " + System.getProperty("user.dir"), ex);
         } catch (SecurityException ex) {
             Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+        
         Logger.getGlobal().info("Starting EMLab-Generation 2");
         Logger.getGlobal().info("Run id is " + runID);
 
@@ -98,13 +103,13 @@ public class Startup {
         
         
         // Make a copy of the scenario file for reproducibility
-        try {
-        	File scenarioFile = new File("src/emlab/gen/scenarios/" + scenarioName + ".java"); 
-        	File scenarioFileCopy = new File(reporterDirectoryName + runID + "-" + scenarioName + ".java-copy.txt"); 
-        	copyFileUsingStream(scenarioFile, scenarioFileCopy);
-        } catch (IOException ex) {
-        	Logger.getGlobal().severe("Could not copy scenario file");
-        }
+		//try {
+		//	File scenarioFile = new File("src/emlab/gen/scenarios/" + scenarioName + ".java"); 
+		//	File scenarioFileCopy = new File(reporterDirectoryName + runID + "-" + scenarioName + ".java-copy.txt"); 
+		//	copyFileUsingStream(scenarioFile, scenarioFileCopy);
+		//} catch (IOException ex) {
+		//	Logger.getGlobal().severe("Could not copy scenario file");
+		//}
         
         // Reporters
         Class<?> reporterClass = null;
@@ -160,8 +165,9 @@ public class Startup {
 
         //Out of the loop, all iterations have been performed and all workers are done
         Logger.getGlobal().info("All is done.");
+
     }
-    
+
 
 	private static void copyFileUsingStream(File source, File dest) throws IOException {
 	    InputStream is = null;
