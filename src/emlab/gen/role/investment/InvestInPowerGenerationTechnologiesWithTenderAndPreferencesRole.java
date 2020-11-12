@@ -122,24 +122,25 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        }
 	                        
 	                        if (projectValue > 0) {
+	                        	
+                        		double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(projectValue);			                    
+                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+                        		double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
+                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
 
+                        		double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket());
+                        		double totalUtility = 0; // not relevant if empirical deactivated
+                        		
 	                        	if(model.isEmpiricalPreferenceActive()) {
 
 	                        		logger.log(Level.FINE, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
-
-	                        		double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(projectValue);			                    
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
-	                        		double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
-
-	                        		double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket());
 
 	                        		double partWorthUtilityReturn = determineUtilityReturn(mappedProjectDiscountedReturnOnEquity, agent);
 	                        		double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
 	                        		double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
 	                        		double partWorthUtilityPolicy = determineUtilityPolicy(supportSchemeAvailable); 
 
-	                        		double totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
+	                        		totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 	                        		double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 
 	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
@@ -148,44 +149,6 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalUtility + " as total utility");
 	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
 
-
-	                        		// Reporter
-	                        		FinancialExpectationReport report = new FinancialExpectationReport();
-
-	                        		report.schedule = schedule;
-	                        		report.setMarket(agent.getInvestorMarket());
-	                        		report.setTime(schedule.getCurrentTick()); 
-	                        		report.setAgent(agent);
-	                        		report.setTechnology(technology);
-	                        		report.setPlant(plant);
-	                        		report.setNode(node);
-	                        		report.setInvestmentRound(this.getCurrentTnvestmentRound());
-
-	                        		report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
-	                        		report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
-	                        		report.setMappedProjectReturnOnEquity(mappedProjectDiscountedReturnOnEquity);
-
-	                        		report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
-	                        		report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
-	                        		report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
-	                        		report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
-
-	                        		report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
-	                        		report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
-	                        		report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
-	                        		report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
-	                        		report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
-
-	                        		report.setProjectCost(financialExpectation.getProjectCost());
-	                        		report.setProjectValue(financialExpectation.getProjectValue());
-
-	                        		report.setRunningHours(financialExpectation.getRunningHours());
-	                        		report.setWacc(financialExpectation.getWacc());
-	                        		report.setTotalUtility(totalUtility);
-
-	                        		getReps().financialExpectationReports.add(report);
-
-	                        		// utilities
 	                        		if(totalRandomUtility > highestValue) {
 	                        			highestValue = totalRandomUtility;
 	                        			bestPlant = plant;
@@ -199,6 +162,46 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        			bestPlant = plant;
 	                        		}
 	                        	}
+	                        	
+                        		// Reporter
+                        		FinancialExpectationReport report = new FinancialExpectationReport();
+
+                        		report.schedule = schedule;
+                        		report.setMarket(agent.getInvestorMarket());
+                        		report.setTime(schedule.getCurrentTick()); 
+                        		report.setAgent(agent);
+                        		report.setTechnology(technology);
+                        		report.setPlant(plant);
+                        		report.setNode(node);
+                        		report.setInvestmentRound(this.getCurrentTnvestmentRound());
+
+                        		report.setProjectReturnOnInvestment(projectDiscountedReturnOnInvestment);
+                        		report.setProjectReturnOnEquity(projectDiscountedReturnOnEquity);
+                        		report.setMappedProjectReturnOnEquity(mappedProjectDiscountedReturnOnEquity);
+
+                        		report.setDebtRatioOfInvestments(agent.getDebtRatioOfInvestments());
+                        		report.setDiscountedCapitalCosts(financialExpectation.getDiscountedCapitalCosts());
+                        		report.setDiscountedOperatingCost(financialExpectation.getDiscountedOperatingCost());
+                        		report.setDiscountedOperatingProfit(financialExpectation.getDiscountedOperatingProfit());
+
+                        		report.setExpectedGeneration(financialExpectation.getExpectedGeneration());
+                        		report.setExpectedGrossProfit(financialExpectation.getExpectedGrossProfit());
+                        		report.setExpectedMarginalCost(financialExpectation.getExpectedMarginalCost());
+                        		report.setExpectedOperatingCost(financialExpectation.getExpectedOperatingCost());
+                        		report.setExpectedOperatingRevenue(financialExpectation.getExpectedOperatingRevenue());
+
+                        		report.setProjectCost(financialExpectation.getProjectCost());
+                        		report.setProjectValue(financialExpectation.getProjectValue());
+
+                        		report.setRunningHours(financialExpectation.getRunningHours());
+                        		report.setWacc(financialExpectation.getWacc());
+                        		report.setTotalUtility(totalUtility);
+                        		
+                        		
+	                        		// utilities
+
+
+                        		getReps().financialExpectationReports.add(report);
 
 	                        } else {
 	                        	logger.log(Level.FINER, "Because the project value is negative, " + agent + " does not consider this investment option.");
