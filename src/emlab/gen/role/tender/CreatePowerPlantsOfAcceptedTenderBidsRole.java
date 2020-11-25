@@ -15,12 +15,16 @@
  ******************************************************************************/
 package emlab.gen.role.tender;
 
+import java.util.logging.Level;
+
 import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
 import emlab.gen.domain.contract.Loan;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
+import emlab.gen.domain.technology.PowerGeneratingTechnology;
+import emlab.gen.domain.technology.PowerGeneratingTechnologyNodeLimit;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
@@ -33,68 +37,80 @@ import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesRole
  */
 
 public class CreatePowerPlantsOfAcceptedTenderBidsRole extends AbstractRole<RenewableSupportSchemeTender>
-        implements Role<RenewableSupportSchemeTender> {
-    
-    public CreatePowerPlantsOfAcceptedTenderBidsRole(Schedule schedule) {
-        super(schedule);
-    }
-    
-    class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesRole<EnergyProducer>{
-    	
+implements Role<RenewableSupportSchemeTender> {
+
+	public CreatePowerPlantsOfAcceptedTenderBidsRole(Schedule schedule) {
+		super(schedule);
+	}
+
+	class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesRole<EnergyProducer>{
+
 		public EvaluateInvestmentRole(Schedule schedule) {
 			super(schedule);
 		}
 	}
 
-    @Override
-    public void act(RenewableSupportSchemeTender scheme) {
+	@Override
+	public void act(RenewableSupportSchemeTender scheme) {
 
-         logger.fine("Create Power Plants Of Accepted Tender Bids Role started for: " + scheme);
+		logger.fine("Create Power Plants Of Accepted Tender Bids Role started for: " + scheme);
 
-        // Zone zone = regulator.getZone();
-        // RenewableSupportSchemeTender scheme =
-        // reps.renewableSupportSchemeTenderRepository
-        // .determineSupportSchemeForZone(zone);
+		// Zone zone = regulator.getZone();
+		// RenewableSupportSchemeTender scheme =
+		// reps.renewableSupportSchemeTenderRepository
+		// .determineSupportSchemeForZone(zone);
 
-        // Initialize the accepted bids
-        Iterable<TenderBid> acceptedTenderBidsByTime = null;
-        acceptedTenderBidsByTime = getReps().findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
+		// Initialize the accepted bids
+		Iterable<TenderBid> acceptedTenderBidsByTime = null;
+		acceptedTenderBidsByTime = getReps().findAllAcceptedTenderBidsByTime(scheme, getCurrentTick());
 
-        for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
+		for (TenderBid currentTenderBid : acceptedTenderBidsByTime) {
 
-        	EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
-        	EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);      	
-            PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
-            		getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
-            
-            getReps().createPowerPlantFromPlant(plant);        
-            
-            currentTenderBid.setPowerPlant(plant);  
-            
-                    
-            PowerPlantManufacturer manufacturer = getReps().powerPlantManufacturer;
-            BigBank bigbank = getReps().bigBank;
+			EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
+			EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);
+			
+			PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
+					getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
+			
+			// Producers needs enough equity for investment
+			if (plant.getActualInvestedCapital() * (1 - bidder.getDebtRatioOfInvestments()) > bidder
+					.getDownpaymentFractionOfCash() * bidder.getCash()) {
+				logger.log(Level.INFO, bidder +" will not build auction bid for {0} technology as he does not have enough money for downpayment", plant.getTechnology().getName());
+				getReps().tenderBids.remove(currentTenderBid);
+				
 
-            double investmentCostPayedByEquity = plant.getActualInvestedCapital()
-                    * (1 - bidder.getDebtRatioOfInvestments());
-            double investmentCostPayedByDebt = plant.getActualInvestedCapital() * bidder.getDebtRatioOfInvestments();
-            double downPayment = investmentCostPayedByEquity;
-            evaluateInvestment.createSpreadOutDownPayments(bidder, manufacturer, downPayment, plant);
+			} else {
 
-            double amount = evaluateInvestment.determineLoanAnnuities(investmentCostPayedByDebt,
-                    plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
+				getReps().createPowerPlantFromPlant(plant);        
 
-            logger.fine("Loan amount is: " + amount);
-            logger.fine("current accepted bid: " + currentTenderBid + " for (new) power plant " + currentTenderBid.getPowerPlant());
+				currentTenderBid.setPowerPlant(plant);  
 
-            Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
-                    plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
-            // Create the loan
-            plant.createOrUpdateLoan(loan);
 
-        }
+				PowerPlantManufacturer manufacturer = getReps().powerPlantManufacturer;
+				BigBank bigbank = getReps().bigBank;
 
-    }
+				double investmentCostPayedByEquity = plant.getActualInvestedCapital()
+						* (1 - bidder.getDebtRatioOfInvestments());
+				double investmentCostPayedByDebt = plant.getActualInvestedCapital() * bidder.getDebtRatioOfInvestments();
+				double downPayment = investmentCostPayedByEquity;
+				evaluateInvestment.createSpreadOutDownPayments(bidder, manufacturer, downPayment, plant);
+
+				double amount = evaluateInvestment.determineLoanAnnuities(investmentCostPayedByDebt,
+						plant.getTechnology().getDepreciationTime(), bidder.getLoanInterestRate());
+
+				logger.info("Loan amount is: " + amount);
+				logger.info("current accepted bid: " + currentTenderBid + " for (new) power plant " + currentTenderBid.getPowerPlant());
+
+						Loan loan = getReps().createLoan(currentTenderBid.getBidder(), bigbank, amount,
+								plant.getTechnology().getDepreciationTime(), getCurrentTick(), plant);
+						// Create the loan
+						plant.createOrUpdateLoan(loan);
+
+			}
+
+		}
+
+	}
 
 
 }
