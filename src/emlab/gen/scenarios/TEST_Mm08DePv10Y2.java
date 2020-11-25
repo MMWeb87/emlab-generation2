@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class Mm07DeOffshore10Y implements Scenario {
+public class TEST_Mm08DePv10Y2 implements Scenario {
 
 	private String name;
 
@@ -750,7 +750,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
-		prefInvestorsSmallDE.setCash(3e9);
+		prefInvestorsSmallDE.setCash(24e9);
 		prefInvestorsSmallDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -795,7 +795,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
-		prefInvestorsMediumDE.setCash(3e9);
+		prefInvestorsMediumDE.setCash(24e9);
 		prefInvestorsMediumDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -840,7 +840,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsLargeDE.setCash(3e9);
+		prefInvestorsLargeDE.setCash(24e9);
 		prefInvestorsLargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -885,7 +885,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeDE.setCash(3e9);
+		prefInvestorsVerylargeDE.setCash(24e9);
 		prefInvestorsVerylargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1623,7 +1623,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);
@@ -1638,7 +1638,7 @@ public class Mm07DeOffshore10Y implements Scenario {
 		renewableSupportSchemeDE3.setName("PVTender DE");
 		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE3.setRegulator(regulatorDe);

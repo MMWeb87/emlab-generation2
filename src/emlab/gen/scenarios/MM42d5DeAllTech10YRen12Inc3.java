@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM18DeAllTech10YStd implements Scenario {
+public class MM42d5DeAllTech10YRen12Inc3 implements Scenario {
 
 	private String name;
 
@@ -712,7 +712,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		// Producers with preferences 
 		// ——————————————————————————————————————————————————
 		
-		reps.emlabModel.setEmpiricalPreferenceActive(false);
+		reps.emlabModel.setEmpiricalPreferenceActive(true);
 	
 		// Must correspond to names used below in technology definition
 		String utilityLevelsTechnologyPV = "Photovoltaic PGT";
@@ -750,7 +750,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
-		prefInvestorsSmallDE.setCash(24e9);
+		prefInvestorsSmallDE.setCash(12e9);
 		prefInvestorsSmallDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -795,7 +795,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
-		prefInvestorsMediumDE.setCash(24e9);
+		prefInvestorsMediumDE.setCash(12e9);
 		prefInvestorsMediumDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -840,7 +840,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsLargeDE.setCash(24e9);
+		prefInvestorsLargeDE.setCash(12e9);
 		prefInvestorsLargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -885,7 +885,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeDE.setCash(24e9);
+		prefInvestorsVerylargeDE.setCash(12e9);
 		prefInvestorsVerylargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();

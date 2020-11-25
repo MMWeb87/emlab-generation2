@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM18DeAllTech10YStd implements Scenario {
+public class MM05DeAllTech10Y implements Scenario {
 
 	private String name;
 
@@ -712,7 +712,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		// Producers with preferences 
 		// ——————————————————————————————————————————————————
 		
-		reps.emlabModel.setEmpiricalPreferenceActive(false);
+		reps.emlabModel.setEmpiricalPreferenceActive(true);
 	
 		// Must correspond to names used below in technology definition
 		String utilityLevelsTechnologyPV = "Photovoltaic PGT";

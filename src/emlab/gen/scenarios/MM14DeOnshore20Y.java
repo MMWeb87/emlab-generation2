@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class Mm03BothOffshore10Y implements Scenario {
+public class MM14DeOnshore20Y implements Scenario {
 
 	private String name;
 
@@ -275,7 +275,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.5);
+		minCo2PriceTrend.setIncrement(1.50);
 
 		
 		reps.government = new Government();
@@ -750,7 +750,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
-		prefInvestorsSmallDE.setCash(3e9);
+		prefInvestorsSmallDE.setCash(24e9);
 		prefInvestorsSmallDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -795,7 +795,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
-		prefInvestorsMediumDE.setCash(3e9);
+		prefInvestorsMediumDE.setCash(24e9);
 		prefInvestorsMediumDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -840,7 +840,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsLargeDE.setCash(3e9);
+		prefInvestorsLargeDE.setCash(24e9);
 		prefInvestorsLargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -885,7 +885,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeDE.setCash(3e9);
+		prefInvestorsVerylargeDE.setCash(24e9);
 		prefInvestorsVerylargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -930,7 +930,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsSmallNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallNL.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallNL.setLongTermContractMargin(0.1);
-		prefInvestorsSmallNL.setCash(3e9);
+		prefInvestorsSmallNL.setCash(6e9);
 		prefInvestorsSmallNL.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -975,7 +975,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsMediumNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumNL.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumNL.setLongTermContractMargin(0.1);
-		prefInvestorsMediumNL.setCash(3e9);
+		prefInvestorsMediumNL.setCash(6e9);
 		prefInvestorsMediumNL.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1020,7 +1020,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsLargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeNL.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeNL.setLongTermContractMargin(0.1);
-		prefInvestorsLargeNL.setCash(3e9);
+		prefInvestorsLargeNL.setCash(6e9);
 		prefInvestorsLargeNL.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1065,7 +1065,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		prefInvestorsVerylargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeNL.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeNL.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeNL.setCash(3e9);
+		prefInvestorsVerylargeNL.setCash(6e9);
 		prefInvestorsVerylargeNL.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1406,7 +1406,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1608,7 +1608,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(20);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);
@@ -1623,7 +1623,7 @@ public class Mm03BothOffshore10Y implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);

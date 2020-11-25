@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM18DeAllTech10YStd implements Scenario {
+public class MM00AuctionScenario implements Scenario {
 
 	private String name;
 
@@ -712,7 +712,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		// Producers with preferences 
 		// ——————————————————————————————————————————————————
 		
-		reps.emlabModel.setEmpiricalPreferenceActive(false);
+		reps.emlabModel.setEmpiricalPreferenceActive(true);
 	
 		// Must correspond to names used below in technology definition
 		String utilityLevelsTechnologyPV = "Photovoltaic PGT";
@@ -1608,7 +1608,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);
@@ -1623,7 +1623,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);
@@ -1638,7 +1638,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeDE3.setName("PVTender DE");
 		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE3.setRegulator(regulatorDe);

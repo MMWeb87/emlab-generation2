@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM18DeAllTech10YStd implements Scenario {
+public class MM0d9BothAllTech10YCo2Price10 implements Scenario {
 
 	private String name;
 
@@ -275,7 +275,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.50);
+		minCo2PriceTrend.setIncrement(1.35);
 
 		
 		reps.government = new Government();
@@ -712,7 +712,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		// Producers with preferences 
 		// ——————————————————————————————————————————————————
 		
-		reps.emlabModel.setEmpiricalPreferenceActive(false);
+		reps.emlabModel.setEmpiricalPreferenceActive(true);
 	
 		// Must correspond to names used below in technology definition
 		String utilityLevelsTechnologyPV = "Photovoltaic PGT";
@@ -1391,7 +1391,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeNL1.setName("OnshoreTender");
 		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL1.setRegulator(regulatorNl);
@@ -1406,7 +1406,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1420,7 +1420,7 @@ public class MM18DeAllTech10YStd implements Scenario {
 		renewableSupportSchemeNL3.setName("PVTender");
 		renewableSupportSchemeNL3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL3.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL3.setRegulator(regulatorNl);
