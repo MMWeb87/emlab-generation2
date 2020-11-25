@@ -57,7 +57,7 @@ public class ComputePremiumRoleExAnte extends AbstractComputePremiumRole{
             fiPremium = -projectValue * biasFactorValue / generation;
         }
         
-         logger.log(Level.FINE, "expectedBaseCost in PremiumRoleExAnte for plant" + plant + 
+         logger.log(Level.FINER, "expectedBaseCost in PremiumRoleExAnte for plant" + plant + 
         		 "in tick" + evaluateInvestment.getFutureTimePoint() + "is " + fiPremium);
          
          setCostPerMWh(fiPremium);        

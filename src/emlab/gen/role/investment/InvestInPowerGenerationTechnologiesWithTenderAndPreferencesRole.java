@@ -124,9 +124,9 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        if (projectValue > 0) {
 	                        	
                         		double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(projectValue);			                    
-                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+                        		logger.log(Level.FINER, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
                         		double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-                        		logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+                        		logger.log(Level.FINER, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
 
                         		double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket());
                         		double totalUtility = 0; // not relevant if empirical deactivated
@@ -143,11 +143,11 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        		totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 	                        		double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
 
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectDiscountedReturnOnEquity);
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalUtility + " as total utility");
-	                        		logger.log(Level.FINE, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
+	                        		logger.log(Level.FINER, "Agent " + agent + " finds " + partWorthUtilityTechnology + " as part-worth utility for technology " + technology);
+	                        		logger.log(Level.FINER, "Agent " + agent + " finds " + partWorthUtilityReturn + " as part-worth utility for ROE " + projectDiscountedReturnOnEquity);
+	                        		logger.log(Level.FINER, "Agent " + agent + " finds " + partWorthUtilityCountry + " as part-worth utility for market " + this.getMarket());
+	                        		logger.log(Level.FINER, "Agent " + agent + " finds " + totalUtility + " as total utility");
+	                        		logger.log(Level.FINER, "Agent " + agent + " finds " + totalRandomUtility + " as total RANDOM utility");
 
 	                        		if(totalRandomUtility > highestValue) {
 	                        			highestValue = totalRandomUtility;

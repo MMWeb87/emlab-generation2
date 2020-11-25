@@ -530,7 +530,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
                     / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
                     .getMaximumInstalledCapacityFractionInCountry()) {
             	
-                logger.log(Level.FINER, 
+                logger.log(Level.FINE, 
                 		agent + " will not invest in {} technology because there's too much of this type in the market", technology);
             
             } else if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
@@ -540,24 +540,24 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
             } else if (expectedOwnedCapacityInMarketOfThisTechnology > expectedOwnedTotalCapacityInMarket
                     * technology.getMaximumInstalledCapacityFractionPerAgent()) {
                  
-            	logger.log(Level.FINER, 
+            	logger.log(Level.FINE, 
                 		 agent + " will not invest in {} technology because there's too much capacity planned by him", technology);
             
             } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
-            	logger.log(Level.FINER, "Not investing because more than 20% of demand in pipeline.");
+            	logger.log(Level.FINE, "Not investing because more than 20% of demand in pipeline.");
 
             
             } else if ((capacityOfTechnologyInPipeline > 2.0 * operationalCapacityOfTechnology)
                     && capacityOfTechnologyInPipeline > 9000) { // TODO: reflects that you cannot expand a technology out of zero.
-            	logger.log(Level.FINER, agent +" will not invest in {} technology because there's too much capacity in the pipeline", technology);
+            	logger.log(Level.FINE, agent +" will not invest in {} technology because there's too much capacity in the pipeline", technology);
             
             } else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
                     .getDownpaymentFractionOfCash() * agent.getCash()) {
-            	logger.log(Level.FINER, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
+            	logger.log(Level.FINE, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
             
             } else {
             	
-            	logger.log(Level.FINER,  technology + " passes capacity limit. " + agent + " will now calculate financial viability.");
+            	logger.log(Level.FINE,  technology + " passes capacity limit. " + agent + " will now calculate financial viability.");
             	setViableInvestment(true);
             	
 	

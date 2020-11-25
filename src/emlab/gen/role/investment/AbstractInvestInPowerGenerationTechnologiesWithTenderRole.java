@@ -218,18 +218,19 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
 
         	// Limiting rule 1: nodeLimit
         	if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
-        		logger.log(Level.FINE, "Not investing in " + technology.getName() + "because of node limit: " + pgtNodeLimit);	 
+        		logger.log(Level.INFO, agent + " will not invest in " + technology.getName() + " because of node limit: " + pgtNodeLimit);
+        		
 
         	// Limiting rule 2: too much by own agent
         	} else if (expectedOwnedCapacityInMarketOfThisTechnology > expectedOwnedTotalCapacityInMarket
         			* technology.getMaximumInstalledCapacityFractionPerAgent()) {
-        		logger.log(Level.FINE, 
+        		logger.log(Level.INFO, 
         				agent + " will not invest in " + technology.getName() + " because there's too much capacity planned by him");
 
         	// Limiting rule 3: avoid not being able to pay downpayments
         	} else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
         			.getDownpaymentFractionOfCash() * agent.getCash()) {
-        		logger.log(Level.FINE, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
+        		logger.log(Level.INFO, agent + " will not invest in " + technology.getName() + " as he does not have enough money for downpayment");
         	} 
 
         	// these two rules were removed for Iychettira (2017) because capacity (GW) was not a good measure to limit renewable generation, especially when targets were in terms of energy (GWh). 
@@ -257,7 +258,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
         	else {
 
         		// Passes all hard limits in terms of capacity
-        		logger.log(Level.FINE, agent + " considers " + technology.getName()  + " to be viable.");
+        		logger.log(Level.INFO, agent + " considers " + technology.getName()  + " to be viable.");
         		setViableInvestment(true);
 
         	}      
@@ -347,7 +348,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
                             node.getName(), getTechnology(), getFutureTimePoint());
                     expectedBaseCost = baseCostFip.getCostPerMWh();
                     
-                    logger.log(Level.FINE, 
+                    logger.log(Level.FINER, 
                     		"For technology" + technology.getName() + "for node" + node.getName() 
                     + "Expected Base cost " + baseCostFip.getCostPerMWh());
                     
@@ -357,7 +358,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
                 	baseCostFip = getReps().findOneTechnologyNeutralBaseCostForTime(getFutureTimePoint());
                     expectedBaseCost = baseCostFip.getCostPerMWh();
                     
-                    logger.log(Level.FINE, 
+                    logger.log(Level.FINER, 
                     		"2: For technology" + technology.getName() + "for node" + node.getName() 
                     		+ "Expected Base cost " + expectedBaseCost);
  
@@ -365,7 +366,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
 
                     expectedBaseCost = predictSubsidyFip(agent, scheme.getFutureSchemeStartTime(), node,
                             technology, scheme.isTechnologySpecificityEnabled());
-                    logger.log(Level.FINE, "3: For technology" + technology.getName() + "for node" + node.getName()
+                    logger.log(Level.FINER, "3: For technology" + technology.getName() + "for node" + node.getName()
                      + "Expected Base cost " + expectedBaseCost);
                     
                 }
@@ -405,7 +406,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
             double discountedGeneration = calculateDiscountedCashFlowForPlant(
             		(int) scheme.getSupportSchemeDuration(), 0, 1);
 		   
-		    logger.log(Level.FINE, 
+		    logger.log(Level.FINER, 
 		    		"Agent " + agent +  " found the discounted generation for " + technology + " to be " + discountedGeneration);
 		
 		    return discountedGeneration;  
@@ -428,7 +429,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
             double discountedOperatingRevenue = calculateDiscountedCashFlowForPlantAdjusted(
                     technology.getDepreciationTime(), 0, operatingRevenue);
 	
-	        logger.log(Level.FINE, 
+	        logger.log(Level.FINER, 
 	       		"Agent " + agent +  " found the discounted operating revenue for " + technology + " to be " + discountedOperatingRevenue);
 	
 	        return discountedOperatingRevenue;  

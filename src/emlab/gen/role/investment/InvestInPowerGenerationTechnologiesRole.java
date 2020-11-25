@@ -63,9 +63,9 @@ public class InvestInPowerGenerationTechnologiesRole<T extends EnergyProducer> e
 	
 	                    // Only for reporting
                     	double projectDiscountedReturnOnInvestment = financialExpectation.calculateDiscountedReturnOnInvestment(financialExpectation.getProjectValue());			                    
-	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
+	                    logger.log(Level.FINER, "Agent " + agent + " finds the discounted per lifetime year ROI for " + technology + " to be " + projectDiscountedReturnOnInvestment);
 	                    double projectDiscountedReturnOnEquity = projectDiscountedReturnOnInvestment / (1 - agent.getDebtRatioOfInvestments());
-	                    logger.log(Level.FINE, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
+	                    logger.log(Level.FINER, "Agent " + agent + " finds the discounted per lifetime year  ROE (debt: " + agent.getDebtRatioOfInvestments() +") for " + technology + " to be " + projectDiscountedReturnOnEquity);
 
 	                    // Reporter
 	                    FinancialExpectationReport report = new FinancialExpectationReport();

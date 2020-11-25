@@ -139,10 +139,10 @@ public class ClearRenewableTenderRole extends AbstractRole<RenewableSupportSchem
         // TODO MM what about forecast and AbstractMarket of object?
 
         if (isTheTenderCleared == true) {
-             logger.log(Level.FINE, "Tender CLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
+             logger.log(Level.FINER, "Tender CLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
 
         } else {
-            logger.log(Level.FINE, "Tender UNCLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
+            logger.log(Level.FINER, "Tender UNCLEARED at price " + tenderClearingPoint.getPrice() + " and volume " + tenderClearingPoint.getVolume());
 
         }
 

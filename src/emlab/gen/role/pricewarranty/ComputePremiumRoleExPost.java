@@ -64,7 +64,7 @@ public class ComputePremiumRoleExPost extends AbstractComputePremiumRole{
         	lcoe = -lcoe; // (Need to be of the same sign as those calculated for Ex-ante)
         }
         
-         logger.log(Level.FINE, "expectedBaseCost in PremiumRoleExPost for plant" + plant + 
+         logger.log(Level.FINER, "expectedBaseCost in PremiumRoleExPost for plant" + plant + 
         		 "in tick" + evaluateInvestment.getFutureTimePoint() + "is " + lcoe);
          
          setCostPerMWh(lcoe);
