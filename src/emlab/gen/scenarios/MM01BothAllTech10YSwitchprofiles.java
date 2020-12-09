@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM00AuctionScenario implements Scenario {
+public class MM01BothAllTech10YSwitchprofiles implements Scenario {
 
 	private String name;
 
@@ -179,7 +179,8 @@ public class MM00AuctionScenario implements Scenario {
 		IntermittentResourceProfile windProfileOffShoreNL = new IntermittentResourceProfile();
 		windProfileOffShoreNL.setFilename("/data/renewablesNinja2015Profiles.csv");
 		windProfileOffShoreNL.setDelimiter(",");
-		windProfileOffShoreNL.readCSVVariable("OFF_NL");
+//		windProfileOffShoreNL.readCSVVariable("OFF_NL");
+		windProfileOffShoreNL.readCSVVariable("PV_NL");
 		windProfileOffShoreNL.setIntermittentProductionNode(nlNode);
 		reps.intermittentResourceProfiles.add(windProfileOffShoreNL);
 
@@ -193,7 +194,8 @@ public class MM00AuctionScenario implements Scenario {
 		IntermittentResourceProfile solarProfileNL = new IntermittentResourceProfile();
 		solarProfileNL.setFilename("/data/renewablesNinja2015Profiles.csv");
 		solarProfileNL.setDelimiter(",");
-		solarProfileNL.readCSVVariable("PV_NL");
+//		solarProfileNL.readCSVVariable("PV_NL");
+		solarProfileNL.readCSVVariable("OFF_NL");
 		solarProfileNL.setIntermittentProductionNode(nlNode);
 		reps.intermittentResourceProfiles.add(solarProfileNL);
 
@@ -201,7 +203,8 @@ public class MM00AuctionScenario implements Scenario {
 		IntermittentResourceProfile windProfileOffShoreDE = new IntermittentResourceProfile();
 		windProfileOffShoreDE.setFilename("/data/renewablesNinja2015Profiles.csv");
 		windProfileOffShoreDE.setDelimiter(",");
-		windProfileOffShoreDE.readCSVVariable("OFF_DE");
+//		windProfileOffShoreDE.readCSVVariable("OFF_DE");
+		windProfileOffShoreDE.readCSVVariable("PV_DE");
 		windProfileOffShoreDE.setIntermittentProductionNode(deNode);
 		reps.intermittentResourceProfiles.add(windProfileOffShoreDE);
 
@@ -215,7 +218,8 @@ public class MM00AuctionScenario implements Scenario {
 		IntermittentResourceProfile solarProfileDE = new IntermittentResourceProfile();
 		solarProfileDE.setFilename("/data/renewablesNinja2015Profiles.csv");
 		solarProfileDE.setDelimiter(",");
-		solarProfileDE.readCSVVariable("PV_DE");
+//		solarProfileDE.readCSVVariable("PV_DE");
+		solarProfileDE.readCSVVariable("OFF_DE");
 		solarProfileDE.setIntermittentProductionNode(deNode);
 		reps.intermittentResourceProfiles.add(solarProfileDE);
 
@@ -1070,13 +1074,13 @@ public class MM00AuctionScenario implements Scenario {
 
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsCountryOwn, 44.9);
-		preferenceMap.put(utilityLevelsCountryKnown, -0.7); 
+		preferenceMap.put(utilityLevelsCountryKnown, -0.7);
 		preferenceMap.put(utilityLevelsCountryUnknown, -44.2);
 		prefInvestorsVerylargeNL.setUtilityCountry(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsReturn5, -27.3);
 		preferenceMap.put(utilityLevelsReturn6, -9.1);
-		preferenceMap.put(utilityLevelsReturn7, 36.5);   
+		preferenceMap.put(utilityLevelsReturn7, 36.5);
 		prefInvestorsVerylargeNL.setUtilityReturn(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsPolicyFIT, 40.6);
@@ -1391,7 +1395,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL1.setName("OnshoreTender");
 		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL1.setRegulator(regulatorNl);
@@ -1406,7 +1410,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1420,7 +1424,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL3.setName("PVTender");
 		renewableSupportSchemeNL3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL3.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL3.setRegulator(regulatorNl);
@@ -1608,7 +1612,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);
@@ -1623,7 +1627,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);
@@ -1638,7 +1642,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE3.setName("PVTender DE");
 		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE3.setRegulator(regulatorDe);

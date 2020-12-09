@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM00AuctionScenario implements Scenario {
+public class MM50AuctionScenario100It implements Scenario {
 
 	private String name;
 
@@ -275,7 +275,7 @@ public class MM00AuctionScenario implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.50);
+		minCo2PriceTrend.setIncrement(1.5);
 
 		
 		reps.government = new Government();
@@ -1070,13 +1070,13 @@ public class MM00AuctionScenario implements Scenario {
 
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsCountryOwn, 44.9);
-		preferenceMap.put(utilityLevelsCountryKnown, -0.7); 
+		preferenceMap.put(utilityLevelsCountryKnown, -0.7);
 		preferenceMap.put(utilityLevelsCountryUnknown, -44.2);
 		prefInvestorsVerylargeNL.setUtilityCountry(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsReturn5, -27.3);
 		preferenceMap.put(utilityLevelsReturn6, -9.1);
-		preferenceMap.put(utilityLevelsReturn7, 36.5);   
+		preferenceMap.put(utilityLevelsReturn7, 36.5);
 		prefInvestorsVerylargeNL.setUtilityReturn(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsPolicyFIT, 40.6);

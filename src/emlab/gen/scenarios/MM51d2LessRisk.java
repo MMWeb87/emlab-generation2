@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM00AuctionScenario implements Scenario {
+public class MM51d2LessRisk implements Scenario {
 
 	private String name;
 
@@ -275,7 +275,7 @@ public class MM00AuctionScenario implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.50);
+		minCo2PriceTrend.setIncrement(1.5);
 
 		
 		reps.government = new Government();
@@ -744,8 +744,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsSmallDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsSmallDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsSmallDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsSmallDE.setLoanInterestRate(0.1);
-		prefInvestorsSmallDE.setEquityInterestRate(0.1);
+		prefInvestorsSmallDE.setLoanInterestRate(0.05);
+		prefInvestorsSmallDE.setEquityInterestRate(0.05);
 		prefInvestorsSmallDE.setPastTimeHorizon(5);
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
@@ -789,8 +789,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsMediumDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsMediumDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsMediumDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsMediumDE.setLoanInterestRate(0.1);
-		prefInvestorsMediumDE.setEquityInterestRate(0.1);
+		prefInvestorsMediumDE.setLoanInterestRate(0.05);
+		prefInvestorsMediumDE.setEquityInterestRate(0.05);
 		prefInvestorsMediumDE.setPastTimeHorizon(5);
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
@@ -834,8 +834,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsLargeDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsLargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsLargeDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsLargeDE.setLoanInterestRate(0.1);
-		prefInvestorsLargeDE.setEquityInterestRate(0.1);
+		prefInvestorsLargeDE.setLoanInterestRate(0.05);
+		prefInvestorsLargeDE.setEquityInterestRate(0.05);
 		prefInvestorsLargeDE.setPastTimeHorizon(5);
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
@@ -879,8 +879,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsVerylargeDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsVerylargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsVerylargeDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsVerylargeDE.setLoanInterestRate(0.1);
-		prefInvestorsVerylargeDE.setEquityInterestRate(0.1);
+		prefInvestorsVerylargeDE.setLoanInterestRate(0.05);
+		prefInvestorsVerylargeDE.setEquityInterestRate(0.05);
 		prefInvestorsVerylargeDE.setPastTimeHorizon(5);
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
@@ -925,7 +925,7 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsSmallNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsSmallNL.setDebtRatioOfInvestments(0.7);
 		prefInvestorsSmallNL.setLoanInterestRate(0.1);
-		prefInvestorsSmallNL.setEquityInterestRate(0.1);
+		prefInvestorsSmallNL.setEquityInterestRate(0.05);
 		prefInvestorsSmallNL.setPastTimeHorizon(5);
 		prefInvestorsSmallNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallNL.setLongTermContractPastTimeHorizon(3);
@@ -969,8 +969,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsMediumNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsMediumNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsMediumNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsMediumNL.setLoanInterestRate(0.1);
-		prefInvestorsMediumNL.setEquityInterestRate(0.1);
+		prefInvestorsMediumNL.setLoanInterestRate(0.05);
+		prefInvestorsMediumNL.setEquityInterestRate(0.05);
 		prefInvestorsMediumNL.setPastTimeHorizon(5);
 		prefInvestorsMediumNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumNL.setLongTermContractPastTimeHorizon(3);
@@ -1014,8 +1014,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsLargeNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsLargeNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsLargeNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsLargeNL.setLoanInterestRate(0.1);
-		prefInvestorsLargeNL.setEquityInterestRate(0.1);
+		prefInvestorsLargeNL.setLoanInterestRate(0.05);
+		prefInvestorsLargeNL.setEquityInterestRate(0.05);
 		prefInvestorsLargeNL.setPastTimeHorizon(5);
 		prefInvestorsLargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeNL.setLongTermContractPastTimeHorizon(3);
@@ -1059,8 +1059,8 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsVerylargeNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsVerylargeNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsVerylargeNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsVerylargeNL.setLoanInterestRate(0.1);
-		prefInvestorsVerylargeNL.setEquityInterestRate(0.1);
+		prefInvestorsVerylargeNL.setLoanInterestRate(0.05);
+		prefInvestorsVerylargeNL.setEquityInterestRate(0.05);
 		prefInvestorsVerylargeNL.setPastTimeHorizon(5);
 		prefInvestorsVerylargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeNL.setLongTermContractPastTimeHorizon(3);
@@ -1070,13 +1070,13 @@ public class MM00AuctionScenario implements Scenario {
 
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsCountryOwn, 44.9);
-		preferenceMap.put(utilityLevelsCountryKnown, -0.7); 
+		preferenceMap.put(utilityLevelsCountryKnown, -0.7);
 		preferenceMap.put(utilityLevelsCountryUnknown, -44.2);
 		prefInvestorsVerylargeNL.setUtilityCountry(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsReturn5, -27.3);
 		preferenceMap.put(utilityLevelsReturn6, -9.1);
-		preferenceMap.put(utilityLevelsReturn7, 36.5);   
+		preferenceMap.put(utilityLevelsReturn7, 36.5);
 		prefInvestorsVerylargeNL.setUtilityReturn(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsPolicyFIT, 40.6);
@@ -1391,7 +1391,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL1.setName("OnshoreTender");
 		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL1.setRegulator(regulatorNl);
@@ -1406,7 +1406,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1420,7 +1420,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL3.setName("PVTender");
 		renewableSupportSchemeNL3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL3.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL3.setRegulator(regulatorNl);
@@ -1608,7 +1608,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);
@@ -1623,7 +1623,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);
@@ -1638,7 +1638,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE3.setName("PVTender DE");
 		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE3.setRegulator(regulatorDe);

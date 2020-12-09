@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM00AuctionScenario implements Scenario {
+public class MM40d1BothAllTech10Y30Bn implements Scenario {
 
 	private String name;
 
@@ -750,7 +750,7 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
-		prefInvestorsSmallDE.setCash(24e9);
+		prefInvestorsSmallDE.setCash(30e9);
 		prefInvestorsSmallDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -795,7 +795,7 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
-		prefInvestorsMediumDE.setCash(24e9);
+		prefInvestorsMediumDE.setCash(30e9);
 		prefInvestorsMediumDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -840,7 +840,7 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsLargeDE.setCash(24e9);
+		prefInvestorsLargeDE.setCash(30e9);
 		prefInvestorsLargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -885,7 +885,7 @@ public class MM00AuctionScenario implements Scenario {
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeDE.setCash(24e9);
+		prefInvestorsVerylargeDE.setCash(30e9);
 		prefInvestorsVerylargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1070,13 +1070,13 @@ public class MM00AuctionScenario implements Scenario {
 
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsCountryOwn, 44.9);
-		preferenceMap.put(utilityLevelsCountryKnown, -0.7); 
+		preferenceMap.put(utilityLevelsCountryKnown, -0.7);
 		preferenceMap.put(utilityLevelsCountryUnknown, -44.2);
 		prefInvestorsVerylargeNL.setUtilityCountry(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsReturn5, -27.3);
 		preferenceMap.put(utilityLevelsReturn6, -9.1);
-		preferenceMap.put(utilityLevelsReturn7, 36.5);   
+		preferenceMap.put(utilityLevelsReturn7, 36.5);
 		prefInvestorsVerylargeNL.setUtilityReturn(preferenceMap);
 		preferenceMap = new HashMap<>();
 		preferenceMap.put(utilityLevelsPolicyFIT, 40.6);
@@ -1391,7 +1391,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL1.setName("OnshoreTender");
 		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL1.setRegulator(regulatorNl);
@@ -1406,7 +1406,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1420,7 +1420,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeNL3.setName("PVTender");
 		renewableSupportSchemeNL3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL3.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL3.setRegulator(regulatorNl);
@@ -1608,7 +1608,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);
@@ -1623,7 +1623,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE2.setName("OffshoreTender DE");
 		renewableSupportSchemeDE2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE2.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE2.setRegulator(regulatorDe);
@@ -1638,7 +1638,7 @@ public class MM00AuctionScenario implements Scenario {
 		renewableSupportSchemeDE3.setName("PVTender DE");
 		renewableSupportSchemeDE3.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE3.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeDE3.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeDE3.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE3.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE3.setRegulator(regulatorDe);
