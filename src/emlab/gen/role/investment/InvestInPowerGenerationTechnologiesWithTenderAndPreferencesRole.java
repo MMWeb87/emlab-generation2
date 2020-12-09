@@ -344,13 +344,15 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
     	
     	utility = agent.getUtilityPolicy().get("None");
     	
-    	if(getReps().emlabModel.isFeedInPremiumImplemented() 
-    			&& getReps().emlabModel.isRenewableTenderSchemeImplemented()
-    			&& supportSchemeAvailable) {
-    		
-    			utility = agent.getUtilityPolicy().get("Auction");	
-    		
-    	}
+    	// TODO: in the auction case, the investment decisions is not performed here, and hence utility is only None.
+    	
+//    	if(getReps().emlabModel.isFeedInPremiumImplemented() 
+//    			&& getReps().emlabModel.isRenewableTenderSchemeImplemented()
+//    			&& supportSchemeAvailable) {
+//    		
+//    			utility = agent.getUtilityPolicy().get("Auction");	
+//    		
+//    	}
     	
     	return utility;
     }
