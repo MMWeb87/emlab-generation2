@@ -171,7 +171,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
     
     
     
-    class FutureCapacityExpectationWithScheme extends FutureCapacityExpectation {
+    public class FutureCapacityExpectationWithScheme extends FutureCapacityExpectation {
 	   
 		
 		public FutureCapacityExpectationWithScheme(PowerGeneratingTechnology technology, PowerPlant plant, PowerGridNode node){
@@ -330,6 +330,8 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
            waccAdjusted = (1 - agent.getDebtRatioOfInvestments())
                    * (agent.getEquityInterestRate() + agent.getEquityRatePriceRiskComponent())
                    + agent.getDebtRatioOfInvestments() * agent.getLoanInterestRate();
+           
+           double test = waccAdjusted;
 
     	}
 	   
@@ -388,7 +390,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
 	             
     	}
     	
-    	protected double calculateDiscountedCashFlowForPlantAdjusted(int depriacationTime,
+		protected double calculateDiscountedCashFlowForPlantAdjusted(int depriacationTime,
                 double totalInvestment, double operatingProfit) {
     		
     		return calculateDiscountedCashFlowForPlant(depriacationTime,

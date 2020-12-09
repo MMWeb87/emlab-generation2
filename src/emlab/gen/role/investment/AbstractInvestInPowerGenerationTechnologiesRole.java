@@ -434,7 +434,7 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
      * Checks if any "hard limits" inhibits the investor from investing.
      * @return
      */
-    class FutureCapacityExpectation{
+    public class FutureCapacityExpectation{
     	
     	double expectedInstalledCapacityOfTechnology;
     	double expectedInstalledCapacityOfTechnologyInNode;

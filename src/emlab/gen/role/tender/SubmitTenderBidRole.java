@@ -33,6 +33,7 @@ import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
 import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesRole;
+import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesWithTenderRole;
 
 /**
  * @author kaveri, rjjdejeu, marcmel
@@ -44,7 +45,7 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
         super(schedule);
     }
 
-    class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesRole<EnergyProducer>{
+    class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesWithTenderRole<EnergyProducer>{
 
     	private boolean submitBid = false;
     	private double totalAnnualExpectedGenerationOfPlant;
@@ -92,6 +93,8 @@ public class SubmitTenderBidRole extends AbstractRole<RenewableSupportSchemeTend
 			
 			public FutureFinancialExpectationWithBid(PowerPlant plant) {
 				super(plant);
+				
+	
 			}
 
 			public double calculateDiscountedTenderReturnFactor(double tenderSchemeDuration) {

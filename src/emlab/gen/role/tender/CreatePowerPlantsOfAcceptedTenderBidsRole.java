@@ -21,15 +21,20 @@ import emlab.gen.domain.agent.BigBank;
 import emlab.gen.domain.agent.EnergyProducer;
 import emlab.gen.domain.agent.PowerPlantManufacturer;
 import emlab.gen.domain.contract.Loan;
+import emlab.gen.domain.market.electricity.ElectricitySpotMarket;
 import emlab.gen.domain.policy.renewablesupport.RenewableSupportSchemeTender;
 import emlab.gen.domain.policy.renewablesupport.TenderBid;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.PowerGeneratingTechnologyNodeLimit;
+import emlab.gen.domain.technology.PowerGridNode;
 import emlab.gen.domain.technology.PowerPlant;
 import emlab.gen.engine.AbstractRole;
 import emlab.gen.engine.Role;
 import emlab.gen.engine.Schedule;
 import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesRole;
+import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesRole.FutureCapacityExpectation;
+import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesWithTenderRole;
+import emlab.gen.role.investment.AbstractInvestInPowerGenerationTechnologiesWithTenderRole.FutureCapacityExpectationWithScheme;
 
 /**
  * @author rjjdejeu
@@ -43,11 +48,20 @@ implements Role<RenewableSupportSchemeTender> {
 		super(schedule);
 	}
 
-	class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesRole<EnergyProducer>{
-
+	class EvaluateInvestmentRole extends AbstractInvestInPowerGenerationTechnologiesWithTenderRole<EnergyProducer>{
+		
 		public EvaluateInvestmentRole(Schedule schedule) {
-			super(schedule);
+			super(schedule);			
 		}
+		
+		public Boolean isCapacityExpansionViable(PowerGeneratingTechnology technology, PowerPlant plant, PowerGridNode node) {
+            
+			// Check in FutureCapacityExpectationWithScheme the check function to see if viable from capacity point of view
+			FutureCapacityExpectationWithScheme futureCapacityExpectation = new FutureCapacityExpectationWithScheme(technology, plant, node); 
+            return(futureCapacityExpectation.isViableInvestment());
+            
+		}				
+		
 	}
 
 	@Override
@@ -69,16 +83,18 @@ implements Role<RenewableSupportSchemeTender> {
 			EnergyProducer bidder = (EnergyProducer) currentTenderBid.getBidder();
 			EvaluateInvestmentRole evaluateInvestment = new EvaluateInvestmentRole(schedule);
 			
+			evaluateInvestment.setAgent(bidder);
+			evaluateInvestment.setMarket(bidder.getInvestorMarket());
+			evaluateInvestment.setFutureTimePoint(getCurrentTick()); // Need to set here because investment happens now
+			//evaluateInvestment.setExpectations();
+			
 			PowerPlant plant = getReps().createAndSpecifyTemporaryPowerPlant(
 					getCurrentTick(), bidder, currentTenderBid.getPowerGridNode(), currentTenderBid.getTechnology());
 			
-			// Producers needs enough equity for investment
-			if (plant.getActualInvestedCapital() * (1 - bidder.getDebtRatioOfInvestments()) > bidder
-					.getDownpaymentFractionOfCash() * bidder.getCash()) {
-				logger.log(Level.INFO, bidder +" will not build auction bid for {0} technology as he does not have enough money for downpayment", plant.getTechnology().getName());
+
+			if(!evaluateInvestment.isCapacityExpansionViable(plant.getTechnology(), plant, currentTenderBid.getPowerGridNode())){
 				getReps().tenderBids.remove(currentTenderBid);
 				
-
 			} else {
 
 				getReps().createPowerPlantFromPlant(plant);        
