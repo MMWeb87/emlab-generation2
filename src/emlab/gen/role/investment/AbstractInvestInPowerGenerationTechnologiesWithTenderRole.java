@@ -213,12 +213,16 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
         
         
         @Override
-        public void check() {        	
+        public void check() {
+        	
+        	double inviableReason = 0;
 
 
         	// Limiting rule 1: nodeLimit
         	if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
         		logger.log(Level.INFO, agent + " will not invest in " + technology.getName() + " because of node limit: " + pgtNodeLimit);
+        		inviableReason = 1;
+        		
         		
 
         	// Limiting rule 2: too much by own agent
@@ -226,11 +230,13 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
         			* technology.getMaximumInstalledCapacityFractionPerAgent()) {
         		logger.log(Level.INFO, 
         				agent + " will not invest in " + technology.getName() + " because there's too much capacity planned by him");
+        		inviableReason = 2;
 
         	// Limiting rule 3: avoid not being able to pay downpayments
         	} else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
         			.getDownpaymentFractionOfCash() * agent.getCash()) {
         		logger.log(Level.INFO, agent + " will not invest in " + technology.getName() + " as he does not have enough money for downpayment");
+        		inviableReason = 3;
         	} 
 
         	// these two rules were removed for Iychettira (2017) because capacity (GW) was not a good measure to limit renewable generation, especially when targets were in terms of energy (GWh). 
@@ -261,7 +267,17 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
         		logger.log(Level.INFO, agent + " considers " + technology.getName()  + " to be viable.");
         		setViableInvestment(true);
 
-        	}      
+        	}
+        	
+        	
+        	// Reporter
+        	
+        	
+    		CapacityExpectationReport report = new CapacityExpectationReport();
+    		
+    		report.setViable(isViableInvestment());
+    		report.setViableReason(inviableReason);
+
 
         
        }

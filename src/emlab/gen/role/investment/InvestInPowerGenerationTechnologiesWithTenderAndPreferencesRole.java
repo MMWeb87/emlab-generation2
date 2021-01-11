@@ -137,8 +137,11 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 
 	                        		double partWorthUtilityReturn = determineUtilityReturn(mappedProjectDiscountedReturnOnEquity, agent);
 	                        		double partWorthUtilityTechnology = determineUtilityTechnology(technology, agent);
-	                        		double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
-	                        		double partWorthUtilityPolicy = determineUtilityPolicy(supportSchemeAvailable); 
+	                        		double partWorthUtilityCountry = 0; // Don't differentiate because only one country modeled here.
+	                        		double partWorthUtilityPolicy = 0; // Don't differentiate because no price policy modeled here.
+	                        		
+	                        		//double partWorthUtilityCountry = determineUtilityCountry(this.getMarket(), agent);
+	                        		//double partWorthUtilityPolicy = determineUtilityPolicy(supportSchemeAvailable); 
 
 	                        		totalUtility = partWorthUtilityReturn + partWorthUtilityTechnology + partWorthUtilityPolicy + partWorthUtilityCountry; 
 	                        		double totalRandomUtility = totalUtility * (1 + ThreadLocalRandom.current().nextDouble(-1 * getRandomUtilityBound(), getRandomUtilityBound()));
@@ -165,6 +168,9 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        	
                         		// Reporter
                         		FinancialExpectationReport report = new FinancialExpectationReport();
+                        		
+                        		// TODO: Need to differentiate when there is investment and when not. 
+                        		// if(bestPlant == plant)
 
                         		report.schedule = schedule;
                         		report.setMarket(agent.getInvestorMarket());

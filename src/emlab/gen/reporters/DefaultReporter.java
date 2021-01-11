@@ -44,9 +44,9 @@ public class DefaultReporter extends AbstractReporter {
 		logger.info("Writing log for tick " + schedule.getCurrentTick());
 
 		Boolean writeReportMain = true;
-		Boolean writeReportPowerplants = false;
-		Boolean writeReportMarketInformation = false;
-		Boolean writeReportFinancialExpectation = false;
+		Boolean writeReportPowerplants = true;
+		Boolean writeReportMarketInformation = true;
+		Boolean writeReportFinancialExpectation = true;
 		Boolean writeReportSegments = false;
 
 		String outputDirectoryName = this.getReporterDirectoryName();
@@ -254,6 +254,8 @@ public class DefaultReporter extends AbstractReporter {
 				e.printStackTrace();
 			} finally {
 				//release writing lock for file
+				schedule.reporter.lockFinancialExpectationCSV.unlock();
+
 
 			}
 

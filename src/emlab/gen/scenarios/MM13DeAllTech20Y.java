@@ -744,8 +744,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsSmallDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsSmallDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsSmallDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsSmallDE.setLoanInterestRate(0.1);
-		prefInvestorsSmallDE.setEquityInterestRate(0.1);
+		prefInvestorsSmallDE.setLoanInterestRate(0.10);
+		prefInvestorsSmallDE.setEquityInterestRate(0.10);
 		prefInvestorsSmallDE.setPastTimeHorizon(5);
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
@@ -789,8 +789,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsMediumDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsMediumDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsMediumDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsMediumDE.setLoanInterestRate(0.1);
-		prefInvestorsMediumDE.setEquityInterestRate(0.1);
+		prefInvestorsMediumDE.setLoanInterestRate(0.10);
+		prefInvestorsMediumDE.setEquityInterestRate(0.10);
 		prefInvestorsMediumDE.setPastTimeHorizon(5);
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
@@ -834,8 +834,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsLargeDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsLargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsLargeDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsLargeDE.setLoanInterestRate(0.1);
-		prefInvestorsLargeDE.setEquityInterestRate(0.1);
+		prefInvestorsLargeDE.setLoanInterestRate(0.10);
+		prefInvestorsLargeDE.setEquityInterestRate(0.10);
 		prefInvestorsLargeDE.setPastTimeHorizon(5);
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
@@ -879,8 +879,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsVerylargeDE.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsVerylargeDE.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsVerylargeDE.setDebtRatioOfInvestments(0.7);
-		prefInvestorsVerylargeDE.setLoanInterestRate(0.1);
-		prefInvestorsVerylargeDE.setEquityInterestRate(0.1);
+		prefInvestorsVerylargeDE.setLoanInterestRate(0.10);
+		prefInvestorsVerylargeDE.setEquityInterestRate(0.10);
 		prefInvestorsVerylargeDE.setPastTimeHorizon(5);
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
@@ -925,7 +925,7 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsSmallNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsSmallNL.setDebtRatioOfInvestments(0.7);
 		prefInvestorsSmallNL.setLoanInterestRate(0.1);
-		prefInvestorsSmallNL.setEquityInterestRate(0.1);
+		prefInvestorsSmallNL.setEquityInterestRate(0.10);
 		prefInvestorsSmallNL.setPastTimeHorizon(5);
 		prefInvestorsSmallNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallNL.setLongTermContractPastTimeHorizon(3);
@@ -969,8 +969,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsMediumNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsMediumNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsMediumNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsMediumNL.setLoanInterestRate(0.1);
-		prefInvestorsMediumNL.setEquityInterestRate(0.1);
+		prefInvestorsMediumNL.setLoanInterestRate(0.10);
+		prefInvestorsMediumNL.setEquityInterestRate(0.10);
 		prefInvestorsMediumNL.setPastTimeHorizon(5);
 		prefInvestorsMediumNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumNL.setLongTermContractPastTimeHorizon(3);
@@ -1014,8 +1014,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsLargeNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsLargeNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsLargeNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsLargeNL.setLoanInterestRate(0.1);
-		prefInvestorsLargeNL.setEquityInterestRate(0.1);
+		prefInvestorsLargeNL.setLoanInterestRate(0.10);
+		prefInvestorsLargeNL.setEquityInterestRate(0.10);
 		prefInvestorsLargeNL.setPastTimeHorizon(5);
 		prefInvestorsLargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeNL.setLongTermContractPastTimeHorizon(3);
@@ -1059,8 +1059,8 @@ public class MM13DeAllTech20Y implements Scenario {
 		prefInvestorsVerylargeNL.setDismantlingRequiredOperatingProfit(0);
 		prefInvestorsVerylargeNL.setDismantlingProlongingYearsAfterTechnicalLifetime(0);
 		prefInvestorsVerylargeNL.setDebtRatioOfInvestments(0.7);
-		prefInvestorsVerylargeNL.setLoanInterestRate(0.1);
-		prefInvestorsVerylargeNL.setEquityInterestRate(0.1);
+		prefInvestorsVerylargeNL.setLoanInterestRate(0.10);
+		prefInvestorsVerylargeNL.setEquityInterestRate(0.10);
 		prefInvestorsVerylargeNL.setPastTimeHorizon(5);
 		prefInvestorsVerylargeNL.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeNL.setLongTermContractPastTimeHorizon(3);
