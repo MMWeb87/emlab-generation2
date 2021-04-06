@@ -71,3 +71,5 @@ resources/sources/powerplants/output/conventional_nl_ft
 resources/sources/renewables capacity factors/config.R
 
 results_meta/scenario_informations.csv
+
+results/
