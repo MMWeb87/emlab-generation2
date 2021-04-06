@@ -116,6 +116,8 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
                         if (projectValue > 0 && projectValue / plant.getActualNominalCapacity() > highestValue) {
                             highestValue = projectValue / plant.getActualNominalCapacity();
                             bestPlant = plant;
+                            bestPlant.setInvestmentOrigin(6);
+                            
                         }
 
                     }
@@ -125,7 +127,6 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
 
             }
         }
-
         decideToInvestInPlant(bestPlant);
 
     }
@@ -275,8 +276,19 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesWithTenderRole<
         	
     		CapacityExpectationReport report = new CapacityExpectationReport();
     		
+
+    		report.schedule = schedule;
+    		report.setMarket(agent.getInvestorMarket());
+    		report.setTime(schedule.getCurrentTick()); 
+    		report.setAgent(agent);
+    		report.setTechnology(technology);
+    		report.setPlant(plant);
+    		report.setNode(node);
+    		
     		report.setViable(isViableInvestment());
     		report.setViableReason(inviableReason);
+    		
+    		getReps().capacityExpectationReports.add(report);
 
 
         

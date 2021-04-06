@@ -526,42 +526,76 @@ public abstract class AbstractInvestInPowerGenerationTechnologiesRole<T extends 
          */
         public void check() {
         	
+        	double inviableReason = 0;
+
+        	
             if ((expectedInstalledCapacityOfTechnology + plant.getActualNominalCapacity())
                     / (marketInformation.maxExpectedLoad + plant.getActualNominalCapacity()) > technology
                     .getMaximumInstalledCapacityFractionInCountry()) {
             	
                 logger.log(Level.FINE, 
                 		agent + " will not invest in {} technology because there's too much of this type in the market", technology);
+                
+        		inviableReason = 11;
+
             
             } else if ((expectedInstalledCapacityOfTechnologyInNode + plant.getActualNominalCapacity()) > pgtNodeLimit) {
             	 
-            	 
+            	inviableReason = 12;
 
             } else if (expectedOwnedCapacityInMarketOfThisTechnology > expectedOwnedTotalCapacityInMarket
                     * technology.getMaximumInstalledCapacityFractionPerAgent()) {
                  
             	logger.log(Level.FINE, 
                 		 agent + " will not invest in {} technology because there's too much capacity planned by him", technology);
+            	
+            	inviableReason = 13;
             
             } else if (capacityInPipelineInMarket > 0.2 * marketInformation.maxExpectedLoad) {
             	logger.log(Level.FINE, "Not investing because more than 20% of demand in pipeline.");
+            	
+            	inviableReason = 14;
 
             
             } else if ((capacityOfTechnologyInPipeline > 2.0 * operationalCapacityOfTechnology)
                     && capacityOfTechnologyInPipeline > 9000) { // TODO: reflects that you cannot expand a technology out of zero.
             	logger.log(Level.FINE, agent +" will not invest in {} technology because there's too much capacity in the pipeline", technology);
+            	
+            	inviableReason = 15;
             
             } else if (plant.getActualInvestedCapital() * (1 - agent.getDebtRatioOfInvestments()) > agent
                     .getDownpaymentFractionOfCash() * agent.getCash()) {
             	logger.log(Level.FINE, agent +" will not invest in {} technology as he does not have enough money for downpayment", technology);
+            	
+            	inviableReason = 16;
             
             } else {
             	
             	logger.log(Level.FINE,  technology + " passes capacity limit. " + agent + " will now calculate financial viability.");
             	setViableInvestment(true);
             	
+            	inviableReason = 17;
+            	
 	
-            }      
+            }    
+            
+    		CapacityExpectationReport report = new CapacityExpectationReport();
+    		
+
+    		report.schedule = schedule;
+    		report.setMarket(agent.getInvestorMarket());
+    		report.setTime(schedule.getCurrentTick()); 
+    		report.setAgent(agent);
+    		report.setTechnology(technology);
+    		report.setPlant(plant);
+    		report.setNode(node);
+    		
+    		report.setViable(isViableInvestment());
+    		report.setViableReason(inviableReason);
+    		
+    		getReps().capacityExpectationReports.add(report);
+
+
             
         
        }

@@ -46,6 +46,7 @@ public class FinancialPowerPlantReportCSVConverter implements CSVEntryConverter<
         row.add(String.valueOf(report.getPowerPlant().getOwner().getName()));
         row.add(String.valueOf(report.getPowerPlant().getActualNominalCapacity()));
         row.add(String.valueOf(report.getPowerPlant().getActualEfficiency()));
+        row.add(String.valueOf(report.getPowerPlant().getInvestmentOrigin()));
 
         return row.toArray(new String[row.size()]);
 

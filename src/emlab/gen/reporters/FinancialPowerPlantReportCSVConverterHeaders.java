@@ -44,6 +44,7 @@ public class FinancialPowerPlantReportCSVConverterHeaders implements CSVEntryCon
         row.add("owner");
         row.add("capacity");
         row.add("efficiency");
+        row.add("investmentOrigin");
 
         return row.toArray(new String[row.size()]);
 

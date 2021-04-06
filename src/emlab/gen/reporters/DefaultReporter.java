@@ -13,6 +13,7 @@ import emlab.gen.domain.market.electricity.FinancialPowerPlantReport;
 import emlab.gen.engine.AbstractReporter;
 import emlab.gen.engine.Schedule;
 import emlab.gen.repository.Reps;
+import emlab.gen.role.investment.CapacityExpectationReport;
 import emlab.gen.role.investment.FinancialExpectationReport;
 import emlab.gen.role.investment.MarketInformationReport;
 
@@ -45,10 +46,11 @@ public class DefaultReporter extends AbstractReporter {
 
 		Boolean writeReportMain = true;
 		Boolean writeReportPowerplants = true;
-		Boolean writeReportMarketInformation = true;
+		Boolean writeReportMarketInformation = false;
 		Boolean writeReportFinancialExpectation = true;
 		Boolean writeReportSegments = false;
-
+		Boolean writeCapacityExpectation = true;
+		
 		String outputDirectoryName = this.getReporterDirectoryName();
 
 
@@ -255,6 +257,59 @@ public class DefaultReporter extends AbstractReporter {
 			} finally {
 				//release writing lock for file
 				schedule.reporter.lockFinancialExpectationCSV.unlock();
+
+
+			}
+
+		}
+		
+		
+		if(writeCapacityExpectation) {
+
+
+
+			// FinancialExpectation file               
+			String capacityExpectationFileName = schedule.runID + "-" + "CapacityExpectation.csv";
+			File capacityExpectationFile = new File(outputDirectoryName + capacityExpectationFileName);
+
+			//Write header if needed
+			if (!capacityExpectationFile.exists()) {
+				try {
+					schedule.reporter.lockCapacityExpectationCSV.lock();
+					FileWriter capacityExpectationFileWriter = new FileWriter(capacityExpectationFile, false);
+					CSVWriter<CapacityExpectationReport> capacityExpectationCSVWriter = new CSVWriterBuilder<CapacityExpectationReport>(capacityExpectationFileWriter)
+							.entryConverter(new CapacityExpectationReportCSVConverterHeaders())
+							.strategy(CSVStrategy.DEFAULT)
+							.build();
+					//                marketinfoCSVWriter.write(schedule.reps.marketInformationReports.get(1));
+					capacityExpectationCSVWriter.write(null);
+					capacityExpectationFileWriter.flush();
+					capacityExpectationFileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					//release writing lock for file
+					schedule.reporter.lockCapacityExpectationCSV.unlock();
+				}
+			}
+
+			try {
+				schedule.reporter.lockCapacityExpectationCSV.lock();
+				FileWriter capacityExpectationFileWriter = new FileWriter(capacityExpectationFile, true);
+				CSVWriter<CapacityExpectationReport> capacityExpectationCSVWriter = new CSVWriterBuilder<CapacityExpectationReport>(capacityExpectationFileWriter)
+						.entryConverter(new CapacityExpectationReportCSVConverter())
+						.strategy(CSVStrategy.DEFAULT)
+						.build();
+
+				//write report per power plant
+				capacityExpectationCSVWriter.writeAll(schedule.reps.capacityExpectationReports);
+				capacityExpectationFileWriter.flush();
+				capacityExpectationFileWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				//release writing lock for file
+				schedule.reporter.lockCapacityExpectationCSV.unlock();
 
 
 			}

@@ -275,7 +275,7 @@ public class MM52AuctionWacc12 implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.50);
+		minCo2PriceTrend.setIncrement(1.5);
 
 		
 		reps.government = new Government();
@@ -534,19 +534,19 @@ public class MM52AuctionWacc12 implements Scenario {
 		nuclearPGT.setFuels(nuclearPGTFuels);
 		
 		TimeSeriesCSVReader pvInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		pvInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvInvestmentCostTimeSeries.setDelimiter(",");
 		pvInvestmentCostTimeSeries.setStartingYear(-50);
 		pvInvestmentCostTimeSeries.setVariableName("PV_Inv");
 
 		TimeSeriesCSVReader pvFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvFixedOperatingCostTimeSeries.setDelimiter(",");
 		pvFixedOperatingCostTimeSeries.setStartingYear(-50);
 		pvFixedOperatingCostTimeSeries.setVariableName("PV_OM");
 		
 		TimeSeriesCSVReader pvEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		pvEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		pvEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvEfficiencyTimeSeries.setDelimiter(",");
 		pvEfficiencyTimeSeries.setStartingYear(-50);
 		pvEfficiencyTimeSeries.setVariableName("PV_Eff");
@@ -605,19 +605,19 @@ public class MM52AuctionWacc12 implements Scenario {
 		
 		
 		TimeSeriesCSVReader windOnshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreInvestmentCostTimeSeries.setDelimiter(",");
 		windOnshoreInvestmentCostTimeSeries.setStartingYear(-50);
 		windOnshoreInvestmentCostTimeSeries.setVariableName("Wind_Inv");
 
 		TimeSeriesCSVReader windOnshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreFixedOperatingCostTimeSeries.setDelimiter(",");
 		windOnshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
 		windOnshoreFixedOperatingCostTimeSeries.setVariableName("Wind_OM");
 		
 		TimeSeriesCSVReader windOnshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreEfficiencyTimeSeries.setDelimiter(",");
 		windOnshoreEfficiencyTimeSeries.setStartingYear(-50);
 		windOnshoreEfficiencyTimeSeries.setVariableName("Wind_Eff");
@@ -646,19 +646,19 @@ public class MM52AuctionWacc12 implements Scenario {
 		windOnshore.setFuels(windOnshorePGTFuels);
 		
 		TimeSeriesCSVReader windOffshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreInvestmentCostTimeSeries.setDelimiter(",");
 		windOffshoreInvestmentCostTimeSeries.setStartingYear(-50);
 		windOffshoreInvestmentCostTimeSeries.setVariableName("WindOffshore_Inv");
 
 		TimeSeriesCSVReader windOffshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreFixedOperatingCostTimeSeries.setDelimiter(",");
 		windOffshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
 		windOffshoreFixedOperatingCostTimeSeries.setVariableName("WindOffshore_OM");
 		
 		TimeSeriesCSVReader windOffshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreEfficiencyTimeSeries.setDelimiter(",");
 		windOffshoreEfficiencyTimeSeries.setStartingYear(-50);
 		windOffshoreEfficiencyTimeSeries.setVariableName("WindOffshore_Eff");
@@ -680,9 +680,9 @@ public class MM52AuctionWacc12 implements Scenario {
 		windOffshore.setFixedOperatingCostModifierAfterLifetime(.05);
 		windOffshore.setMinimumRunningHours(0);
 		windOffshore.setDepreciationTime(15);
-		windOffshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
-		windOffshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
-		windOffshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries); 
+		windOffshore.setEfficiencyTimeSeries(windOffshoreEfficiencyTimeSeries);
+		windOffshore.setFixedOperatingCostTimeSeries(windOffshoreFixedOperatingCostTimeSeries);
+		windOffshore.setInvestmentCostTimeSeries(windOffshoreInvestmentCostTimeSeries); 
 		Set<Substance> windOffshorePGTFuels = new HashSet<>();
 		windOffshore.setFuels(windOffshorePGTFuels);
 		

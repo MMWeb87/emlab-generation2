@@ -97,7 +97,9 @@ implements Role<RenewableSupportSchemeTender> {
 				
 			} else {
 
-				getReps().createPowerPlantFromPlant(plant);        
+				getReps().createPowerPlantFromPlant(plant);
+				
+				plant.setInvestmentOrigin(3);
 
 				currentTenderBid.setPowerPlant(plant);  
 

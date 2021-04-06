@@ -131,7 +131,8 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
                         		double mappedProjectDiscountedReturnOnEquity = mapReturnToEmpiricalRange(projectDiscountedReturnOnEquity, technology, this.getMarket());
                         		double totalUtility = 0; // not relevant if empirical deactivated
                         		
-	                        	if(model.isEmpiricalPreferenceActive()) {
+	                        	// preference-algorithm
+                        		if(model.isEmpiricalPreferenceActive()) {
 
 	                        		logger.log(Level.FINE, "The project value " + projectValue + " for " + technology + " and " + this.getMarket().getName() + " is positive.");
 
@@ -155,14 +156,19 @@ public class InvestInPowerGenerationTechnologiesWithTenderAndPreferencesRole<T e
 	                        		if(totalRandomUtility > highestValue) {
 	                        			highestValue = totalRandomUtility;
 	                        			bestPlant = plant;
+	                        	        bestPlant.setInvestmentOrigin(2);
+
 	                        		} 
 	                        	
-	                        	} else {
+	                        	// NPV-algorithm
+                        		} else {
 
 	                        		// empirical preference is deactivated -> evaluate like normal 
 	                        		if (projectValue / plant.getActualNominalCapacity() > highestValue) {
 	                        			highestValue = projectValue / plant.getActualNominalCapacity();
 	                        			bestPlant = plant;
+	                        	        bestPlant.setInvestmentOrigin(1);
+
 	                        		}
 	                        	}
 	                        	

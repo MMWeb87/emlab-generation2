@@ -77,6 +77,8 @@ public class PowerPlant {
 
     private double electricityOutput;
     public boolean flagOutputChanged = true;
+    
+    private int investmentOrigin; // to differentiate between 0: initialized from data, 1: NPV-algorithm, 2: preference-algorithm, 3:tender 
 
     public boolean isOperational(long currentTick) {
 
@@ -592,6 +594,14 @@ public class PowerPlant {
     public void setHistoricalCvarDummyPlant(boolean historicalCvarDummyPlant) {
         this.historicalCvarDummyPlant = historicalCvarDummyPlant;
     }
+
+	public double getInvestmentOrigin() {
+		return investmentOrigin;
+	}
+
+	public void setInvestmentOrigin(int investmentOrigin) {
+		this.investmentOrigin = investmentOrigin;
+	}
     
     
 

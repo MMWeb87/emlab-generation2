@@ -51,7 +51,7 @@ import java.util.Set;
  *
  * @author marcmel, ejlchappin
  */
-public class MM40d2BothOnshore10Y30Bn implements Scenario {
+public class MM111NlOffshore10Y implements Scenario {
 
 	private String name;
 
@@ -275,7 +275,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		minCo2PriceTrend.setDuration(1);
 		minCo2PriceTrend.setStart(7);
 		minCo2PriceTrend.setMinValue(0);
-		minCo2PriceTrend.setIncrement(1.50);
+		minCo2PriceTrend.setIncrement(1.5);
 
 		
 		reps.government = new Government();
@@ -534,19 +534,19 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		nuclearPGT.setFuels(nuclearPGTFuels);
 		
 		TimeSeriesCSVReader pvInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		pvInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvInvestmentCostTimeSeries.setDelimiter(",");
 		pvInvestmentCostTimeSeries.setStartingYear(-50);
 		pvInvestmentCostTimeSeries.setVariableName("PV_Inv");
 
 		TimeSeriesCSVReader pvFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		pvFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvFixedOperatingCostTimeSeries.setDelimiter(",");
 		pvFixedOperatingCostTimeSeries.setStartingYear(-50);
 		pvFixedOperatingCostTimeSeries.setVariableName("PV_OM");
 		
 		TimeSeriesCSVReader pvEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		pvEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		pvEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		pvEfficiencyTimeSeries.setDelimiter(",");
 		pvEfficiencyTimeSeries.setStartingYear(-50);
 		pvEfficiencyTimeSeries.setVariableName("PV_Eff");
@@ -605,19 +605,19 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		
 		
 		TimeSeriesCSVReader windOnshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreInvestmentCostTimeSeries.setDelimiter(",");
 		windOnshoreInvestmentCostTimeSeries.setStartingYear(-50);
 		windOnshoreInvestmentCostTimeSeries.setVariableName("Wind_Inv");
 
 		TimeSeriesCSVReader windOnshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreFixedOperatingCostTimeSeries.setDelimiter(",");
 		windOnshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
 		windOnshoreFixedOperatingCostTimeSeries.setVariableName("Wind_OM");
 		
 		TimeSeriesCSVReader windOnshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOnshoreEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOnshoreEfficiencyTimeSeries.setDelimiter(",");
 		windOnshoreEfficiencyTimeSeries.setStartingYear(-50);
 		windOnshoreEfficiencyTimeSeries.setVariableName("Wind_Eff");
@@ -646,19 +646,19 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		windOnshore.setFuels(windOnshorePGTFuels);
 		
 		TimeSeriesCSVReader windOffshoreInvestmentCostTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreInvestmentCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreInvestmentCostTimeSeries.setDelimiter(",");
 		windOffshoreInvestmentCostTimeSeries.setStartingYear(-50);
 		windOffshoreInvestmentCostTimeSeries.setVariableName("WindOffshore_Inv");
 
 		TimeSeriesCSVReader windOffshoreFixedOperatingCostTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreFixedOperatingCostTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreFixedOperatingCostTimeSeries.setDelimiter(",");
 		windOffshoreFixedOperatingCostTimeSeries.setStartingYear(-50);
 		windOffshoreFixedOperatingCostTimeSeries.setVariableName("WindOffshore_OM");
 		
 		TimeSeriesCSVReader windOffshoreEfficiencyTimeSeries = new TimeSeriesCSVReader();
-		windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurves.csv");
+		windOffshoreEfficiencyTimeSeries.setFilename("/data/learningCurvesRevised.csv");
 		windOffshoreEfficiencyTimeSeries.setDelimiter(",");
 		windOffshoreEfficiencyTimeSeries.setStartingYear(-50);
 		windOffshoreEfficiencyTimeSeries.setVariableName("WindOffshore_Eff");
@@ -680,9 +680,9 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		windOffshore.setFixedOperatingCostModifierAfterLifetime(.05);
 		windOffshore.setMinimumRunningHours(0);
 		windOffshore.setDepreciationTime(15);
-		windOffshore.setEfficiencyTimeSeries(windOnshoreEfficiencyTimeSeries);
-		windOffshore.setFixedOperatingCostTimeSeries(windOnshoreFixedOperatingCostTimeSeries);
-		windOffshore.setInvestmentCostTimeSeries(windOnshoreInvestmentCostTimeSeries); 
+		windOffshore.setEfficiencyTimeSeries(windOffshoreEfficiencyTimeSeries);
+		windOffshore.setFixedOperatingCostTimeSeries(windOffshoreFixedOperatingCostTimeSeries);
+		windOffshore.setInvestmentCostTimeSeries(windOffshoreInvestmentCostTimeSeries); 
 		Set<Substance> windOffshorePGTFuels = new HashSet<>();
 		windOffshore.setFuels(windOffshorePGTFuels);
 		
@@ -750,7 +750,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		prefInvestorsSmallDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsSmallDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsSmallDE.setLongTermContractMargin(0.1);
-		prefInvestorsSmallDE.setCash(30e9);
+		prefInvestorsSmallDE.setCash(24e9);
 		prefInvestorsSmallDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -795,7 +795,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		prefInvestorsMediumDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsMediumDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsMediumDE.setLongTermContractMargin(0.1);
-		prefInvestorsMediumDE.setCash(30e9);
+		prefInvestorsMediumDE.setCash(24e9);
 		prefInvestorsMediumDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -840,7 +840,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		prefInvestorsLargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsLargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsLargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsLargeDE.setCash(30e9);
+		prefInvestorsLargeDE.setCash(24e9);
 		prefInvestorsLargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -885,7 +885,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		prefInvestorsVerylargeDE.setInvestmentFutureTimeHorizon(7);
 		prefInvestorsVerylargeDE.setLongTermContractPastTimeHorizon(3);
 		prefInvestorsVerylargeDE.setLongTermContractMargin(0.1);
-		prefInvestorsVerylargeDE.setCash(30e9);
+		prefInvestorsVerylargeDE.setCash(24e9);
 		prefInvestorsVerylargeDE.setInvestmentRole(tenderAndPreferenceInvestmentRole); 
 
 		preferenceMap = new HashMap<>();
@@ -1229,6 +1229,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		PowerPlantCSVFactory powerPlantCSVFactory = new PowerPlantCSVFactory(reps);
 		powerPlantCSVFactory.setCsvFile("/data/separatedDutchGermanPlants2015For14investors.csv");
 		for (PowerPlant plant : powerPlantCSVFactory.read()) {
+		  plant.setInvestmentOrigin(0);
 			reps.createPowerPlantFromPlant(plant);
 		}
 		
@@ -1391,7 +1392,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		renewableSupportSchemeNL1.setName("OnshoreTender");
 		renewableSupportSchemeNL1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL1.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeNL1.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeNL1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL1.setRegulator(regulatorNl);
@@ -1406,7 +1407,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		renewableSupportSchemeNL2.setName("OffshoreTender");
 		renewableSupportSchemeNL2.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeNL2.setSupportSchemeDuration(nlTenderDuration);
-		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(50);
+		renewableSupportSchemeNL2.setSupportSchemePhaseOutTick(10);
 		renewableSupportSchemeNL2.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeNL2.setExpostRevenueCalculation(true);
 		renewableSupportSchemeNL2.setRegulator(regulatorNl);
@@ -1608,7 +1609,7 @@ public class MM40d2BothOnshore10Y30Bn implements Scenario {
 		renewableSupportSchemeDE1.setName("OnshoreTender DE");
 		renewableSupportSchemeDE1.setFutureTenderOperationStartTime(2);
 		renewableSupportSchemeDE1.setSupportSchemeDuration(deTenderDuration);
-		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(10);
+		renewableSupportSchemeDE1.setSupportSchemePhaseOutTick(50);
 		renewableSupportSchemeDE1.setTechnologySpecificityEnabled(true);
 		renewableSupportSchemeDE1.setExpostRevenueCalculation(true);
 		renewableSupportSchemeDE1.setRegulator(regulatorDe);

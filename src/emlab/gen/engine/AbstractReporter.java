@@ -21,6 +21,7 @@ public abstract class AbstractReporter {
     public final Lock lockSegmentCSV;
     public final Lock lockMarketInformationCSV;
     public final Lock lockFinancialExpectationCSV;
+    public final Lock lockCapacityExpectationCSV;
 
 
     private String reporterDirectoryName;
@@ -31,6 +32,7 @@ public abstract class AbstractReporter {
         this.lockSegmentCSV = new ReentrantLock();
         this.lockMarketInformationCSV = new ReentrantLock();
         this.lockFinancialExpectationCSV = new ReentrantLock();
+        this.lockCapacityExpectationCSV = new ReentrantLock();
     }
 
     public void report(Schedule schedule){

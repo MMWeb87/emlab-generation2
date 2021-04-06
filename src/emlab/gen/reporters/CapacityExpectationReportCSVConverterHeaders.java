@@ -12,6 +12,7 @@ import emlab.gen.domain.market.electricity.FinancialPowerPlantReport;
 import emlab.gen.domain.technology.PowerGeneratingTechnology;
 import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.Schedule;
+import emlab.gen.role.investment.CapacityExpectationReport;
 import emlab.gen.role.investment.FinancialExpectationReport;
 import emlab.gen.role.investment.MarketInformationReport;
 
@@ -24,13 +25,13 @@ import java.util.Map;
  * @author ejlchappin
  * @author marcmel
  */
-public class CapacityExpectationReportCSVConverterHeaders implements CSVEntryConverter<FinancialExpectationReport> {
+public class CapacityExpectationReportCSVConverterHeaders implements CSVEntryConverter<CapacityExpectationReport> {
 
     CapacityExpectationReportCSVConverterHeaders() {
 
     }
 
-    public String[] convertEntry(FinancialExpectationReport report) {
+    public String[] convertEntry(CapacityExpectationReport report) {
         List<String> row = new ArrayList();
         
         row.add("iteration");
@@ -40,35 +41,10 @@ public class CapacityExpectationReportCSVConverterHeaders implements CSVEntryCon
         row.add("technology");
         row.add("plant");
         row.add("node");
-        row.add("investmentRound");
+        row.add("viable");
+        row.add("viablereason");
 
-        
-        row.add("ROI");
-        row.add("ROE.modelled");
-        row.add("ROE.mapped");
-
-        row.add("debtratio");
-        row.add("discounted.capital_cost");
-        row.add("discounted.operating_cost");
-        row.add("discounted.operating_profit");
-        
-        row.add("expected.generation");
-        row.add("expected.gross_profit");
-        row.add("expected.marginal_cost");
-        
-        row.add("expected.operating_cost");
-        row.add("expected.operating_revenue");
-        
-        row.add("project.cost");
-        row.add("project.value");
-        row.add("runninghours");
-        row.add("wacc");
-        
-        row.add("utility.total");
-        row.add("lcoe");
-
-
-
+       
         return row.toArray(new String[row.size()]);
 
     }

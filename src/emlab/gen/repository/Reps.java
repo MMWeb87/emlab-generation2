@@ -60,6 +60,7 @@ import emlab.gen.domain.technology.Substance;
 import emlab.gen.engine.AbstractAgent;
 import emlab.gen.engine.Schedule;
 import emlab.gen.trend.TimeSeriesCSVReader;
+import emlab.gen.role.investment.CapacityExpectationReport;
 import emlab.gen.role.investment.FinancialExpectationReport;
 import emlab.gen.role.investment.MarketInformationReport;
 import emlab.gen.trend.TimeSeriesImpl;
@@ -169,6 +170,9 @@ public class Reps {
     public ArrayList<MarketInformationReport> marketInformationReports = new ArrayList<>();
     
     public ArrayList<FinancialExpectationReport> financialExpectationReports = new ArrayList<>();
+    
+    public ArrayList<CapacityExpectationReport> capacityExpectationReports = new ArrayList<>();
+
 
     
     public ArrayList<RenewableTarget> renewableTargets = new ArrayList<>();
@@ -1553,6 +1557,7 @@ public class Reps {
 
         Loan loan = createLoan(energyProducer, null, amountPerPayment, plant.getTechnology().getDepreciationTime(), plant.getConstructionStartTime(), plant);
         loan.setNumberOfPaymentsDone(-plant.getConstructionStartTime());// Some payments are already made
+        plant.setInvestmentOrigin(5);
         createPowerPlantFromPlant(plant);
         return plant;
     }

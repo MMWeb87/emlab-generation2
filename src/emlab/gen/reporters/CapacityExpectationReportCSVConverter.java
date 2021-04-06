@@ -8,7 +8,6 @@ package emlab.gen.reporters;
 import com.googlecode.jcsv.writer.CSVEntryConverter;
 
 import emlab.gen.role.investment.CapacityExpectationReport;
-import emlab.gen.role.investment.FinancialExpectationReport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,10 @@ public class CapacityExpectationReportCSVConverter implements CSVEntryConverter<
         row.add(String.valueOf(report.getTechnology().getName()));
 		row.add(String.valueOf(report.getPlant().getName()));
 		row.add(String.valueOf(report.getNode().getName()));
-		row.add(Boolean.valueOf(report.getViable()));
-		row.add(Double.valueOf(report.getViableReason()));
+		row.add(String.valueOf(report.getViable()));
+		row.add(String.valueOf(report.getViableReason()));
 
 
-	    		
         return row.toArray(new String[row.size()]);
         
 
